@@ -1,0 +1,27 @@
+.pet-cards-container {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto; 
+}
+
+.allpets-feed-fragment-container {
+  position: relative;
+  width: 660px !important;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll; 
+  scrollbar-width: thin;
+}
+
+.no-adoptable-pets-today{
+  font-size: 1.4rem;
+  line-height: 1.1;
+  font-family: 'Gotu', sans-serif;
+  letter-spacing: -1px;
+  color: #401E12;
+  text-align: center;
+  text-shadow: 0 2px 4px #401E12(0, 0, 0, 0.1);
+  margin-top: 150px;
+  margin-bottom: 20px;
+}

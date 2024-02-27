@@ -1,0 +1,130 @@
+.profile-page-container {
+  background: url('../../styles/backgrounds/my-profile-page-background.jpg') no-repeat;
+  background-size: cover;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  position: absolute;
+}
+
+.edit-profile-container {
+  max-width: 600px;
+  margin-top: 180px;
+  margin-left: 150px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  font-family: 'Gotu', sans-serif;
+  letter-spacing: -1px;
+}
+
+.editprofile-inputs,
+.editprofile-shortbio {
+  width: 100%;
+}
+
+.edit-profile-input-item{
+left: 350px;
+position: absolute; 
+margin-bottom: 20px;  
+}
+
+input {
+  border-radius: 0.25rem;
+  outline: none;
+  border: none;
+  box-shadow: 0 2px 4px #8C4303;
+  width: 50%;
+  padding: 10px;
+  margin-bottom: 8px;
+  color: #87152a !important;
+}
+
+textarea{
+  padding: 10px;
+  color: #87152a !important;
+}
+
+.edit-profile-textarea {
+  height: 60px;
+  width: 364px;
+  border-radius: 0.25rem;
+  outline: none;
+  border: none;
+  box-shadow: 0 2px 4px #8C4303;
+  left: 350px;
+  position: absolute;   
+}
+
+.edit-profile-page-btn {
+  border-radius: 50%;
+  border: none;
+  box-shadow: 0 2px 4px #8C4303;
+  width: 60px;
+  height: 60px;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+  letter-spacing: -1px;
+  color: #FFFFFF;
+  font-weight: 600;
+  background-color: #A64153;
+  box-shadow: 0 2px 4px #8C4E37;
+  top: 720px;
+  left: 500px;
+  position: absolute;
+}
+
+.edit-profile-page-btn:hover {
+  background-color: #a33348;
+  cursor: pointer;
+}
+
+.edit-profile-name{
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: -1px;
+  color: #593202;
+  left: 470px;
+  margin-bottom: 20px;
+  position: absolute;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  letter-spacing: -1px;
+  color: #593202;
+}
+
+.edit-profile-label{
+  display: inline;
+  margin-bottom: 5px;
+  letter-spacing: -1px;
+  color: #593202;
+  margin-right: 20px ;
+}
+
+.error-message, .success-message{
+  margin: 0 auto;
+  position: absolute;
+  bottom: 50px;
+  left: 40%;
+  background-color: antiquewhite;
+  border-radius: 0.25rem;
+  width: fit-content;
+  padding: 10px;
+  opacity: 0.8;
+  font-size: 16px;
+}
+
+.error-message {
+  color: #87152a;
+  border: solid 2px#87152a;
+}
+
+.success-message {
+  color: #025224;
+  border: solid 2px #025224;
+}

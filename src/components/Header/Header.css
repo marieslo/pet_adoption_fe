@@ -1,0 +1,17 @@
+h1 {
+    position: absolute;
+    height: fit-content;
+    width: fit-content;
+    text-align: center;
+    font-family: 'Gotu', sans-serif;
+    letter-spacing: -2px;
+    font-size: 50px;
+    line-height: 1;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    left: 60px;
+    top: 90px;
+    bottom: 0;
+    color: #87152a;
+    z-index: 10;
+    margin-bottom: 20px;
+  }

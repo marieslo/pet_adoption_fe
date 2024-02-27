@@ -1,0 +1,45 @@
+@media (max-width: 768px) {
+  .home-page-greeting {
+    line-height: 0.5;
+    margin-top: 50px;
+    font-size: 14px !important;
+    line-height: 1.1 !important;
+  }
+}
+
+.home-page-container {
+  position: absolute;
+  background: url('../../styles/backgrounds/home-page-background.jpg') right no-repeat;
+  background-size: cover;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+}
+
+.home-page-greeting, h3 {
+  font-family: 'Gotu', sans-serif;
+  letter-spacing: -1px;
+  margin-top: 200px;
+  margin-left: 150px;
+  margin-bottom: 100px;
+  width: 400px;
+  font-size: 1.2rem;
+  color: #593202;
+}
+
+.they-need-your-love, .call-to-action{
+  font-family: 'Gotu', sans-serif;
+  letter-spacing: -1px;
+  width: 400px;
+  font-size: 1.2rem;
+  color: #593202;
+}
+
+.home-page-allpetsfeed-container {
+  overflow-x: auto;
+  padding: 10px;
+  white-space: nowrap;
+  position: relative;
+  margin-top: 200px;
+  margin-left: 50px;
+}

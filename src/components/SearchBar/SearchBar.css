@@ -1,0 +1,230 @@
+.searchbar-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 800px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 20px;
+  position: fixed;
+}
+
+.toggle-search-container {
+  top: 160px;
+  left: 90px;
+  display: flex;
+  align-items: flex-start;
+  font-family: 'Gotu', sans-serif;
+  letter-spacing: -1px;
+  width: 102px !important;
+  height: fit-content;
+  border: 1px solid #FFFFFF;
+  border-radius: 50px;
+  position: fixed;
+}
+
+.toggle-search-button {
+  background-color: transparent;
+  color: #FFFFFF;
+  font-size: 14px;
+  border: none;
+  padding: 1px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.toggle-search-button:hover,
+.toggle-search-button:active {
+  background-color: transparent;
+  border: none;
+  border-radius: 50%;
+}
+
+.toggle-handle {
+  width: 60px;
+  height: 60px;
+  background-color: #FFFFFF;
+  border-radius: 50%;
+  transition: transform 0.1s ease;
+  line-height: 0.5;
+  padding: 20px 0 5px 0;
+  font-size: 16px;
+}
+
+.toggle-text {
+  position: static;
+}
+
+.move-left {
+  transform: translateX(0);
+}
+
+.move-right {
+  transform: translateX(61%);
+}
+
+.search-icon {
+  width: 29px;
+  height: 29px;
+  padding: 0;
+}
+
+.search-bar-btn-container {
+  left: 190px;
+  top: 60px;
+  position: absolute;
+}
+
+.search-bar-btn{
+  border-radius: 50%;
+  border: none;
+  box-shadow: 0 2px 4px #8C4303;
+  width: 60px;
+  height: 60px;
+  top: 30px;
+  right: -120px;
+  transition: background-color 0.3s ease;
+  letter-spacing: -1px;
+  color: #FFFFFF;
+  font-weight: 600;
+  background-color: #A64153;
+  box-shadow: 0 2px 4px #8C4E37;
+  position: absolute;
+}
+
+.clear-results-btn{
+  border-radius: 50%;
+  border: none;
+  box-shadow: 0 2px 4px #8C4303;
+  width: 60px;
+  height: 60px;
+  transition: background-color 0.3s ease;
+  letter-spacing: -1px;
+  color: #A64153;
+  font-weight: 600;
+  margin: 10px;
+  box-shadow: 0 2px 4px #8C4E37;
+  font-family: 'Gotu', sans-serif;
+  letter-spacing: -1px;
+  font-size: 12px;
+  top: 20px;
+  right: -200px;
+  position: absolute;
+  line-height: 1.1;
+}
+
+.search-bar-btn:hover {
+  background-color: #a71731;
+}
+
+.clear-results-btn:hover {
+  color: #9e9193;
+}
+
+.searchbar-fields {
+  flex-grow: 1;
+  margin-top: 150px;
+}
+
+.advanced-search-fields {
+  display: flex;
+  flex-direction: column;
+}
+
+.select-pet-type, .select-pet-status, select, slot, option{
+  height: 36px;
+  width: 364px !important;
+  font-size: 16px !important;
+  font-family: 'Gotu', sans-serif;
+  color: grey;
+  background-color: #FFFFFF !important;
+  border-radius: 0.25rem;
+  box-shadow: 0 2px 4px #8C4303;
+  padding: 5px;
+  letter-spacing: -1px;
+}
+
+.select-pet-type{
+  margin: 5px 5px -15px 0px;
+}
+
+.select-pet-status {
+  margin: 10px 5px 5px 0px;
+}
+
+select, slot, option, :in-range {
+  margin-bottom: 10px;
+}
+
+.range-input{
+  height: 36px;
+  width: 364px !important;
+  font-size: 16px !important;
+  font-family: 'Gotu', sans-serif;
+  background-color: #FFFFFF !important;
+  border-radius: 0.25rem;
+  margin-bottom: 10px;
+  padding-right: 5px;
+} 
+
+
+input[type="range"] {
+  -webkit-appearance: none; 
+  appearance: none;
+  width: 100%; 
+  height: 10px; 
+  background-color:  transparent; 
+  border: none !important;
+  border-radius: 5px; 
+  outline: none; 
+  margin: 15px 0;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px; 
+  height: 10px; 
+  background: 
+  linear-gradient(to bottom, #837364, #D7C3B8);
+  border-radius: 50%; 
+  cursor: pointer; 
+  margin-top: 20px;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 10px; 
+  height: 10px; 
+  background: 
+  linear-gradient(to bottom, #837364, #D7C3B8);
+  border-radius: 50%; 
+  cursor: pointer; 
+} 
+
+.range-input-container {
+  position: relative;
+}
+
+.range-input {
+  margin-bottom: 10px;
+}
+
+.placeholder-label {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-size: 16px;
+  color: grey;
+  letter-spacing: -1;
+  pointer-events: none;
+}
+
+.range-input:not(:placeholder-shown) + .placeholder-label {
+  display: none;
+}
+
+.weight{
+  top: 52px;
+}
