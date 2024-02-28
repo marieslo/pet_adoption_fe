@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import localforage from 'localforage';
 import './LoginSignUp.css';
+import { SERVER_URL } from '../../../api';
 
 export default function LoginSignUpModal({ show, onHide }) {
   const [isLoginPage, setIsLoginPage] = useState(true);
@@ -23,7 +24,7 @@ export default function LoginSignUpModal({ show, onHide }) {
 
   const handleLogin = async (userData) => {
     try {
-      const response = await axios.post('http://localhost:3000/auth/login', userData);
+      const response = await axios.post(`${SERVER_URL}/auth/login`, userData);
       const { data: { user, token } } = response;
       await localforage.setItem('user', JSON.stringify(user));
       await localforage.setItem('token', token);
@@ -36,7 +37,7 @@ export default function LoginSignUpModal({ show, onHide }) {
   
   const handleSignup = async (formData) => {
     try {
-      const response = await axios.post('http://localhost:3000/auth/signup', formData);
+      const response = await axios.post(`${SERVER_URL}/auth/signup`, formData);
       const { data: { user, token } } = response;
       await localforage.setItem('user', JSON.stringify(user));
       await localforage.setItem('token', token);

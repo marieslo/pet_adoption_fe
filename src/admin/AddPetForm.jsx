@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Spinner } from 'react-bootstrap';
 import axios from 'axios';
+import { SERVER_URL } from '../../api';
 
 export default function AddPetForm() {
   const initialState = {
@@ -36,7 +37,7 @@ export default function AddPetForm() {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:3000/pets/addpet', petDetails);
+      const response = await axios.post(`${SERVER_URL}/pets/addpet`, petDetails);
       setPetDetails(initialState);
       setLoading(false);
       setShowSuccessMessage(true);

@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Table, Button, Modal, Spinner } from 'react-bootstrap';
 import './AdminDashboards.css';
 import axios from 'axios';
+import { SERVER_URL } from '../../api';
 
 const itemsPerPage = 4;
 
@@ -24,7 +25,7 @@ export default function PetsDashboard() {
 
   const fetchPets = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/pets');
+      const response = await axios.get(`${SERVER_URL}/pets`);
       setPets(response.data);
       setLoading(false);
     } catch (error) {
@@ -39,7 +40,7 @@ export default function PetsDashboard() {
 
   const handleDeleteConfirm = async () => {
     try {
-      await axios.delete(`http://localhost:3000/pets/${selectedPet._id}`);
+      await axios.delete(`${SERVER_URL}/pets/${selectedPet._id}`);
       fetchPets();
       setShowDeleteModal(false);
     } catch (error) {

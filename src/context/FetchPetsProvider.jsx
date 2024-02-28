@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import localforage from 'localforage';
 import axios from 'axios';
+import { SERVER_URL } from '../../api';
 
 export const FetchPetsContext = createContext();
 
@@ -16,7 +17,7 @@ export default function FetchPetsProvider ({ children })  {
 
   const fetchPets = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:3000/pets');
+      const response = await axios.get(`${SERVER_URL}/pets`);
       return response.data;
     } catch (error) {
       throw new Error(`Error fetching pets: ${error.message}`);
@@ -25,7 +26,7 @@ export default function FetchPetsProvider ({ children })  {
 
   const fetchAdoptablePets = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:3000/pets/search', {
+      const response = await axios.get(`${SERVER_URL}/pets/search`, {
         params: { adoptionStatus: 'adoptable' }
       });
       return response.data;
@@ -37,7 +38,7 @@ export default function FetchPetsProvider ({ children })  {
   const fetchPetById = useCallback(async (id) => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:3000/pets/${id}`);
+      const response = await axios.get(`${SERVER_URL}/pets/${id}`);
       return response.data;
     } catch (error) {
       console.error(`Error fetching pet by ID ${id}: ${error.message}`);
@@ -72,7 +73,7 @@ export default function FetchPetsProvider ({ children })  {
   const searchPets = async (searchParams) => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:3000/pets/search', { params: searchParams });
+      const response = await axios.get(`${SERVER_URL}/pets/search`, { params: searchParams });
       const filteredPets = response.data.filter(pet => !pet.deleted);
       return filteredPets;
     } catch (error) {

@@ -3,6 +3,7 @@ import { Modal } from 'react-bootstrap';
 import './AdminDashboards.css';
 import { useNavigate } from 'react-router-dom'; 
 import axios from 'axios';
+import { SERVER_URL } from '../../api';
 
 export default function UserPetsModal({ showUserPetsModal, setShowUserPetsModal, selectedUser }) {
   const [userPets, setUserPets] = useState([]);
@@ -12,7 +13,7 @@ export default function UserPetsModal({ showUserPetsModal, setShowUserPetsModal,
     const fetchUserPets = async () => {
       if (selectedUser) {
         try {
-          const response = await axios.get(`http://localhost:3000/users/profile/${selectedUser.id}/pets`);
+          const response = await axios.get(`${SERVER_URL}/users/profile/${selectedUser.id}/pets`);
           const userData = response.data;
           setUserPets(userData);
         } catch (error) {

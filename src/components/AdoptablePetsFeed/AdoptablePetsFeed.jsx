@@ -5,6 +5,7 @@ import { useFetchPets } from '../../context/FetchPetsProvider';
 import { AuthContext } from '../../context/AuthProvider';
 import PetCard from '../PetCard/PetCard';
 import './AdoptablePetsFeed.css';
+import { SERVER_URL } from '../../../api';
 
 export default function AdoptablePetsFeed() {
   const { loading, adoptablePets, fetchPets } = useFetchPets();
@@ -25,7 +26,7 @@ export default function AdoptablePetsFeed() {
   const handleLike = async (pet) => {
     if (isAuthenticated) {
       try {
-        await axios.post(`http://localhost:3000/pets/${pet._id}/like`, { userId: user.id });
+        await axios.post(`${SERVER_URL}/pets/${pet._id}/like`, { userId: user.id });
         console.log(`User ${user.username} liked pet with ID ${pet._id}`);
       } catch (error) {
         console.error('Error liking pet:', error.message);

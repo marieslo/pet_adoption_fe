@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import localforage from 'localforage';
 import axios from 'axios';
+import { SERVER_URL } from '../../api';
 
 export const AuthContext = createContext();
 
@@ -34,7 +35,7 @@ export const AuthProvider = ({ children }) => {
 
   const handleUserLogin = async (userData) => {
     try {
-      const response = await axios.post('http://localhost:3000/auth/login', userData);
+      const response = await axios.post(`${SERVER_URL}/auth/login`, userData);
       const loggedInUser = response.data.user;
       setUser(loggedInUser);
       setIsAdmin(loggedInUser && loggedInUser.role === 'admin');
@@ -63,7 +64,7 @@ export const AuthProvider = ({ children }) => {
       if (!user || !user._id) {
         throw new Error('User ID not found');
       }
-      const response = await axios.put(`http://localhost:3000/users/profile/${user._id}`, userData);
+      const response = await axios.put(`${SERVER_URL}/users/profile/${user._id}`, userData);
       const updatedUser = response.data;
       setUser(updatedUser);
       await localforage.setItem('user', JSON.stringify(updatedUser));
@@ -75,7 +76,7 @@ export const AuthProvider = ({ children }) => {
 
   const updateUserPassword = async (currentPassword, newPassword) => {
     try {
-      const response = await axios.put(`http://localhost:3000/users/profile/${user._id}/password`, { currentPassword, newPassword });
+      const response = await axios.put(`${SERVER_URL}/users/profile/${user._id}/password`, { currentPassword, newPassword });
       console.log(response.data);
     } catch (error) {
       console.error('Error updating user password:', error);

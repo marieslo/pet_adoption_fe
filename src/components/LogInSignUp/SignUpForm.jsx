@@ -3,6 +3,7 @@ import { Form, Alert, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 import localforage from 'localforage';
 import { useAuth } from '../../context/AuthProvider';
+import { SERVER_URL } from '../../../api';
 
 export default function SignupForm({ onSignupSuccess }) {
   const [formData, setFormData] = useState({
@@ -35,7 +36,7 @@ export default function SignupForm({ onSignupSuccess }) {
         throw new Error('Invalid phone number. Please use the format XXXXXX.');
       }
 
-      const response = await axios.post('http://localhost:3000/auth/signup', formData);
+      const response = await axios.post(`${SERVER_URL}/auth/signup`, formData);
       console.log('User registered successfully:', response.data);
       const {
         data: { user, token },

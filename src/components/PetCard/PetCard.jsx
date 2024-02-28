@@ -9,6 +9,7 @@ import './PetCard.css';
 import likeIcon from '../../styles/icons/heart-filled.png';
 import unlikeIcon from '../../styles/icons/heart-outlined.png';
 import seeMoreIcon from '../../styles/icons/seemore.png';
+import { SERVER_URL } from '../../../api';
 
 export default function PetCard({ pet }) {
   const { _id, picture, name } = pet;
@@ -37,7 +38,7 @@ export default function PetCard({ pet }) {
   const fetchPetAdoptionStatus = async () => {
     try {
       if (_id) {
-        const response = await fetch(`http://localhost:3000/pets/${_id}`);
+        const response = await fetch(`${SERVER_URL}/pets/${_id}`);
         const data = await response.json();
         setAdoptionStatus(data.adoptionStatus);
       }

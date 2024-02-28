@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import { SERVER_URL } from '../../api';
 
 export default function EditPetForm() {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ export default function EditPetForm() {
 
   const fetchPetDetails = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/pets/${id}`);
+      const response = await axios.get(`${SERVER_URL}/pets/${id}`);
       setPetDetails(response.data);
     } catch (error) {
       console.error('Error fetching pet details:', error);
@@ -54,7 +55,7 @@ export default function EditPetForm() {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.put(`http://localhost:3000/pets/${id}/details`, petDetails);
+      await axios.put(`${SERVER_URL}/pets/${id}/details`, petDetails);
       setLoading(false);
       setShowSuccessMessage(true);
       setErrorMessage('');

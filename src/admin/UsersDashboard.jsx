@@ -3,6 +3,7 @@ import { Table, Button, Modal, Form, Spinner } from 'react-bootstrap';
 import './AdminDashboards.css';
 import axios from 'axios';
 import UserPetsModal from './UserPetsModal';
+import { SERVER_URL } from '../../api';
 
 const itemsPerPage = 8;
 
@@ -22,7 +23,7 @@ export default function UsersDashboard() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/users');
+      const response = await axios.get(`${SERVER_URL}/users`);
       const modifiedUsers = response.data.map(user => ({ ...user, id: user._id }));
       modifiedUsers.sort((a, b) => a.lastName.localeCompare(b.lastName));
       setUsers(modifiedUsers);
@@ -81,7 +82,7 @@ export default function UsersDashboard() {
   const handleOpenConfirmationModal = async (user) => {
     setSelectedUser(user);
     try {
-      const response = await axios.get(`http://localhost:3000/users/profile/${user.id}/role`);
+      const response = await axios.get(`${SERVER_URL}/users/profile/${user.id}/role`);
       setSelectedUserRole(response.data.role);
       setShowConfirmationModal(true);
     } catch (error) {
@@ -91,7 +92,7 @@ export default function UsersDashboard() {
 
   const updateUser = async (userId, userData) => {
     try {
-      await axios.put(`http://localhost:3000/users/profile/${userId}`, userData);
+      await axios.put(`${SERVER_URL}/users/profile/${userId}`, userData);
       fetchData();
     } catch (error) {
       console.error('Error updating user:', error);
@@ -104,7 +105,7 @@ const deleteUser = async (userId) => {
       console.error('Invalid user ID');
       return;
     }
-    await axios.delete(`http://localhost:3000/users/${userId}`);
+    await axios.delete(`${SERVER_URL}/users/${userId}`);
     fetchData();
   } catch (error) {
     console.error('Error deleting user:', error);

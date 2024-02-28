@@ -31,7 +31,6 @@ export default function SearchPage() {
           <SearchBar onSearch={handleSearch} onClear={handleClearSearch} />
           <div className='searchresults-wrapper'>
             <div className='search-results'>
-              {error && <p>Error: {error.message}</p>}
               <SearchResults petsData={searchTerm ? filteredPets : petsData} loading={false} error={null} />
             </div>
           </div>
