@@ -17,7 +17,6 @@ import SearchPage from './src/pages/SearchPage/SearchPage';
 import MyProfilePage from './src/pages/MyProfilePage/MyProfilePage';
 import MyPetsPage from './src/pages/MyPetsPage/MyPetsPage';
 import SinglePetPage from './src/pages/SinglePetPage/SinglePetPage';
-import PageNotFound from './src/pages/PageNotFound/PageNotFound';
 import './src/styles/style.css';
 
 export default function App() {
@@ -39,7 +38,6 @@ export default function App() {
               <Route path="/pets/addpet/:id" element={<EditPetForm />} />
               <Route path="/petsdashboard" element={<PetsDashboard />} />
               <Route path="/usersdashboard" element={<UsersDashboard />} />
-              <Route path="*" element={<PageNotFound />} />
             </Routes>
             <Footer />
           </Router>
