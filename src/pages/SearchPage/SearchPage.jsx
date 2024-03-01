@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './SearchPage.css';
 import { useFetchPets } from '../../context/FetchPetsProvider';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import SearchResults from '../../components/SearchResults/SearchResults';
 
 export default function SearchPage() {
-  const { petsData, error, searchPets } = useFetchPets();
+  const { petsData, error, searchPets, fetchPets } = useFetchPets();
   const [filteredPets, setFilteredPets] = useState([]);
   const [searchTerm, setSearchTerm] = useState(null);
 
+    useEffect(() => {
+    fetchPets();
+  }, [fetchPets]);
+  
   const handleSearch = async (searchTerm) => {
     try {
       setSearchTerm(searchTerm);
