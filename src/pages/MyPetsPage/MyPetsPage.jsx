@@ -74,9 +74,9 @@ export default function MyPetsPage() {
           onUnlike={unlikePet}
         />
         {!(likedPetsUpdated || adoptedPetsUpdated || fosteredPetsUpdated) && (
-       <p className='they-need-your-love'>
-            Until you have no saved, fostered or adopted pets, take a look at the adoptable ones
-            </p>
+       // <p className='they-need-your-love'>
+       //      Until you have no saved, fostered or adopted pets, take a look at the adoptable ones
+       //      </p>
             <div className='mypets-page-petsfeed-container'>
               <AdoptablePetsFeed />
             </div>
