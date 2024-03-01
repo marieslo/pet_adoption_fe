@@ -73,10 +73,10 @@ export default function MyPetsPage() {
           onLike={likePet}
           onUnlike={unlikePet}
         />
-        <p className='they-need-your-love'>
+        {!(likedPetsUpdated || adoptedPetsUpdated || fosteredPetsUpdated) && (
+       <p className='they-need-your-love'>
             Until you have no saved, fostered or adopted pets, take a look at the adoptable ones
             </p>
-        {!(likedPetsUpdated || adoptedPetsUpdated || fosteredPetsUpdated) && (
             <div className='mypets-page-petsfeed-container'>
               <AdoptablePetsFeed />
             </div>
