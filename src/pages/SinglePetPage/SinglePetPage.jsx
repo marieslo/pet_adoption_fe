@@ -179,20 +179,12 @@ export default function SinglePetPage() {
                 </button>
               </>
             )}
-            {adoptionStatus === 'adopted' || adoptionStatus === 'fostered' && 
-              (
-                <button className='pet-page-btn' onClick={handleReturn}>
-                  Return
-                </button>
-              )}
-            {(!adoptionStatus === 'adoptable' && !isCurrentUserAdopterOrFosterer) && 
-              (
-                <div className="pet-already-has-home-message">
-                  This pet has already found its home.
-                  <br/>
-                  But its status may change later, so you can save it by clicking Like
-                </div>
-              )}
+           {adoptionStatus === 'adopted' && isCurrentUserAdopterOrFosterer || (adoptionStatus === 'fostered' && isCurrentUserAdopterOrFosterer) && 
+            (
+              <button className='pet-page-btn' onClick={handleReturn}>
+                Return
+              </button>
+            )}
           </div>
           </Card.Body>
         </Card>
