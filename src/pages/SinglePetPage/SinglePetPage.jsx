@@ -179,12 +179,12 @@ export default function SinglePetPage() {
                 </button>
               </>
             )}
-           {adoptionStatus === 'adopted' && isCurrentUserAdopterOrFosterer || (adoptionStatus === 'fostered' && isCurrentUserAdopterOrFosterer) && 
-            (
-              <button className='pet-page-btn' onClick={handleReturn}>
-                Return
-              </button>
-            )}
+          {(adoptionStatus === 'fostered' || adoptionStatus === 'adopted') && isCurrentUserAdopterOrFosterer && 
+          (
+            <button className='pet-page-btn' onClick={handleReturn}>
+              Return
+            </button>
+          )}
           </div>
           </Card.Body>
         </Card>
