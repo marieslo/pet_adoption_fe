@@ -1,3 +1,11 @@
+@media screen and (max-width: 768px) {
+  .search-results{
+    top: 450px !important;
+    left: -440px !important;
+    position: absolute;
+  }
+  }
+  
 .search-page-container {
   background: linear-gradient(to bottom,#837364, #D7C3B8);
   display: flex;

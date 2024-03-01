@@ -1,10 +1,14 @@
 @media (max-width: 768px) {
-  .my-pets-lists-wrapper {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    align-items: space-around;
+  .they-need-your-love {
+    font-size: 14px !important;
+    top: -450px !important;
+    left: 60px !important;
+    font-family: 'Gotu', sans-serif;
+    color: #593202;
+    letter-spacing: -1px;
+    text-wrap: wrap;
+    width: 80px !important;
+    position: absolute;
   }
 }
 

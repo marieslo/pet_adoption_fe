@@ -1,3 +1,46 @@
+@media screen and (max-width: 768px) {
+  .edit-profile-container {
+    margin-top: 160px !important;
+    margin-left: 100px;
+  }
+
+  .edit-profile-name{
+    top: 190px !important;
+    left: 70px !important;
+  }
+
+ .edit-profile-input-item {
+    height: 30px !important;
+    position: absolute;
+    left: 250px !important;
+    margin-bottom: 5px !important;
+    color: #87152a !important;
+  }
+  
+  .edit-profile-textarea{
+    left: 250px !important;
+  }
+  
+  .edit-profile-page-btn {
+    top: 620px !important;
+    left: 70px !important;
+    position: absolute;
+  }
+  
+ .edit-profile-label {
+    display: block;
+    letter-spacing: -1px;
+    color: #593202;
+    left: -100px;
+  }
+  
+  .error-message, .success-message{
+    bottom: 50px;
+    left: 50px;
+    position: absolute;
+  }
+}
+
 .profile-page-container {
   background: url('../../styles/backgrounds/my-profile-page-background.jpg') no-repeat;
   background-size: cover;

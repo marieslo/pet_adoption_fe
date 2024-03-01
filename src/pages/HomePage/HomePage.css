@@ -1,9 +1,14 @@
-@media (max-width: 768px) {
-  .home-page-greeting {
-    line-height: 0.5;
-    margin-top: 50px;
+@media screen and (max-width: 768px) {
+  .home-page-container {
+    padding: 20px;
+    align-items: center; 
+  }
+  
+  .home-page-greeting{
     font-size: 14px !important;
-    line-height: 1.1 !important;
+    top: 0% !important;
+    left: 0% !important;
+    position: absolute;
   }
 }
 
