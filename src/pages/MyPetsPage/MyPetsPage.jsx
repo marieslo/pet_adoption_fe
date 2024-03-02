@@ -11,32 +11,28 @@ export default function MyPetsPage() {
     fosteredPets = [], 
     likePet,
     unlikePet,
+    adoptPet,
+    fosterPet,
     unlikedPetsUpdated,
+    adoptedPetsUpdated,
+    fosteredPetsUpdated,
   } = useMyPetsContext();
 
+  const [likedPetsUpdated, setLikedPetsUpdated] = useState(false);
   const [adoptedPetsUpdated, setAdoptedPetsUpdated] = useState(false);
   const [fosteredPetsUpdated, setFosteredPetsUpdated] = useState(false);
-  const [likedPetsUpdated, setLikedPetsUpdated] = useState(false);
-
 
   useEffect(() => {
     setLikedPetsUpdated(unlikedPetsUpdated);
   }, [unlikedPetsUpdated]);
 
   useEffect(() => {
-    if (adoptedPets.length > 0) setAdoptedPetsUpdated(true);
-    else setAdoptedPetsUpdated(false);
-  }, [adoptedPets]);
+    setAdoptedPetsUpdated(adoptedPetsUpdated);
+  }, [adoptedPetsUpdated]);
 
   useEffect(() => {
-    if (fosteredPets.length > 0) setFosteredPetsUpdated(true);
-    else setFosteredPetsUpdated(false);
-  }, [fosteredPets]);
-
-  useEffect(() => {
-    if (likedPets.length > 0) setLikedPetsUpdated(true);
-    else setLikedPetsUpdated(false);
-  }, [likedPets]);
+    setFosteredPetsUpdated(fosteredPetsUpdated);
+  }, [fosteredPetsUpdated]);
 
   const handleUnlikePet = async (petId) => {
     try {
@@ -63,7 +59,7 @@ export default function MyPetsPage() {
           cssClass='fostered'
           pets={fosteredPets}
           onLike={likePet}
-          onUnlike={unlikePet}
+          onAdopt={adoptPet} // Change to onAdopt for fostering
         />
         <PetsList
           key={adoptedPetsUpdated ? 'adoptedUpdated' : 'adopted'}
