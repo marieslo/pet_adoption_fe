@@ -12,7 +12,7 @@ import unlikeIcon from '../../styles/icons/heart-outlined.png';
 export default function SinglePetPage() {
   const { id } = useParams();
   const { fetchPetById } = useContext(FetchPetsContext);
-  const { likePet, unlikePet, adoptPet, fosterPet, returnPet } = useMyPetsContext(); 
+  const { likePet, unlikePet, adoptPet, fosterPet, returnPet, adoptedPets, fosteredPets } = useMyPetsContext(); 
   const { user } = useAuth();
 
   const [showAlert, setShowAlert] = useState(false);
