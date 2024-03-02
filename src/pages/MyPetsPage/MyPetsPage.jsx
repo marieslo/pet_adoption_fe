@@ -25,6 +25,8 @@ export default function MyPetsPage() {
     setLikedPetsUpdated(unlikedPetsUpdated || adoptedPetsUpdated || fosteredPetsUpdated);
   }, [unlikedPetsUpdated, adoptedPetsUpdated, fosteredPetsUpdated]);
 
+  const hasPets = likedPets.length > 0 || adoptedPets.length > 0 || fosteredPets.length > 0;
+
   return (
     <div className='my-pets-page-container'>
       <div className='my-pets-lists-wrapper'>
@@ -59,7 +61,7 @@ export default function MyPetsPage() {
           onReturn={returnPet}
         />
 
-        {!(likedPetsUpdated || adoptedPetsUpdated || fosteredPetsUpdated) && (
+        {!hasPets && (
           <div className='they-need-your-love'>
             <p>
               For now, you don't have any saved, adopted, or fostered pets.
