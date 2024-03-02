@@ -163,7 +163,7 @@ export default function SinglePetPage() {
               <Card.Text><u>Breed:</u> {breed}</Card.Text>
             </div>
             <div className="pet-buttons">
-              {(adoptionStatus === 'adoptable') && (
+               {(adoptionStatus === 'adoptable') && (
                 <>
                   <button className='pet-page-btn' onClick={handleAdopt}>
                     Adopt
@@ -173,7 +173,7 @@ export default function SinglePetPage() {
                   </button>
                 </>
               )}
-              {isOwner && ( 
+              {(adoptionStatus !== 'adoptable' && isOwner) && ( 
                 <button
                   className='pet-page-btn'
                   onClick={handleReturn}
