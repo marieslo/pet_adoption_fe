@@ -163,7 +163,7 @@ export default function SinglePetPage() {
               <Card.Text><u>Breed:</u> {breed}</Card.Text>
             </div>
             <div className="pet-buttons">
-              {(adoptionStatus === 'adoptable') && (
+             {(adoptionStatus === 'adoptable') ? (
                 <>
                   <button className='pet-page-btn' onClick={handleAdopt}>
                     Adopt
@@ -172,14 +172,15 @@ export default function SinglePetPage() {
                     Foster
                   </button>
                 </>
-              )}
-              {!(adoptionStatus === 'adoptable') && isOwner && ( 
-                <button
-                  className='pet-page-btn'
-                  onClick={handleReturn}
-                >
-                  Return
-                </button>
+              ) : (
+                isOwner && (
+                  <button
+                    className='pet-page-btn'
+                    onClick={handleReturn}
+                  >
+                    Return
+                  </button>
+                )
               )}
             </div>
           </Card.Body>
