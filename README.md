@@ -12,7 +12,7 @@ _This is a MERN full-stack project.\
 - React
 - Axios for requests from the client- to the server-side
 - Cloudinary for uploading files
-- Frontend was deployed on [Netify](https://pet-adoption-fe.netlify.app/)
+- Frontend deployed on [Netify](https://pet-adoption-fe.netlify.app/)
 
 ### To run locally: 
 - npm i
