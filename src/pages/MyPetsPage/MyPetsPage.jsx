@@ -30,7 +30,7 @@ export default function MyPetsPage() {
     const updatedAdoptedPets = adoptedPets.filter(petId => !fosteredPets.includes(petId));
     fosterPet(updatedFosteredPets);
     adoptPet(updatedAdoptedPets);
-  }, [fosterPet, adoptPet, returnPet, adoptedPets, fosteredPets]);
+  }, [fosterPet, adoptPet, adoptedPets, fosteredPets]);
 
   const hasPets = likedPets.length > 0 || adoptedPets.length > 0 || fosteredPets.length > 0;
 
