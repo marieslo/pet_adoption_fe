@@ -62,7 +62,7 @@ export default function MyPetsPage() {
           cssClass='adopted'
           pets={adoptedPets}
           onLike={likePet}
-          onUnlike={unlikePet}
+          onUnlike={handleUnlikePet} 
         />
 
         {!(likedPetsUpdated || adoptedPetsUpdated || fosteredPetsUpdated) && (
