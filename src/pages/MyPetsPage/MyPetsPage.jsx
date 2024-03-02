@@ -49,6 +49,14 @@ export default function MyPetsPage() {
 return (
   <div className='my-pets-page-container'>
     <div className='my-pets-lists-wrapper'>
+        <PetsList
+        key={likedPetsUpdated ? 'likedUpdated' : 'liked'}
+        title='Liked'
+        cssClass='liked'
+        pets={likedPets}
+        onLike={likePet}
+        onUnlike={handleUnlikePet}
+      />
       {adoptedPets.length > 0 && (
         <PetsList
           key={adoptedPetsUpdated ? 'adoptedUpdated' : 'adopted'}
