@@ -57,7 +57,7 @@ export default function MyPetsPage() {
           onReturn={returnPet}
         />
 
-        {!(likedPetsUpdated || adoptedPetsUpdated || fosteredPetsUpdated) && (
+        {(likedPets.length === 0 && adoptedPets.length === 0 && fosteredPets.length === 0) && (
           <div className='they-need-your-love'>
             <p>
               For now, you don't have any saved, adopted, or fostered pets.
