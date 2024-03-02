@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from './AuthProvider';
+import { useParams } from 'react-router-dom'; 
 import { SERVER_URL } from '../../api';
 
 const MyPetsContext = createContext();
@@ -9,6 +10,7 @@ export const useMyPetsContext = () => useContext(MyPetsContext);
 
 export default function MyPetsProvider ({ children }) {
   const { user } = useAuth();
+  const { id } = useParams(); 
   const [likedPets, setLikedPets] = useState([]);
   const [adoptedPets, setAdoptedPets] = useState([]);
   const [fosteredPets, setFosteredPets] = useState([]);
