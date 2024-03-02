@@ -14,9 +14,7 @@ export default function MyPetsProvider ({ children }) {
   const [fosteredPets, setFosteredPets] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [likedPetsUpdated, setLikedPetsUpdated] = useState(false);
-  const [adoptedPetsUpdated, setAdoptedPetsUpdated] = useState(false);
-  const [fosteredPetsUpdated, setFosteredPetsUpdated] = useState(false);
+  const [unlikedPetsUpdated, setUnlikedPetsUpdated] = useState(false); 
 
   useEffect(() => {
     const fetchUserPets = async () => {
@@ -37,64 +35,13 @@ export default function MyPetsProvider ({ children }) {
       }
     };
     fetchUserPets();
-  }, [user, likedPetsUpdated, adoptedPetsUpdated, fosteredPetsUpdated]);
+  }, [user, unlikedPetsUpdated]); 
 
-   useEffect(() => {
-    if (adoptedPets.length > 0) {
-      setAdoptedPetsUpdated(true);
-    }
-  }, [adoptedPets]);
-
-  useEffect(() => {
-    if (fosteredPets.length > 0) {
-      setFosteredPetsUpdated(true);
-    }
-  }, [fosteredPets]);
-
-   const fetchAdoptedPets = async () => {
-    setLoading(true);
-    try {
-      if (user && user._id) {
-        const response = await axios.get(`${SERVER_URL}/users/profile/${user._id}/adoptedPets`);
-        const userData = response.data;
-        setAdoptedPets(userData.adoptedPets || []);
-      }
-    } catch (error) {
-      console.error('Error fetching adopted pets:', error);
-      setError(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchFosteredPets = async () => {
-    setLoading(true);
-    try {
-      if (user && user._id) {
-        const response = await axios.get(`${SERVER_URL}/users/profile/${user._id}/fosteredPets`);
-        const userData = response.data;
-        setFosteredPets(userData.fosteredPets || []);
-      }
-    } catch (error) {
-      console.error('Error fetching fostered pets:', error);
-      setError(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (user && user._id) {
-      fetchAdoptedPets();
-      fetchFosteredPets();
-    }
-  }, [user]);
-  
   const likePet = async (petId) => {
     try {
       await axios.post(`${SERVER_URL}/pets/${petId}/like`, { userId: user._id });
       setLikedPets(prevLikedPets => [...prevLikedPets, petId]);
-      setLikedPetsUpdated(true);
+      setUnlikedPetsUpdated(true); 
     } catch (error) {
       console.error('Error liking pet:', error);
       setError(error);
@@ -105,47 +52,39 @@ export default function MyPetsProvider ({ children }) {
     try {
       await axios.delete(`${SERVER_URL}/pets/${petId}/unlike/${user._id}`);
       setLikedPets(prevLikedPets => prevLikedPets.filter(id => id !== petId));
-      setLikedPetsUpdated(true);
+      setUnlikedPetsUpdated(false); 
     } catch (error) {
       console.error('Error unliking pet:', error);
       setError(error);
     }
   };
 
-const adoptPet = async (petId) => {
-  try {
-    await axios.put(`${SERVER_URL}/pets/${petId}/adopt`, { userId: user._id });
-    setAdoptedPets(prevAdoptedPets => [...prevAdoptedPets, petId]);
-    setAdoptedPetsUpdated(true); 
-  } catch (error) {
-    console.error('Error adopting pet:', error);
-    setError(error);
-  }
-};
+  const adoptPet = async (petId) => {
+    try {
+      await axios.put(`${SERVER_URL}/pets/${petId}/adopt`, { userId: user._id });
+    } catch (error) {
+      console.error('Error adopting pet:', error);
+      setError(error);
+    }
+  };
 
-const fosterPet = async (petId) => {
-  try {
-    await axios.put(`${SERVER_URL}/pets/${petId}/foster`, { userId: user._id });
-    setFosteredPets(prevFosteredPets => [...prevFosteredPets, petId]);
-    setFosteredPetsUpdated(true); 
-  } catch (error) {
-    console.error('Error fostering pet:', error);
-    setError(error);
-  }
-};
+  const fosterPet = async (petId) => {
+    try {
+      await axios.put(`${SERVER_URL}/pets/${petId}/foster`, { userId: user._id });
+    } catch (error) {
+      console.error('Error fostering pet:', error);
+      setError(error);
+    }
+  };
 
-const returnPet = async (petId) => {
-  try {
-    await axios.put(`${SERVER_URL}/pets/${petId}/return`, { userId: user._id });
-    setAdoptedPets(prevAdoptedPets => prevAdoptedPets.filter(id => id !== petId));
-    setAdoptedPetsUpdated(true);
-    setFosteredPets(prevFosteredPets => prevFosteredPets.filter(id => id !== petId));
-    setFosteredPetsUpdated(true);
-  } catch (error) {
-    console.error('Error returning pet:', error);
-    setError(error);
-  }
-};
+  const returnPet = async (petId) => {
+    try {
+      await axios.put(`${SERVER_URL}/pets/${petId}/return`, { userId: user._id });
+    } catch (error) {
+      console.error('Error returning pet:', error);
+      setError(error);
+    }
+  };
 
   return (
     <MyPetsContext.Provider
@@ -164,14 +103,8 @@ const returnPet = async (petId) => {
         returnPet,
         error,
         loading,
-        likedPetsUpdated,
-        setLikedPetsUpdated,
-        adoptedPetsUpdated,
-        setAdoptedPetsUpdated,
-        fosteredPetsUpdated,
-        setFosteredPetsUpdated,
-        fetchAdoptedPets,
-        fetchFosteredPets
+        unlikedPetsUpdated,
+        setUnlikedPetsUpdated, 
       }}
     >
       {children}
