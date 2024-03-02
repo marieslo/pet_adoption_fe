@@ -12,18 +12,13 @@ import unlikeIcon from '../../styles/icons/heart-outlined.png';
 export default function SinglePetPage() {
   const { id } = useParams();
   const { fetchPetById } = useContext(FetchPetsContext);
-  const { likePet, unlikePet, adoptPet, fosterPet, returnPet, adoptedPets, fosteredPets } = useMyPetsContext(); 
+  const { likePet, unlikePet, adoptPet, fosterPet, returnPet, isCurrentUserAdopterOrFosterer } = useMyPetsContext(); 
   const { user } = useAuth();
 
   const [showAlert, setShowAlert] = useState(false);
   const [loading, setLoading] = useState(true);
   const [petData, setPetData] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
-
-  const isCurrentUserAdopterOrFosterer = user && petData && (
-    (petData.adoptionStatus === 'adopted' && adoptedPets.includes(id)) ||
-    (petData.adoptionStatus === 'fostered' && fosteredPets.includes(id))
-  );
 
   useEffect(() => {
     const fetchPetData = async () => {
@@ -180,12 +175,12 @@ export default function SinglePetPage() {
                 </>
               )}
               {(adoptionStatus === 'adopted' || adoptionStatus === 'fostered') && 
-                (isCurrentUserAdopterOrFosterer) && (
+                (isCurrentUserAdopterOrFosterer(id)) && (
                   <button className='pet-page-btn' onClick={handleReturn}>
                     Return
                   </button>
                 )}
-              {!(adoptionStatus === 'adoptable' || isCurrentUserAdopterOrFosterer) && 
+              {!(adoptionStatus === 'adoptable' || isCurrentUserAdopterOrFosterer(id)) && 
                 (
                   <div className="pet-already-has-home-message">
                     This pet has already found its home.
