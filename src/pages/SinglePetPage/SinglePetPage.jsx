@@ -174,7 +174,8 @@ export default function SinglePetPage() {
                   </button>
                 </>
               )}
-              {(adoptionStatus === 'adopted' || adoptionStatus === 'fostered') && (
+             {(adoptionStatus === 'adopted' || adoptionStatus === 'fostered') && isCurrentUserAdopterOrFosterer(id) && 
+                (
                 <button
                   className='pet-page-btn'
                   onClick={handleReturn}
@@ -182,7 +183,7 @@ export default function SinglePetPage() {
                   Return
                 </button>
               )}
-              {!(adoptionStatus === 'adopted' || adoptionStatus === 'fostered') && isCurrentUserAdopterOrFosterer(id) && 
+              {(adoptionStatus === 'adopted' || adoptionStatus === 'fostered') && !isCurrentUserAdopterOrFosterer(id) && 
                 (
                   <div className="pet-already-has-home-message">
                     This pet has already found its home.
