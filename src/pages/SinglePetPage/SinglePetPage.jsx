@@ -179,14 +179,14 @@ export default function SinglePetPage() {
                   </button>
                 </>
               )}
-                {isOwner(id) && (
-              <button
-                className='pet-page-btn'
-                onClick={handleReturn}
-              >
-                Return
-              </button>
-            )}
+              {isOwner && ( 
+                <button
+                  className='pet-page-btn'
+                  onClick={handleReturn}
+                >
+                  Return
+                </button>
+              )}
             </div>
           </Card.Body>
         </Card>
