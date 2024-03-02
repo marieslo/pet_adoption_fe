@@ -8,7 +8,8 @@ export default function MyPetsPage() {
   const {
     likedPets = [], 
     adoptedPets = [],
-    fosteredPets = [], 
+    fosteredPets = [],
+    returnedPets = [], 
     likePet,
     unlikePet,
     adoptPet,
@@ -25,27 +26,28 @@ export default function MyPetsPage() {
     setLikedPetsUpdated(unlikedPetsUpdated || adoptedPetsUpdated || fosteredPetsUpdated);
   }, [unlikedPetsUpdated, adoptedPetsUpdated, fosteredPetsUpdated]);
 
-useEffect(() => {
-  const updatedFosteredPets = fosteredPets.filter(petId => !adoptedPets.includes(petId));
-  const updatedAdoptedPets = adoptedPets.filter(petId => !fosteredPets.includes(petId));
-  const updatedReturnedPets = returnedPets.filter(petId => !(adoptedPets.includes(petId) || fosteredPets.includes(petId)));
-  fosterPet(updatedFosteredPets);
-  adoptPet(updatedAdoptedPets);
-  returnPet(updatedReturnedPets);
-}, [fosterPet, adoptPet, returnPet, adoptedPets, fosteredPets, returnedPets]);
-  
+  useEffect(() => {
+    const updatedFosteredPets = fosteredPets.filter(petId => !adoptedPets.includes(petId));
+    const updatedAdoptedPets = adoptedPets.filter(petId => !fosteredPets.includes(petId));
+    const updatedReturnedPets = returnedPets.filter(petId => !(adoptedPets.includes(petId) || fosteredPets.includes(petId)));
+
+    fosterPet(updatedFosteredPets);
+    adoptPet(updatedAdoptedPets);
+    returnPet(updatedReturnedPets);
+  }, [fosterPet, adoptPet, returnPet, adoptedPets, fosteredPets, returnedPets]);
+
   const hasPets = likedPets.length > 0 || adoptedPets.length > 0 || fosteredPets.length > 0;
 
   return (
     <div className='my-pets-page-container'>
       <div className='my-pets-lists-wrapper'>
         <PetsList
-         key={likedPetsUpdated ? 'likedUpdated' : 'liked'}
-         title='Liked'
-         cssClass='liked'
-         pets={likedPets}
-         onLike={likePet}
-         onUnlike={unlikePet} 
+          key={likedPetsUpdated ? 'likedUpdated' : 'liked'}
+          title='Liked'
+          cssClass='liked'
+          pets={likedPets}
+          onLike={likePet}
+          onUnlike={unlikePet} 
         />
         <PetsList
           key={fosteredPetsUpdated ? 'fosteredUpdated' : 'fostered'}
