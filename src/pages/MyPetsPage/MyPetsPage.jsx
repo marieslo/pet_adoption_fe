@@ -51,7 +51,7 @@ export default function MyPetsPage() {
           key={adoptedPetsUpdated ? 'adoptedUpdated' : 'adopted'}
           title='Adopted'
           cssClass='adopted'
-          pets={adoptedPets}
+          pets={adoptedPets} 
           onLike={likePet}
           onUnlike={unlikePet}
           onReturn={returnPet}
