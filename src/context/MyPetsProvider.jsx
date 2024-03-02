@@ -94,6 +94,10 @@ export default function MyPetsProvider ({ children }) {
     }
   };
 
+  const isOwner = (petId) => {
+  return adoptedPets.includes(petId) || fosteredPets.includes(petId);
+};
+  
   return (
     <MyPetsContext.Provider
       value={{
@@ -117,6 +121,7 @@ export default function MyPetsProvider ({ children }) {
         setAdoptedPetsUpdated,
         fosteredPetsUpdated,
         setFosteredPetsUpdated,
+        isOwner
       }}
     >
       {children}
