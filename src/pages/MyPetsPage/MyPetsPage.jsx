@@ -8,7 +8,7 @@ export default function MyPetsPage() {
   const {
     likedPets = [], 
     adoptedPets = [],
-    fosteredPets = [],
+    fosteredPets = [], 
     likePet,
     unlikePet,
     adoptPet,
@@ -26,11 +26,11 @@ export default function MyPetsPage() {
   }, [unlikedPetsUpdated, adoptedPetsUpdated, fosteredPetsUpdated]);
 
   useEffect(() => {
-    const updatedFosteredPets = fosteredPets.filter(petId => !adoptedPets.includes(petId));
     const updatedAdoptedPets = adoptedPets.filter(petId => !fosteredPets.includes(petId));
-    fosterPet(updatedFosteredPets);
+    const updatedFosteredPets = fosteredPets.filter(petId => !adoptedPets.includes(petId));
     adoptPet(updatedAdoptedPets);
-  }, [fosterPet, adoptPet, adoptedPets, fosteredPets]);
+    fosterPet(updatedFosteredPets);
+  }, [adoptPet, fosterPet, adoptedPets, fosteredPets]);
 
   const hasPets = likedPets.length > 0 || adoptedPets.length > 0 || fosteredPets.length > 0;
 
@@ -38,12 +38,12 @@ export default function MyPetsPage() {
     <div className='my-pets-page-container'>
       <div className='my-pets-lists-wrapper'>
         <PetsList
-          key={likedPetsUpdated ? 'likedUpdated' : 'liked'}
-          title='Liked'
-          cssClass='liked'
-          pets={likedPets}
-          onLike={likePet}
-          onUnlike={unlikePet} 
+         key={likedPetsUpdated ? 'likedUpdated' : 'liked'}
+         title='Liked'
+         cssClass='liked'
+         pets={likedPets}
+         onLike={likePet}
+         onUnlike={unlikePet} 
         />
         <PetsList
           key={fosteredPetsUpdated ? 'fosteredUpdated' : 'fostered'}
