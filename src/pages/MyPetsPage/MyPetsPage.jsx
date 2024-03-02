@@ -49,30 +49,32 @@ export default function MyPetsPage() {
   return (
     <div className='my-pets-page-container'>
       <div className='my-pets-lists-wrapper'>
-        <PetsList
-         key={likedPetsUpdated ? 'likedUpdated' : 'liked'}
-         title='Liked'
-         cssClass='liked'
-         pets={likedPets}
-         onLike={likePet}
-         onUnlike={handleUnlikePet} 
-        />
-        <PetsList
-          key={fosteredPetsUpdated ? 'fosteredUpdated' : 'fostered'}
-          title='Fostered'
-          cssClass='fostered'
-          pets={fosteredPets}
-          onLike={likePet}
-          onUnlike={handleUnlikePet} 
-        />
-        <PetsList
-          key={adoptedPetsUpdated ? 'adoptedUpdated' : 'adopted'}
-          title='Adopted'
-          cssClass='adopted'
-          pets={adoptedPets}
-          onLike={likePet}
-          onUnlike={handleUnlikePet} 
-        />
+       <PetsList
+        key={likedPetsUpdated ? 'likedUpdated' : 'liked'}
+        title='Liked'
+        cssClass='liked'
+        pets={likedPets}
+        onLike={likePet}
+        onUnlike={handleUnlikePet}
+      />
+      
+      <PetsList
+        key={fosteredPetsUpdated ? 'fosteredUpdated' : 'fostered'}
+        title='Fostered'
+        cssClass='fostered'
+        pets={fosteredPets}
+        onLike={likePet}
+        onUnlike={handleUnlikePet}
+      />
+      
+      <PetsList
+        key={adoptedPetsUpdated ? 'adoptedUpdated' : 'adopted'}
+        title='Adopted'
+        cssClass='adopted'
+        pets={adoptedPets}
+        onLike={likePet}
+        onUnlike={handleUnlikePet}
+      />
 
         {!(likedPetsUpdated || adoptedPetsUpdated || fosteredPetsUpdated) && (
           <div className='they-need-your-love'>
