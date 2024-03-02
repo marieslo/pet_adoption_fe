@@ -36,8 +36,14 @@ export default function MyPetsProvider ({ children }) {
         setLoading(false);
       }
     };
+  
     fetchUserPets();
   }, [user, likedPetsUpdated, adoptedPetsUpdated, fosteredPetsUpdated]);
+
+  const isCurrentUserAdopterOrFosterer = (petId) => {
+    return adoptedPets.includes(petId) || fosteredPets.includes(petId);
+  };
+
 
   const likePet = async (petId) => {
     try {
@@ -117,6 +123,7 @@ const returnPet = async (petId) => {
         setAdoptedPetsUpdated,
         fosteredPetsUpdated,
         setFosteredPetsUpdated,
+        isCurrentUserAdopterOrFosterer
       }}
     >
       {children}
