@@ -10,6 +10,14 @@
     width: 80px !important;
     position: absolute;
   }
+
+.pets-list.liked,
+.pets-list.fostered,
+.pets-list.adopted {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 0.4fr));
+  gap: 0px;
+}
 }
 
 .my-pets-page-container {
