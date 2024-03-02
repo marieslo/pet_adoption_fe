@@ -14,7 +14,7 @@ export default function MyPetsPage() {
     unlikedPetsUpdated,
     adoptedPetsUpdated,
     fosteredPetsUpdated,
-    setfosteredPetsUpdated,
+    setFosteredPetsUpdated,
     setAdoptedPetsUpdated,
   } = useMyPetsContext();
 
