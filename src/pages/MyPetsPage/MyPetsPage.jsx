@@ -11,28 +11,40 @@ export default function MyPetsPage() {
     fosteredPets = [], 
     likePet,
     unlikePet,
-    adoptPet,
-    fosterPet,
-    returnPet,
-    adoptedPetsUpdated,
-    fosteredPetsUpdated,
     unlikedPetsUpdated,
   } = useMyPetsContext();
 
+  const [adoptedPetsUpdated, setAdoptedPetsUpdated] = useState(false);
+  const [fosteredPetsUpdated, setFosteredPetsUpdated] = useState(false);
   const [likedPetsUpdated, setLikedPetsUpdated] = useState(false);
 
-  useEffect(() => {
-    setLikedPetsUpdated(unlikedPetsUpdated || adoptedPetsUpdated || fosteredPetsUpdated);
-  }, [unlikedPetsUpdated, adoptedPetsUpdated, fosteredPetsUpdated]);
 
   useEffect(() => {
-    const updatedFosteredPets = fosteredPets.filter(petId => !adoptedPets.includes(petId));
-    const updatedAdoptedPets = adoptedPets.filter(petId => !fosteredPets.includes(petId));
-    fosterPet(updatedFosteredPets);
-    adoptPet(updatedAdoptedPets);
-  }, [adoptedPets, fosteredPets, fosterPet, adoptPet]);
-  
-  const hasPets = likedPets.length > 0 || adoptedPets.length > 0 || fosteredPets.length > 0;
+    setLikedPetsUpdated(unlikedPetsUpdated);
+  }, [unlikedPetsUpdated]);
+
+  useEffect(() => {
+    if (adoptedPets.length > 0) setAdoptedPetsUpdated(true);
+    else setAdoptedPetsUpdated(false);
+  }, [adoptedPets]);
+
+  useEffect(() => {
+    if (fosteredPets.length > 0) setFosteredPetsUpdated(true);
+    else setFosteredPetsUpdated(false);
+  }, [fosteredPets]);
+
+  useEffect(() => {
+    if (likedPets.length > 0) setLikedPetsUpdated(true);
+    else setLikedPetsUpdated(false);
+  }, [likedPets]);
+
+  const handleUnlikePet = async (petId) => {
+    try {
+      await unlikePet(petId);
+    } catch (error) {
+      console.error('Error unliking pet:', error);
+    }
+  };
 
   return (
     <div className='my-pets-page-container'>
@@ -43,7 +55,7 @@ export default function MyPetsPage() {
          cssClass='liked'
          pets={likedPets}
          onLike={likePet}
-         onUnlike={unlikePet} 
+         onUnlike={handleUnlikePet} 
         />
         <PetsList
           key={fosteredPetsUpdated ? 'fosteredUpdated' : 'fostered'}
@@ -52,32 +64,22 @@ export default function MyPetsPage() {
           pets={fosteredPets}
           onLike={likePet}
           onUnlike={unlikePet}
-          onAdopt={adoptPet}
-          onFoster={fosterPet}
-          onReturn={returnPet}
         />
         <PetsList
           key={adoptedPetsUpdated ? 'adoptedUpdated' : 'adopted'}
           title='Adopted'
           cssClass='adopted'
-          pets={adoptedPets} 
+          pets={adoptedPets}
           onLike={likePet}
           onUnlike={unlikePet}
-          onAdopt={adoptPet}
-          onFoster={fosterPet}
-          onReturn={returnPet}
         />
-
-        {!hasPets && (
-          <div className='they-need-your-love'>
-            <p>
-              For now, you don't have any saved, adopted, or fostered pets.
-            </p>
+        {!(likedPetsUpdated || adoptedPetsUpdated || fosteredPetsUpdated) && (
+       // <p className='they-need-your-love'>
+       //      Until you have no saved, fostered or adopted pets, take a look at the adoptable ones
+       //      </p>
             <div className='mypets-page-petsfeed-container'>
-              Look for adoptable ones
               <AdoptablePetsFeed />
             </div>
-          </div>
         )}
       </div>
     </div>
