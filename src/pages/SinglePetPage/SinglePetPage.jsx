@@ -9,10 +9,11 @@ import { useAuth } from '../../context/AuthProvider';
 import likeIcon from '../../styles/icons/heart-filled.png';
 import unlikeIcon from '../../styles/icons/heart-outlined.png';
 
+
 export default function SinglePetPage() {
   const { id } = useParams();
   const { fetchPetById } = useContext(FetchPetsContext);
-  const { likePet, unlikePet, adoptPet, fosterPet, returnPet, isCurrentUserAdopterOrFosterer } = useMyPetsContext(); 
+  const { likePet, unlikePet, adoptPet, fosterPet, returnPet, adoptedPets, fosteredPets, isCurrentUserAdopterOrFosterer } = useMyPetsContext(); 
   const { user } = useAuth();
 
   const [showAlert, setShowAlert] = useState(false);
@@ -152,7 +153,7 @@ export default function SinglePetPage() {
               <Card.Title className='single-page-card-title'>{name}</Card.Title>
               <Card.Text className='single-page-card-bio'>{bio}</Card.Text>
             </div>
-            <br />
+            <br/>
             <div className='single-pet-card-fields-container'>
               <Card.Text><u>Type:</u> {type}</Card.Text>
               <Card.Text><u>Status:</u> {adoptionStatus}</Card.Text>
@@ -163,7 +164,7 @@ export default function SinglePetPage() {
               <Card.Text><u>Dietary Restrictions:</u> {dietaryRestrictions}</Card.Text>
               <Card.Text><u>Breed:</u> {breed}</Card.Text>
             </div>
-               <div className="pet-buttons">
+           <div className="pet-buttons">
             {adoptionStatus === 'adoptable' && (
               <>
                 <button className='pet-page-btn' onClick={handleAdopt}>
