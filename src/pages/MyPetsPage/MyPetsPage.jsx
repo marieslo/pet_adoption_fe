@@ -25,13 +25,15 @@ export default function MyPetsPage() {
     setLikedPetsUpdated(unlikedPetsUpdated || adoptedPetsUpdated || fosteredPetsUpdated);
   }, [unlikedPetsUpdated, adoptedPetsUpdated, fosteredPetsUpdated]);
 
-  useEffect(() => {
-    const updatedFosteredPets = fosteredPets.filter(petId => !adoptedPets.includes(petId));
-    const updatedAdoptedPets = adoptedPets.filter(petId => !fosteredPets.includes(petId));
-    fosterPet(updatedFosteredPets);
-    adoptPet(updatedAdoptedPets);
-  }, [fosterPet, adoptPet, adoptedPets, fosteredPets]);
-
+useEffect(() => {
+  const updatedFosteredPets = fosteredPets.filter(petId => !adoptedPets.includes(petId));
+  const updatedAdoptedPets = adoptedPets.filter(petId => !fosteredPets.includes(petId));
+  const updatedReturnedPets = returnedPets.filter(petId => !(adoptedPets.includes(petId) || fosteredPets.includes(petId)));
+  fosterPet(updatedFosteredPets);
+  adoptPet(updatedAdoptedPets);
+  returnPet(updatedReturnedPets);
+}, [fosterPet, adoptPet, returnPet, adoptedPets, fosteredPets, returnedPets]);
+  
   const hasPets = likedPets.length > 0 || adoptedPets.length > 0 || fosteredPets.length > 0;
 
   return (
