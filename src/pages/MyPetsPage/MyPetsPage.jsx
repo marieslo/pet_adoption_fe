@@ -14,6 +14,8 @@ export default function MyPetsPage() {
     unlikedPetsUpdated,
     adoptedPetsUpdated,
     fosteredPetsUpdated,
+    setfosteredPetsUpdated,
+    setAdoptedPetsUpdated,
   } = useMyPetsContext();
 
   const [likedPetsUpdated, setLikedPetsUpdated] = useState(false);
