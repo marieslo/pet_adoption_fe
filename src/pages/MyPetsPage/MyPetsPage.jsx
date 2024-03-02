@@ -28,11 +28,9 @@ export default function MyPetsPage() {
   useEffect(() => {
     const updatedFosteredPets = fosteredPets.filter(petId => !adoptedPets.includes(petId));
     const updatedAdoptedPets = adoptedPets.filter(petId => !fosteredPets.includes(petId));
-    const updatedReturnedPets = [];
     fosterPet(updatedFosteredPets);
     adoptPet(updatedAdoptedPets);
-    returnPet(updatedReturnedPets);
-  }, [fosterPet, adoptPet, returnPet, adoptedPets, fosteredPets]);
+  }, [adoptedPets, fosteredPets, fosterPet, adoptPet]);
   
   const hasPets = likedPets.length > 0 || adoptedPets.length > 0 || fosteredPets.length > 0;
 
