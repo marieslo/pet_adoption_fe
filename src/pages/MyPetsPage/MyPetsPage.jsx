@@ -54,6 +54,8 @@ export default function MyPetsPage() {
           pets={adoptedPets} 
           onLike={likePet}
           onUnlike={unlikePet}
+          onAdopt={adoptPet}
+          onFoster={fosterPet}
           onReturn={returnPet}
         />
 
