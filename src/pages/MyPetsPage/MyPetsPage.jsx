@@ -59,7 +59,7 @@ export default function MyPetsPage() {
           cssClass='fostered'
           pets={fosteredPets}
           onLike={likePet}
-          onAdopt={adoptPet} // Change to onAdopt for fostering
+          onUnlike={handleUnlikePet} 
         />
         <PetsList
           key={adoptedPetsUpdated ? 'adoptedUpdated' : 'adopted'}
