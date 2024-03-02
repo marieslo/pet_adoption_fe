@@ -39,6 +39,18 @@ export default function MyPetsProvider ({ children }) {
     fetchUserPets();
   }, [user, likedPetsUpdated, adoptedPetsUpdated, fosteredPetsUpdated]);
 
+   useEffect(() => {
+    if (adoptedPets.length > 0) {
+      setAdoptedPetsUpdated(true);
+    }
+  }, [adoptedPets]);
+
+  useEffect(() => {
+    if (fosteredPets.length > 0) {
+      setFosteredPetsUpdated(true);
+    }
+  }, [fosteredPets]);
+  
   const likePet = async (petId) => {
     try {
       await axios.post(`${SERVER_URL}/pets/${petId}/like`, { userId: user._id });
