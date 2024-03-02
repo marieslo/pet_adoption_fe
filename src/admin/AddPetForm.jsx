@@ -256,8 +256,8 @@ export default function AddPetForm() {
               </label>
             </div>
           </div>
-          {previewSource && (
-            <img src={previewSource} alt='Preview' className='pic-preview' />
+          {previewSource && !showSuccessMessage && (
+          <img src={previewSource} alt='Preview' className='pic-preview' />
           )}
           <Button className='save-pet-details-button add-pet' variant='secondary' type='submit'>
           {loading ? (
