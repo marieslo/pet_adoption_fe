@@ -83,16 +83,24 @@ export default function MyPetsProvider ({ children }) {
     }
   };
 
- const returnPet = async (petId) => {
-  try {
-    await axios.put(`${SERVER_URL}/pets/${petId}/return`, { userId: user._id });
-    setFosteredPets(prevFosteredPets => prevFosteredPets.filter(id => id !== petId));
-    setAdoptedPets(prevAdoptedPets => prevAdoptedPets.filter(id => id !== petId));
-  } catch (error) {
-    console.error('Error returning pet:', error);
-    setError(error);
-  }
-};
+  const returnPet = async (petId) => {
+    try {
+      await axios.put(`${SERVER_URL}/pets/${petId}/return`, { userId: user._id });
+      setFosteredPets(prevFosteredPets => prevFosteredPets.filter(id => id !== petId));
+      setAdoptedPets(prevAdoptedPets => prevAdoptedPets.filter(id => id !== petId));
+    } catch (error) {
+      console.error('Error returning pet:', error);
+      setError(error);
+    }
+  };
+
+  // Update adopted and fostered pets when their respective state changes
+  useEffect(() => {
+    const updatedAdoptedPets = adoptedPets.filter(petId => !fosteredPets.includes(petId));
+    const updatedFosteredPets = fosteredPets.filter(petId => !adoptedPets.includes(petId));
+    setAdoptedPets(updatedAdoptedPets);
+    setFosteredPets(updatedFosteredPets);
+  }, [adoptedPets, fosteredPets]);
 
   return (
     <MyPetsContext.Provider
