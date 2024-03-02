@@ -19,20 +19,21 @@ export default function MyPetsPage() {
   } = useMyPetsContext();
 
   const [likedPetsUpdated, setLikedPetsUpdated] = useState(false);
+  const [adoptedPetsUpdated, setAdoptedPetsUpdated] = useState(false);
+  const [fosteredPetsUpdated, setFosteredPetsUpdated] = useState(false);
 
   useEffect(() => {
     setLikedPetsUpdated(unlikedPetsUpdated);
   }, [unlikedPetsUpdated]);
 
   useEffect(() => {
-    if (adoptedPets.length > 0) setAdoptedPetsUpdated(true);
-    else setAdoptedPetsUpdated(false);
+    setAdoptedPetsUpdated(adoptedPets.length > 0);
   }, [adoptedPets]);
 
   useEffect(() => {
-    if (fosteredPets.length > 0) setFosteredPetsUpdated(true);
-    else setFosteredPetsUpdated(false);
+    setFosteredPetsUpdated(fosteredPets.length > 0);
   }, [fosteredPets]);
+
 
   const handleUnlikePet = async (petId) => {
     try {
