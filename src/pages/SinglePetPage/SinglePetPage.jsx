@@ -1,15 +1,3 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { Card, Spinner, Alert } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
-import localforage from 'localforage';
-import './SinglePetPage.css';
-import { FetchPetsContext } from '../../context/FetchPetsProvider';
-import { useMyPetsContext } from '../../context/MyPetsProvider';
-import { useAuth } from '../../context/AuthProvider';
-import likeIcon from '../../styles/icons/heart-filled.png';
-import unlikeIcon from '../../styles/icons/heart-outlined.png';
-
-
 export default function SinglePetPage() {
   const { id } = useParams();
   const { fetchPetById } = useContext(FetchPetsContext);
@@ -20,17 +8,14 @@ export default function SinglePetPage() {
   const [loading, setLoading] = useState(true);
   const [petData, setPetData] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
-
-  const isCurrentUserAdopterOrFosterer = 
-    user && petData && (petData.adoptionStatus === 'adopted' || petData.adoptionStatus === 'fostered') && 
-    (adoptedPets.includes(id) || fosteredPets.includes(id));
+  const isOwner = petData?.owner === user?.id;
 
   useEffect(() => {
     const fetchPetData = async () => {
       try {
         const data = await fetchPetById(id);
         setPetData(data);
-        const storedLikedStatus = await localforage.getItem(`likedStatus_${user?._id}_${id}`);
+        const storedLikedStatus = await localforage.getItem(`likedStatus_${user?.id}_${id}`);
         setIsLiked(storedLikedStatus || false);
       } catch (error) {
         console.error('Error fetching pet data:', error.message);
@@ -40,76 +25,7 @@ export default function SinglePetPage() {
     };
 
     fetchPetData();
-  }, [fetchPetById, id, user._id]);
-
-  const handleLike = async () => {
-    try {
-      if (!user) {
-        setShowAlert(true);
-      } else {
-        await likePet(id);
-        setIsLiked(true);
-        await localforage.setItem(`likedStatus_${user._id}_${id}`, true);
-      }
-    } catch (error) {
-      console.error('Error liking pet:', error);
-      setShowAlert(true);
-    }
-  };
-
-  const handleUnlike = async () => {
-    try {
-      if (!user) {
-        setShowAlert(true);
-        return;
-      }
-      await unlikePet(id);
-      setIsLiked(false);
-      await localforage.removeItem(`likedStatus_${user._id}_${id}`);
-    } catch (error) {
-      console.error('Error updating liked status:', error);
-      setShowAlert(true);
-    }
-  };
-
-  const handleAdopt = async () => {
-    try {
-      await adoptPet(id);
-      setPetData(prevPetData => ({
-        ...prevPetData,
-        adoptionStatus: 'adopted'
-      }));
-    } catch (error) {
-      console.error('Error adopting pet:', error);
-      setShowAlert(true);
-    }
-  };
-
-  const handleFoster = async () => {
-    try {
-      await fosterPet(id);
-      setPetData(prevPetData => ({
-        ...prevPetData,
-        adoptionStatus: 'fostered'
-      }));
-    } catch (error) {
-      console.error('Error fostering pet:', error);
-      setShowAlert(true);
-    }
-  };
-
-  const handleReturn = async () => {
-    try {
-      await returnPet(id);
-      setPetData(prevPetData => ({
-        ...prevPetData,
-        adoptionStatus: 'adoptable'
-      }));
-    } catch (error) {
-      console.error('Error returning pet:', error);
-      setShowAlert(true);
-    }
-  };
+  }, [fetchPetById, id, user?.id]);
 
   if (loading) {
     return <Spinner className='single-pet-page-spinner' animation="grow" variant="light" />;
@@ -168,32 +84,33 @@ export default function SinglePetPage() {
               <Card.Text><u>Dietary Restrictions:</u> {dietaryRestrictions}</Card.Text>
               <Card.Text><u>Breed:</u> {breed}</Card.Text>
             </div>
-           <div className="pet-buttons">
-            {adoptionStatus === 'adoptable' && (
-              <>
-                <button className='pet-page-btn' onClick={handleAdopt}>
-                  Adopt
-                </button>
-                <button className='pet-page-btn' onClick={handleFoster}>
-                  Foster
-                </button>
-              </>
-            )}
-            {adoptionStatus === 'adopted' || adoptionStatus === 'fostered' && 
-              (
-                <button className='pet-page-btn' onClick={handleReturn}>
-                  Return
-                </button>
+            <div className="pet-buttons">
+              {adoptionStatus === 'adoptable' && (
+                <>
+                  <button className='pet-page-btn' onClick={handleAdopt}>
+                    Adopt
+                  </button>
+                  <button className='pet-page-btn' onClick={handleFoster}>
+                    Foster
+                  </button>
+                </>
               )}
-            {(!adoptionStatus === 'adoptable' && !isCurrentUserAdopterOrFosterer) && 
-              (
-                <div className="pet-already-has-home-message">
-                  This pet has already found its home.
-                  <br/>
-                  But its status may change later, so you can save it by clicking Like
-                </div>
+              {(adoptionStatus === 'adopted' || adoptionStatus === 'fostered') && (
+                <>
+                  {isOwner ? (
+                    <button className='pet-page-btn' onClick={handleReturn}>
+                      Return
+                    </button>
+                  ) : (
+                    <div className="pet-already-has-home-message">
+                      This pet has already found its home.
+                      <br/>
+                      But its status may change later, so you can save it by clicking Like
+                    </div>
+                  )}
+                </>
               )}
-          </div>
+            </div>
           </Card.Body>
         </Card>
         {showAlert && (
