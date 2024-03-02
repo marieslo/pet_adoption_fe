@@ -50,6 +50,45 @@ export default function MyPetsProvider ({ children }) {
       setFosteredPetsUpdated(true);
     }
   }, [fosteredPets]);
+
+   const fetchAdoptedPets = async () => {
+    setLoading(true);
+    try {
+      if (user && user._id) {
+        const response = await axios.get(`${SERVER_URL}/users/profile/${user._id}/adoptedPets`);
+        const userData = response.data;
+        setAdoptedPets(userData.adoptedPets || []);
+      }
+    } catch (error) {
+      console.error('Error fetching adopted pets:', error);
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchFosteredPets = async () => {
+    setLoading(true);
+    try {
+      if (user && user._id) {
+        const response = await axios.get(`${SERVER_URL}/users/profile/${user._id}/fosteredPets`);
+        const userData = response.data;
+        setFosteredPets(userData.fosteredPets || []);
+      }
+    } catch (error) {
+      console.error('Error fetching fostered pets:', error);
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (user && user._id) {
+      fetchAdoptedPets();
+      fetchFosteredPets();
+    }
+  }, [user]);
   
   const likePet = async (petId) => {
     try {
@@ -131,6 +170,8 @@ const returnPet = async (petId) => {
         setAdoptedPetsUpdated,
         fosteredPetsUpdated,
         setFosteredPetsUpdated,
+        fetchAdoptedPets,
+        fetchFosteredPets
       }}
     >
       {children}
