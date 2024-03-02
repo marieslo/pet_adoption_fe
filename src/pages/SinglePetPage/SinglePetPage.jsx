@@ -12,19 +12,25 @@ import unlikeIcon from '../../styles/icons/heart-outlined.png';
 export default function SinglePetPage() {
   const { id } = useParams();
   const { fetchPetById } = useContext(FetchPetsContext);
-  const { likePet, unlikePet, adoptPet, fosterPet, returnPet, isOwner } = useMyPetsContext(); 
+  const { likePet, unlikePet, adoptPet, fosterPet, returnPet } = useMyPetsContext(); 
   const { user } = useAuth();
 
   const [showAlert, setShowAlert] = useState(false);
   const [loading, setLoading] = useState(true);
   const [petData, setPetData] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
-
+  const [isOwner, setIsOwner] = useState(false);
+  
   useEffect(() => {
     const fetchPetData = async () => {
       try {
         const data = await fetchPetById(id);
         setPetData(data);
+        if (data && user && (adoptedPets.includes(id) || fosteredPets.includes(id))) {
+          setIsOwner(true);
+        } else {
+          setIsOwner(false);
+        }
         const storedLikedStatus = await localforage.getItem(`likedStatus_${user?._id}_${id}`);
         setIsLiked(storedLikedStatus || false);
       } catch (error) {
@@ -33,9 +39,8 @@ export default function SinglePetPage() {
         setLoading(false);
       }
     };
-  
     fetchPetData();
-  }, [fetchPetById, id, user._id]);
+  }, [fetchPetById, id, user._id,  adoptedPets, fosteredPets]);
 
   const handleLike = async () => {
     try {
