@@ -11,14 +11,32 @@ export default function MyPetsPage() {
     fosteredPets = [], 
     likePet,
     unlikePet,
-    fetchAdoptedPets,
-    fetchFosteredPets,
+    unlikedPetsUpdated,
   } = useMyPetsContext();
 
+  const [adoptedPetsUpdated, setAdoptedPetsUpdated] = useState(false);
+  const [fosteredPetsUpdated, setFosteredPetsUpdated] = useState(false);
+  const [likedPetsUpdated, setLikedPetsUpdated] = useState(false);
+
+
   useEffect(() => {
-    fetchAdoptedPets();
-    fetchFosteredPets();
-  }, [fetchAdoptedPets, fetchFosteredPets]);
+    setLikedPetsUpdated(unlikedPetsUpdated);
+  }, [unlikedPetsUpdated]);
+
+  useEffect(() => {
+    if (adoptedPets.length > 0) setAdoptedPetsUpdated(true);
+    else setAdoptedPetsUpdated(false);
+  }, [adoptedPets]);
+
+  useEffect(() => {
+    if (fosteredPets.length > 0) setFosteredPetsUpdated(true);
+    else setFosteredPetsUpdated(false);
+  }, [fosteredPets]);
+
+  useEffect(() => {
+    if (likedPets.length > 0) setLikedPetsUpdated(true);
+    else setLikedPetsUpdated(false);
+  }, [likedPets]);
 
   const handleUnlikePet = async (petId) => {
     try {
@@ -32,31 +50,37 @@ export default function MyPetsPage() {
     <div className='my-pets-page-container'>
       <div className='my-pets-lists-wrapper'>
         <PetsList
-          title='Adopted'
-          cssClass='adopted'
-          pets={adoptedPets}
-          onUnlike={handleUnlikePet} 
+         key={likedPetsUpdated ? 'likedUpdated' : 'liked'}
+         title='Liked'
+         cssClass='liked'
+         pets={likedPets}
+         onLike={likePet}
+         onUnlike={handleUnlikePet} 
         />
         <PetsList
+          key={fosteredPetsUpdated ? 'fosteredUpdated' : 'fostered'}
           title='Fostered'
           cssClass='fostered'
           pets={fosteredPets}
+          onLike={likePet}
           onUnlike={handleUnlikePet} 
         />
         <PetsList
-          title='Liked'
-          cssClass='liked'
-          pets={likedPets}
+          key={adoptedPetsUpdated ? 'adoptedUpdated' : 'adopted'}
+          title='Adopted'
+          cssClass='adopted'
+          pets={adoptedPets}
+          onLike={likePet}
           onUnlike={handleUnlikePet} 
         />
 
-        {!(adoptedPets.length || fosteredPets.length || likedPets.length) && (
+        {!(likedPetsUpdated || adoptedPetsUpdated || fosteredPetsUpdated) && (
           <div className='they-need-your-love'>
             <p>
-              Until you don't have any saved, adopted, or fostered pets,
+              For now, you don't have any saved, adopted, or fostered pets.
             </p>
             <div className='mypets-page-petsfeed-container'>
-              look for adoptable ones
+              Look for adoptable ones
               <AdoptablePetsFeed />
             </div>
           </div>
