@@ -9,7 +9,6 @@ import { useAuth } from '../../context/AuthProvider';
 import likeIcon from '../../styles/icons/heart-filled.png';
 import unlikeIcon from '../../styles/icons/heart-outlined.png';
 
-
 export default function SinglePetPage() {
   const { id } = useParams();
   const { fetchPetById } = useContext(FetchPetsContext);
@@ -21,9 +20,10 @@ export default function SinglePetPage() {
   const [petData, setPetData] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
 
-  const isCurrentUserAdopterOrFosterer = 
-    user && petData && (petData.adoptionStatus === 'adopted' || petData.adoptionStatus === 'fostered') && 
-    (adoptedPets.includes(id) || fosteredPets.includes(id));
+  const isCurrentUserAdopterOrFosterer = user && petData && (
+    (petData.adoptionStatus === 'adopted' && adoptedPets.includes(id)) ||
+    (petData.adoptionStatus === 'fostered' && fosteredPets.includes(id))
+  );
 
   useEffect(() => {
     const fetchPetData = async () => {
@@ -168,24 +168,32 @@ export default function SinglePetPage() {
               <Card.Text><u>Dietary Restrictions:</u> {dietaryRestrictions}</Card.Text>
               <Card.Text><u>Breed:</u> {breed}</Card.Text>
             </div>
-           <div className="pet-buttons">
-            {adoptionStatus === 'adoptable' && (
-              <>
-                <button className='pet-page-btn' onClick={handleAdopt}>
-                  Adopt
-                </button>
-                <button className='pet-page-btn' onClick={handleFoster}>
-                  Foster
-                </button>
-              </>
-            )}
-          {(adoptionStatus === 'fostered' || adoptionStatus === 'adopted') && isCurrentUserAdopterOrFosterer && 
-          (
-            <button className='pet-page-btn' onClick={handleReturn}>
-              Return
-            </button>
-          )}
-          </div>
+            <div className="pet-buttons">
+              {(adoptionStatus === 'adoptable') && (
+                <>
+                  <button className='pet-page-btn' onClick={handleAdopt}>
+                    Adopt
+                  </button>
+                  <button className='pet-page-btn' onClick={handleFoster}>
+                    Foster
+                  </button>
+                </>
+              )}
+              {(adoptionStatus === 'adopted' || adoptionStatus === 'fostered') && 
+                (isCurrentUserAdopterOrFosterer) && (
+                  <button className='pet-page-btn' onClick={handleReturn}>
+                    Return
+                  </button>
+                )}
+              {!(adoptionStatus === 'adoptable' || isCurrentUserAdopterOrFosterer) && 
+                (
+                  <div className="pet-already-has-home-message">
+                    This pet has already found its home.
+                    <br/>
+                    But its status may change later, so you can save it by clicking Like
+                  </div>
+                )}
+            </div>
           </Card.Body>
         </Card>
         {showAlert && (
