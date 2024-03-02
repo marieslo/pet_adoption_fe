@@ -163,35 +163,32 @@ export default function SinglePetPage() {
               <Card.Text><u>Dietary Restrictions:</u> {dietaryRestrictions}</Card.Text>
               <Card.Text><u>Breed:</u> {breed}</Card.Text>
             </div>
-            <div className="pet-buttons">
-              {(adoptionStatus === 'adoptable') && (
-                <>
-                  <button className='pet-page-btn' onClick={handleAdopt}>
-                    Adopt
-                  </button>
-                  <button className='pet-page-btn' onClick={handleFoster}>
-                    Foster
-                  </button>
-                </>
-              )}
-             {(adoptionStatus === 'adopted' || adoptionStatus === 'fostered') && isCurrentUserAdopterOrFosterer(id) && 
-                (
-                <button
-                  className='pet-page-btn'
-                  onClick={handleReturn}
-                >
+               <div className="pet-buttons">
+            {adoptionStatus === 'adoptable' && (
+              <>
+                <button className='pet-page-btn' onClick={handleAdopt}>
+                  Adopt
+                </button>
+                <button className='pet-page-btn' onClick={handleFoster}>
+                  Foster
+                </button>
+              </>
+            )}
+            {adoptionStatus === 'adopted' || adoptionStatus === 'fostered' && 
+              (
+                <button className='pet-page-btn' onClick={handleReturn}>
                   Return
                 </button>
               )}
-              {(adoptionStatus === 'adopted' || adoptionStatus === 'fostered') && !isCurrentUserAdopterOrFosterer(id) && 
-                (
-                  <div className="pet-already-has-home-message">
-                    This pet has already found its home.
-                    <br/>
-                    But its status may change later, so you can save it by clicking Like
-                  </div>
-                )}
-            </div>
+            {(!adoptionStatus === 'adoptable' && !isCurrentUserAdopterOrFosterer) && 
+              (
+                <div className="pet-already-has-home-message">
+                  This pet has already found its home.
+                  <br/>
+                  But its status may change later, so you can save it by clicking Like
+                </div>
+              )}
+          </div>
           </Card.Body>
         </Card>
         {showAlert && (
