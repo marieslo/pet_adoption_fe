@@ -11,23 +11,14 @@ export default function MyPetsPage() {
     fosteredPets = [], 
     likePet,
     unlikePet,
-    adoptedPetsUpdated,
-    fosteredPetsUpdated,
     fetchAdoptedPets,
     fetchFosteredPets,
   } = useMyPetsContext();
 
-  const [likedPetsUpdated, setLikedPetsUpdated] = useState(false);
-  const [adoptedPetsUpdated, setAdoptedPetsUpdated] = useState(false);
-  const [fosteredPetsUpdated, setFosteredPetsUpdated] = useState(false);
-
   useEffect(() => {
     fetchAdoptedPets();
-  }, [adoptedPetsUpdated, fetchAdoptedPets]);
-
-  useEffect(() => {
     fetchFosteredPets();
-  }, [fosteredPetsUpdated, fetchFosteredPets]);
+  }, [fetchAdoptedPets, fetchFosteredPets]);
 
   const handleUnlikePet = async (petId) => {
     try {
@@ -41,31 +32,25 @@ export default function MyPetsPage() {
     <div className='my-pets-page-container'>
       <div className='my-pets-lists-wrapper'>
         <PetsList
-         key={likedPetsUpdated ? 'likedUpdated' : 'liked'}
-         title='Liked'
-         cssClass='liked'
-         pets={likedPets}
-         onLike={likePet}
-         onUnlike={handleUnlikePet} 
-        />
-        <PetsList
-          key={fosteredPetsUpdated ? 'fosteredUpdated' : 'fostered'}
-          title='Fostered'
-          cssClass='fostered'
-          pets={fosteredPets}
-          onLike={likePet}
-          onUnlike={handleUnlikePet} 
-        />
-        <PetsList
-          key={adoptedPetsUpdated ? 'adoptedUpdated' : 'adopted'}
           title='Adopted'
           cssClass='adopted'
           pets={adoptedPets}
-          onLike={likePet}
+          onUnlike={handleUnlikePet} 
+        />
+        <PetsList
+          title='Fostered'
+          cssClass='fostered'
+          pets={fosteredPets}
+          onUnlike={handleUnlikePet} 
+        />
+        <PetsList
+          title='Liked'
+          cssClass='liked'
+          pets={likedPets}
           onUnlike={handleUnlikePet} 
         />
 
-        {!(likedPetsUpdated || adoptedPetsUpdated || fosteredPetsUpdated) && (
+        {!(adoptedPets.length || fosteredPets.length || likedPets.length) && (
           <div className='they-need-your-love'>
             <p>
               Until you don't have any saved, adopted, or fostered pets,
