@@ -175,7 +175,7 @@ export default function SinglePetPage() {
                 </button>
               </>
             )}
-            {adoptionStatus === 'adopted' || adoptionStatus === 'fostered' && 
+            {(adoptionStatus === 'adopted' || adoptionStatus === 'fostered') && 
               (
                 <button className='pet-page-btn' onClick={handleReturn}>
                   Return
