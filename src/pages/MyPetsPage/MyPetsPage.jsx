@@ -26,8 +26,11 @@ export default function MyPetsPage() {
   }, [unlikedPetsUpdated, adoptedPetsUpdated, fosteredPetsUpdated]);
 
   useEffect(() => {
+    // Filter out returned pets from adopted and fostered lists
     const updatedAdoptedPets = adoptedPets.filter(petId => !fosteredPets.includes(petId));
     const updatedFosteredPets = fosteredPets.filter(petId => !adoptedPets.includes(petId));
+
+    // Update the lists
     adoptPet(updatedAdoptedPets);
     fosterPet(updatedFosteredPets);
   }, [adoptPet, fosterPet, adoptedPets, fosteredPets]);
