@@ -12,7 +12,7 @@ import unlikeIcon from '../../styles/icons/heart-outlined.png';
 export default function SinglePetPage() {
   const { id } = useParams();
   const { fetchPetById } = useContext(FetchPetsContext);
-  const { likePet, unlikePet, adoptPet, fosterPet, returnPet, adoptedPets, fosteredPets, isOwner } = useMyPetsContext({ id });
+  const { likePet, unlikePet, adoptPet, fosterPet, returnPet, adoptedPets, fosteredPets, isOwner } = useMyPetsContext(); 
   const { user } = useAuth();
 
   const [showAlert, setShowAlert] = useState(false);
@@ -163,7 +163,7 @@ export default function SinglePetPage() {
               <Card.Text><u>Breed:</u> {breed}</Card.Text>
             </div>
             <div className="pet-buttons">
-               {(adoptionStatus === 'adoptable') && (
+              {(adoptionStatus === 'adoptable') && (
                 <>
                   <button className='pet-page-btn' onClick={handleAdopt}>
                     Adopt
@@ -173,7 +173,7 @@ export default function SinglePetPage() {
                   </button>
                 </>
               )}
-              {(adoptionStatus !== 'adoptable' && isOwner) && ( 
+              {!(adoptionStatus === 'adoptable') && isOwner && ( 
                 <button
                   className='pet-page-btn'
                   onClick={handleReturn}
