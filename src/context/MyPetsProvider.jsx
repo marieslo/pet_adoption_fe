@@ -76,7 +76,7 @@ export default function MyPetsProvider ({ children }) {
     try {
       await axios.put(`${SERVER_URL}/pets/${petId}/foster`, { userId: user._id });
       setFosteredPets(prevFosteredPets => [...prevFosteredPets, petId]);
-      setFosteredPetsUpdated(prev => !prev); // Toggle fosteredPetsUpdated to trigger useEffect
+      setFosteredPetsUpdated(prev => !prev); 
     } catch (error) {
       console.error('Error fostering pet:', error);
       setError(error);
