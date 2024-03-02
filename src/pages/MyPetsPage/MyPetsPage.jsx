@@ -11,40 +11,19 @@ export default function MyPetsPage() {
     fosteredPets = [], 
     likePet,
     unlikePet,
+    adoptPet,
+    fosterPet,
+    returnPet,
+    adoptedPetsUpdated,
+    fosteredPetsUpdated,
     unlikedPetsUpdated,
   } = useMyPetsContext();
 
-  const [adoptedPetsUpdated, setAdoptedPetsUpdated] = useState(false);
-  const [fosteredPetsUpdated, setFosteredPetsUpdated] = useState(false);
   const [likedPetsUpdated, setLikedPetsUpdated] = useState(false);
 
-
   useEffect(() => {
-    setLikedPetsUpdated(unlikedPetsUpdated);
-  }, [unlikedPetsUpdated]);
-
-  useEffect(() => {
-    if (adoptedPets.length > 0) setAdoptedPetsUpdated(true);
-    else setAdoptedPetsUpdated(false);
-  }, [adoptedPets]);
-
-  useEffect(() => {
-    if (fosteredPets.length > 0) setFosteredPetsUpdated(true);
-    else setFosteredPetsUpdated(false);
-  }, [fosteredPets]);
-
-  useEffect(() => {
-    if (likedPets.length > 0) setLikedPetsUpdated(true);
-    else setLikedPetsUpdated(false);
-  }, [likedPets]);
-
-  const handleUnlikePet = async (petId) => {
-    try {
-      await unlikePet(petId);
-    } catch (error) {
-      console.error('Error unliking pet:', error);
-    }
-  };
+    setLikedPetsUpdated(unlikedPetsUpdated || adoptedPetsUpdated || fosteredPetsUpdated);
+  }, [unlikedPetsUpdated, adoptedPetsUpdated, fosteredPetsUpdated]);
 
   return (
     <div className='my-pets-page-container'>
@@ -55,7 +34,7 @@ export default function MyPetsPage() {
          cssClass='liked'
          pets={likedPets}
          onLike={likePet}
-         onUnlike={handleUnlikePet} 
+         onUnlike={unlikePet} 
         />
         <PetsList
           key={fosteredPetsUpdated ? 'fosteredUpdated' : 'fostered'}
@@ -64,6 +43,9 @@ export default function MyPetsPage() {
           pets={fosteredPets}
           onLike={likePet}
           onUnlike={unlikePet}
+          onAdopt={adoptPet}
+          onFoster={fosterPet}
+          onReturn={returnPet}
         />
         <PetsList
           key={adoptedPetsUpdated ? 'adoptedUpdated' : 'adopted'}
@@ -72,6 +54,7 @@ export default function MyPetsPage() {
           pets={adoptedPets}
           onLike={likePet}
           onUnlike={unlikePet}
+          onReturn={returnPet}
         />
 
         {!(likedPetsUpdated || adoptedPetsUpdated || fosteredPetsUpdated) && (
