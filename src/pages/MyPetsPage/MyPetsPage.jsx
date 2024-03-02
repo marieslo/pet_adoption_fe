@@ -11,11 +11,10 @@ export default function MyPetsPage() {
     fosteredPets = [], 
     likePet,
     unlikePet,
-    adoptPet,
-    fosterPet,
-    unlikedPetsUpdated,
     adoptedPetsUpdated,
     fosteredPetsUpdated,
+    fetchAdoptedPets,
+    fetchFosteredPets,
   } = useMyPetsContext();
 
   const [likedPetsUpdated, setLikedPetsUpdated] = useState(false);
@@ -23,16 +22,12 @@ export default function MyPetsPage() {
   const [fosteredPetsUpdated, setFosteredPetsUpdated] = useState(false);
 
   useEffect(() => {
-    setLikedPetsUpdated(unlikedPetsUpdated);
-  }, [unlikedPetsUpdated]);
+    fetchAdoptedPets();
+  }, [adoptedPetsUpdated, fetchAdoptedPets]);
 
   useEffect(() => {
-    setAdoptedPetsUpdated(adoptedPetsUpdated);
-  }, [adoptedPetsUpdated]);
-
-  useEffect(() => {
-    setFosteredPetsUpdated(fosteredPetsUpdated);
-  }, [fosteredPetsUpdated]);
+    fetchFosteredPets();
+  }, [fosteredPetsUpdated, fetchFosteredPets]);
 
   const handleUnlikePet = async (petId) => {
     try {
