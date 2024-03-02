@@ -59,32 +59,36 @@ export default function MyPetsProvider ({ children }) {
     }
   };
 
-  const adoptPet = async (petId) => {
-    try {
-      await axios.put(`${SERVER_URL}/pets/${petId}/adopt`, { userId: user._id });
-    } catch (error) {
-      console.error('Error adopting pet:', error);
-      setError(error);
-    }
-  };
+const adoptPet = async (petId) => {
+  try {
+    await axios.put(`${SERVER_URL}/pets/${petId}/adopt`, { userId: user._id });
+    setAdoptedPets(prevAdoptedPets => [...prevAdoptedPets, petId]); 
+  } catch (error) {
+    console.error('Error adopting pet:', error);
+    setError(error);
+  }
+};
 
-  const fosterPet = async (petId) => {
-    try {
-      await axios.put(`${SERVER_URL}/pets/${petId}/foster`, { userId: user._id });
-    } catch (error) {
-      console.error('Error fostering pet:', error);
-      setError(error);
-    }
-  };
+const fosterPet = async (petId) => {
+  try {
+    await axios.put(`${SERVER_URL}/pets/${petId}/foster`, { userId: user._id });
+    setFosteredPets(prevFosteredPets => [...prevFosteredPets, petId]); 
+  } catch (error) {
+    console.error('Error fostering pet:', error);
+    setError(error);
+  }
+};
 
-  const returnPet = async (petId) => {
-    try {
-      await axios.put(`${SERVER_URL}/pets/${petId}/return`, { userId: user._id });
-    } catch (error) {
-      console.error('Error returning pet:', error);
-      setError(error);
-    }
-  };
+ const returnPet = async (petId) => {
+  try {
+    await axios.put(`${SERVER_URL}/pets/${petId}/return`, { userId: user._id });
+    setAdoptedPets(prevAdoptedPets => prevAdoptedPets.filter(id => id !== petId));
+    setFosteredPets(prevFosteredPets => prevFosteredPets.filter(id => id !== petId));
+  } catch (error) {
+    console.error('Error returning pet:', error);
+    setError(error);
+  }
+};
 
   return (
     <MyPetsContext.Provider
