@@ -17,7 +17,7 @@ export default function MyPetsProvider ({ children }) {
   const [likedPetsUpdated, setLikedPetsUpdated] = useState(false);
   const [adoptedPetsUpdated, setAdoptedPetsUpdated] = useState(false);
   const [fosteredPetsUpdated, setFosteredPetsUpdated] = useState(false);
-  const [isOwner, setIsOwner] = useState(false); 
+ const [petOwnerIds, setPetOwnerIds] = useState([]);
   
   useEffect(() => {
     const fetchUserPets = async () => {
@@ -29,7 +29,7 @@ export default function MyPetsProvider ({ children }) {
           setLikedPets(userData.likedPets || []);
           setAdoptedPets(userData.adoptedPets || []);
           setFosteredPets(userData.fosteredPets || []);
-          setIsOwner(userData.isOwner || false); 
+          setPetOwnerIds(userData.petOwnerIds || []); 
         }
       } catch (error) {
         console.error('Error fetching user pets:', error);
@@ -96,6 +96,10 @@ export default function MyPetsProvider ({ children }) {
     }
   };
 
+    const isOwner = (petId) => {
+    return adoptedPets.includes(petId) || fosteredPets.includes(petId) || petOwnerIds.includes(petId);
+  };
+  
   return (
     <MyPetsContext.Provider
       value={{
