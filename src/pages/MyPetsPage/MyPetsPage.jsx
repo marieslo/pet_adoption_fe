@@ -46,46 +46,45 @@ export default function MyPetsPage() {
     }
   };
 
-  return (
-    <div className='my-pets-page-container'>
-      <div className='my-pets-lists-wrapper'>
-        <PetsList
-         key={likedPetsUpdated ? 'likedUpdated' : 'liked'}
-         title='Liked'
-         cssClass='liked'
-         pets={likedPets}
-         onLike={likePet}
-         onUnlike={handleUnlikePet} 
-        />
-        <PetsList
-          key={fosteredPetsUpdated ? 'fosteredUpdated' : 'fostered'}
-          title='Fostered'
-          cssClass='fostered'
-          pets={fosteredPets}
-          onLike={likePet}
-          onUnlike={unlikePet}
-        />
-        <PetsList
-          key={adoptedPetsUpdated ? 'adoptedUpdated' : 'adopted'}
-          title='Adopted'
-          cssClass='adopted'
-          pets={adoptedPets}
-          onLike={likePet}
-          onUnlike={unlikePet}
-        />
+return (
+  <div className='my-pets-page-container'>
+    <div className='my-pets-lists-wrapper'>
+      <PetsList
+       key={likedPetsUpdated ? 'likedUpdated' : 'liked'}
+       title='Liked'
+       cssClass='liked'
+       pets={likedPets}
+       onLike={likePet}
+       onUnlike={handleUnlikePet} 
+      />
+      <PetsList
+        key={fosteredPetsUpdated ? 'fosteredUpdated' : 'fostered'}
+        title='Fostered'
+        cssClass='fostered'
+        pets={fosteredPets}
+        onLike={likePet}
+        onUnlike={unlikePet}
+      />
+      <PetsList
+        key={adoptedPetsUpdated ? 'adoptedUpdated' : 'adopted'}
+        title='Adopted'
+        cssClass='adopted'
+        pets={adoptedPets}
+        onLike={likePet}
+        onUnlike={unlikePet}
+      />
 
-        {!(likedPetsUpdated || adoptedPetsUpdated || fosteredPetsUpdated) && (
-          <div className='they-need-your-love'>
-            <p>
-              For now, you don't have any saved, adopted, or fostered pets
-            </p>
-            <div className='mypets-page-petsfeed-container'>
-              Look for adoptable ones
-              <AdoptablePetsFeed />
-            </div>
+      {!(likedPetsUpdated || adoptedPetsUpdated || fosteredPetsUpdated) && (
+        <div className='they-need-your-love'>
+          <p>
+            For now, you don't have any saved, adopted, or fostered pets
+          </p>
+          <div className='mypets-page-petsfeed-container'>
+            Look for adoptable ones
+            <AdoptablePetsFeed />
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
-  );
-}
+  </div>
+);
