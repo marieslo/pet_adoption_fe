@@ -43,6 +43,9 @@ export default function MyPetsPage() {
           pets={fosteredPets}
           onLike={likePet}
           onUnlike={unlikePet}
+          onAdopt={adoptPet}
+          onFoster={fosterPet}
+          onReturn={returnPet}
         />
         <PetsList
           key={adoptedPetsUpdated ? 'adoptedUpdated' : 'adopted'}
@@ -51,6 +54,7 @@ export default function MyPetsPage() {
           pets={adoptedPets} 
           onLike={likePet}
           onUnlike={unlikePet}
+          onReturn={returnPet}
         />
 
         {!(likedPetsUpdated || adoptedPetsUpdated || fosteredPetsUpdated) && (
