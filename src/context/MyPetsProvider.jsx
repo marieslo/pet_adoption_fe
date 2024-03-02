@@ -14,7 +14,9 @@ export default function MyPetsProvider ({ children }) {
   const [fosteredPets, setFosteredPets] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [unlikedPetsUpdated, setUnlikedPetsUpdated] = useState(false); 
+  const [likedPetsUpdated, setLikedPetsUpdated] = useState(false);
+  const [adoptedPetsUpdated, setAdoptedPetsUpdated] = useState(false);
+  const [fosteredPetsUpdated, setFosteredPetsUpdated] = useState(false);
 
   useEffect(() => {
     const fetchUserPets = async () => {
@@ -35,13 +37,13 @@ export default function MyPetsProvider ({ children }) {
       }
     };
     fetchUserPets();
-  }, [user, unlikedPetsUpdated]); 
+  }, [user, likedPetsUpdated, adoptedPetsUpdated, fosteredPetsUpdated]); 
 
   const likePet = async (petId) => {
     try {
       await axios.post(`${SERVER_URL}/pets/${petId}/like`, { userId: user._id });
       setLikedPets(prevLikedPets => [...prevLikedPets, petId]);
-      setUnlikedPetsUpdated(true); 
+      setLikedPetsUpdated(prev => !prev); 
     } catch (error) {
       console.error('Error liking pet:', error);
       setError(error);
@@ -52,43 +54,45 @@ export default function MyPetsProvider ({ children }) {
     try {
       await axios.delete(`${SERVER_URL}/pets/${petId}/unlike/${user._id}`);
       setLikedPets(prevLikedPets => prevLikedPets.filter(id => id !== petId));
-      setUnlikedPetsUpdated(false); 
+      setLikedPetsUpdated(prev => !prev);
     } catch (error) {
       console.error('Error unliking pet:', error);
       setError(error);
     }
   };
 
-const adoptPet = async (petId) => {
-  try {
-    await axios.put(`${SERVER_URL}/pets/${petId}/adopt`, { userId: user._id });
-    setAdoptedPets(prevAdoptedPets => [...prevAdoptedPets, petId]); 
-  } catch (error) {
-    console.error('Error adopting pet:', error);
-    setError(error);
-  }
-};
+  const adoptPet = async (petId) => {
+    try {
+      await axios.put(`${SERVER_URL}/pets/${petId}/adopt`, { userId: user._id });
+      setAdoptedPets(prevAdoptedPets => [...prevAdoptedPets, petId]);
+      setAdoptedPetsUpdated(prev => !prev); 
+    } catch (error) {
+      console.error('Error adopting pet:', error);
+      setError(error);
+    }
+  };
 
-const fosterPet = async (petId) => {
-  try {
-    await axios.put(`${SERVER_URL}/pets/${petId}/foster`, { userId: user._id });
-    setFosteredPets(prevFosteredPets => [...prevFosteredPets, petId]); 
-  } catch (error) {
-    console.error('Error fostering pet:', error);
-    setError(error);
-  }
-};
+  const fosterPet = async (petId) => {
+    try {
+      await axios.put(`${SERVER_URL}/pets/${petId}/foster`, { userId: user._id });
+      setFosteredPets(prevFosteredPets => [...prevFosteredPets, petId]);
+      setFosteredPetsUpdated(prev => !prev); // Toggle fosteredPetsUpdated to trigger useEffect
+    } catch (error) {
+      console.error('Error fostering pet:', error);
+      setError(error);
+    }
+  };
 
- const returnPet = async (petId) => {
-  try {
-    await axios.put(`${SERVER_URL}/pets/${petId}/return`, { userId: user._id });
-    setAdoptedPets(prevAdoptedPets => prevAdoptedPets.filter(id => id !== petId));
-    setFosteredPets(prevFosteredPets => prevFosteredPets.filter(id => id !== petId));
-  } catch (error) {
-    console.error('Error returning pet:', error);
-    setError(error);
-  }
-};
+  const returnPet = async (petId) => {
+    try {
+      await axios.put(`${SERVER_URL}/pets/${petId}/return`, { userId: user._id });
+      setAdoptedPets(prevAdoptedPets => prevAdoptedPets.filter(id => id !== petId));
+      setFosteredPets(prevFosteredPets => prevFosteredPets.filter(id => id !== petId));
+    } catch (error) {
+      console.error('Error returning pet:', error);
+      setError(error);
+    }
+  };
 
   return (
     <MyPetsContext.Provider
@@ -107,8 +111,12 @@ const fosterPet = async (petId) => {
         returnPet,
         error,
         loading,
-        unlikedPetsUpdated,
-        setUnlikedPetsUpdated, 
+        likedPetsUpdated,
+        setLikedPetsUpdated,
+        adoptedPetsUpdated,
+        setAdoptedPetsUpdated,
+        fosteredPetsUpdated,
+        setFosteredPetsUpdated,
       }}
     >
       {children}
