@@ -32,7 +32,7 @@ export default function MyPetsProvider ({ children }) {
           setAdoptedPets(userData.adoptedPets || []);
           setFosteredPets(userData.fosteredPets || []);
           const userPets = [...userData.likedPets, ...userData.adoptedPets, ...userData.fosteredPets];
-          setIsOwner(userPets.includes(id)); 
+          setIsOwner(userData.likedPets.includes(id) || userData.adoptedPets.includes(id) || userData.fosteredPets.includes(id));
         }
       } catch (error) {
         console.error('Error fetching user pets:', error);
