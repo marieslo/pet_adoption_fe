@@ -13,13 +13,17 @@ import unlikeIcon from '../../styles/icons/heart-outlined.png';
 export default function SinglePetPage() {
   const { id } = useParams();
   const { fetchPetById } = useContext(FetchPetsContext);
-  const { likePet, unlikePet, adoptPet, fosterPet, returnPet, isCurrentUserAdopterOrFosterer } = useMyPetsContext(); 
+  const { likePet, unlikePet, adoptPet, fosterPet, returnPet, adoptedPets, fosteredPets } = useMyPetsContext(); 
   const { user } = useAuth();
 
   const [showAlert, setShowAlert] = useState(false);
   const [loading, setLoading] = useState(true);
   const [petData, setPetData] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
+
+  const isCurrentUserAdopterOrFosterer = 
+    user && petData && (petData.adoptionStatus === 'adopted' || petData.adoptionStatus === 'fostered') && 
+    (adoptedPets.includes(id) || fosteredPets.includes(id));
 
   useEffect(() => {
     const fetchPetData = async () => {
@@ -34,7 +38,7 @@ export default function SinglePetPage() {
         setLoading(false);
       }
     };
-  
+
     fetchPetData();
   }, [fetchPetById, id, user._id]);
 
@@ -80,7 +84,7 @@ export default function SinglePetPage() {
       setShowAlert(true);
     }
   };
-  
+
   const handleFoster = async () => {
     try {
       await fosterPet(id);
@@ -93,7 +97,7 @@ export default function SinglePetPage() {
       setShowAlert(true);
     }
   };
-  
+
   const handleReturn = async () => {
     try {
       await returnPet(id);
@@ -153,7 +157,7 @@ export default function SinglePetPage() {
               <Card.Title className='single-page-card-title'>{name}</Card.Title>
               <Card.Text className='single-page-card-bio'>{bio}</Card.Text>
             </div>
-            <br/>
+            <br />
             <div className='single-pet-card-fields-container'>
               <Card.Text><u>Type:</u> {type}</Card.Text>
               <Card.Text><u>Status:</u> {adoptionStatus}</Card.Text>
@@ -175,7 +179,7 @@ export default function SinglePetPage() {
                 </button>
               </>
             )}
-            {(adoptionStatus === 'adopted' || adoptionStatus === 'fostered') && 
+            {adoptionStatus === 'adopted' || adoptionStatus === 'fostered' && 
               (
                 <button className='pet-page-btn' onClick={handleReturn}>
                   Return
