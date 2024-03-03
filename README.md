@@ -8,16 +8,19 @@ _This is a MERN full-stack project.\
 > This is the frontend\
 > [This is a link to the backend](https://github.com/marieslo/Pet-Adoption_server)
 
+ ### Deploy:
+ [Netify](https://pet-adoption-fe.netlify.app/)
+ 
 ### Technologies Used:
 - React
 - Axios for requests from the client- to the server-side
 - Cloudinary for uploading files
-- Frontend has been deployed on [Netify](https://pet-adoption-fe.netlify.app/)
 
-### To run locally: 
-- npm i
-- npm run dev
-***
+> [!TIP]
+> ### To run this project locally:
+>  You need to change a value of SERVER_URL in 'api.js' according to the localhost port number that your backend is using, then:
+> - npm i
+> - npm run dev
 
 ## User Interface:
 
