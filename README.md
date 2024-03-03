@@ -18,9 +18,9 @@ _This is a MERN full-stack project.\
 
 > [!TIP]
 > ### To run this project locally:
->  You need to change a value of SERVER_URL in 'api.js' according to the localhost port number that your backend is using, then:
-> - npm i
-> - npm run dev
+> 1. change a value of SERVER_URL in 'api.js' according to the localhost port number that your backend is usin
+> 2. npm i
+> 3. npm run dev
 
 ## User Interface:
 
