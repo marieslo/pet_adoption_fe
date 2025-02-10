@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import localforage from 'localforage';
 import axios from 'axios';
-import { SERVER_URL } from '../../api';
+import { SERVER_URL } from '../api';
 
 export const FetchPetsContext = createContext();
 

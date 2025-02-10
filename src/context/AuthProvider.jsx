@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import localforage from 'localforage';
 import axios from 'axios';
-import { SERVER_URL } from '../../api';
+import { SERVER_URL } from '../api';
 
 export const AuthContext = createContext();
 
@@ -13,18 +13,22 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [authToken, setAuthToken] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const storedUser = await localforage.getItem('user');
-        if (storedUser) {
+        const storedToken = await localforage.getItem('authToken');
+        
+        if (storedUser && storedToken) {
           const parsedUser = JSON.parse(storedUser);
           setUser(parsedUser);
+          setAuthToken(storedToken);
           setIsAdmin(parsedUser.role === 'admin'); 
         }
       } catch (error) {
-        console.error('Error fetching user from local storage:', error);
+        console.error('Error fetching user or token from local storage:', error);
       } finally {
         setLoading(false);
       }
@@ -36,10 +40,14 @@ export const AuthProvider = ({ children }) => {
   const handleUserLogin = async (userData) => {
     try {
       const response = await axios.post(`${SERVER_URL}/auth/login`, userData);
-      const loggedInUser = response.data.user;
+      const { user: loggedInUser, token } = response.data;
+
       setUser(loggedInUser);
+      setAuthToken(token);
       setIsAdmin(loggedInUser && loggedInUser.role === 'admin');
+      
       await localforage.setItem('user', JSON.stringify(loggedInUser));
+      await localforage.setItem('authToken', token);
       await localforage.setItem('isAdmin', JSON.stringify(loggedInUser && loggedInUser.role === 'admin'));
     } catch (error) {
       console.error('Error logging in:', error);
@@ -51,7 +59,9 @@ export const AuthProvider = ({ children }) => {
     try {
       setUser(null);
       setIsAdmin(false);
+      setAuthToken(null);
       await localforage.removeItem('user');
+      await localforage.removeItem('authToken');
       await localforage.removeItem('isAdmin');
     } catch (error) {
       console.error('Error logging out:', error);
@@ -64,7 +74,17 @@ export const AuthProvider = ({ children }) => {
       if (!user || !user._id) {
         throw new Error('User ID not found');
       }
-      const response = await axios.put(`${SERVER_URL}/users/profile/${user._id}`, userData);
+
+      const response = await axios.put(
+        `${SERVER_URL}/users/profile/${user._id}`,
+        userData,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
       const updatedUser = response.data;
       setUser(updatedUser);
       await localforage.setItem('user', JSON.stringify(updatedUser));
@@ -76,7 +96,15 @@ export const AuthProvider = ({ children }) => {
 
   const updateUserPassword = async (currentPassword, newPassword) => {
     try {
-      const response = await axios.put(`${SERVER_URL}/users/profile/${user._id}/password`, { currentPassword, newPassword });
+      const response = await axios.put(
+        `${SERVER_URL}/users/profile/${user._id}/password`,
+        { currentPassword, newPassword },
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
       console.log(response.data);
     } catch (error) {
       console.error('Error updating user password:', error);
@@ -91,7 +119,8 @@ export const AuthProvider = ({ children }) => {
     login: handleUserLogin,
     logout: handleUserLogout,
     updateUser: updateUserFunction,
-    updateUserPassword: updateUserPassword 
+    updateUserPassword: updateUserPassword,
+    authToken,
   };
 
   return (
