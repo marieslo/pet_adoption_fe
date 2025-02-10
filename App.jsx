@@ -1,14 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import './src/styles/style.scss';
+import './public/style.scss';
 import { AuthProvider } from './src/context/AuthProvider';
 import FetchPetsProvider from './src/context/FetchPetsProvider';
 import PetsOfUserProvider from './src/context/PetsOfUserProvider';
 import PostProvider from './src/context/PostProvider';
-import AddPetForm from './src/components/admin/AddPetForm';
-import EditPetForm from './src/components/admin/EditPetForm';
-import PetsDashboard from './src/components/admin/PetsDashboard';
-import UsersDashboard from './src/components/admin/UsersDashboard';
+import AddPetForm from './src/pages/admin/AddPetForm';
+import EditPetForm from './src/pages/admin/EditPetForm';
+import PetsDashboard from './src/pages/admin/PetsDashboard';
+import UsersDashboard from './src/pages/admin/UsersDashboard';
 import Header from './src/components/Header';
 import Footer from './src/components/Footer';
 import WelcomePage from './src/pages/WelcomePage';
@@ -17,7 +17,6 @@ import SearchPage from './src/pages/SearchPage';
 import MyProfilePage from './src/pages/MyProfilePage';
 import MyPetsPage from './src/pages/MyPetsPage/MyPetsPage';
 import SinglePetPage from './src/pages/SinglePetPage';
-
 import UserPostsPage from './src/pages/UsersPostsPage';
 
 export default function App () {
