@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './AdminDashboards.scss';
 import axios from 'axios';
-import { SERVER_URL } from '../../api';
-import LoadingSpinner from '../LoadingSpinner';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const itemsPerPage = 4;
 

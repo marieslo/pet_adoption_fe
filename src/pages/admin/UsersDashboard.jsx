@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import UserPetsModal from './UserPetsModal';
 import { SERVER_URL } from '../../api';
-import LoadingSpinner from '../LoadingSpinner';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const itemsPerPage = 8;
 
