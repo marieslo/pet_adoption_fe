@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import './MyPetsPage.css';
-import { useMyPetsContext } from '../../context/MyPetsProvider';
+import './MyPetsPage.scss';
+import { usePetsOfUserContext } from '../../context/PetsOfUserProvider';
 import PetsList from './PetsList';
-import AdoptablePetsFeed from '../../components/AdoptablePetsFeed/AdoptablePetsFeed';
 
 export default function MyPetsPage() {
   const {
@@ -17,7 +16,7 @@ export default function MyPetsPage() {
     adoptedPetsUpdated,
     fosteredPetsUpdated,
     unlikedPetsUpdated,
-  } = useMyPetsContext();
+  } = usePetsOfUserContext();
 
   const [likedPetsUpdated, setLikedPetsUpdated] = useState(false);
 
@@ -62,10 +61,6 @@ export default function MyPetsPage() {
             <p>
               For now, you don't have any saved, adopted, or fostered pets.
             </p>
-            <div className='mypets-page-petsfeed-container'>
-              Look for adoptable ones
-              <AdoptablePetsFeed />
-            </div>
           </div>
         )}
       </div>

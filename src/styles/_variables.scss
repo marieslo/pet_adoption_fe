@@ -1,0 +1,39 @@
+// Colors
+$primary-color: #af9463; 
+$secondary-color: #d8dabf;
+$accent-color: #ED8936;
+$white: #ffffff;
+$black: #000000;
+$gray-light: #f4f4f4;
+$gray-dark: #333333;
+
+// Fonts
+$font-primary: 'Fraunces', sans-serif;
+$font-secondary: 'Parkinsans', sans-serif;
+$font-base-size: 16px;
+
+// Spacing (margins, paddings, etc.)
+$space-xs: 8px;
+$space-sm: 16px;
+$space-md: 24px;
+$space-lg: 32px;
+$space-xl: 40px;
+
+// Breakpoints for responsive design
+$breakpoint-sm: 576px;  // Mobile devices
+$breakpoint-md: 768px;  // Tablets
+$breakpoint-lg: 1024px; // Desktops
+$breakpoint-xl: 1200px; // Larger screens
+
+// Box Shadows
+$box-shadow-light: 0 4px 6px rgba(0, 0, 0, 0.1);
+$box-shadow-dark: 0 12px 24px rgba(0, 0, 0, 0.3);
+
+// Border Radius
+$border-radius: 16px;
+$border-radius-small: 8px;
+
+// Z-index for stacking contexts
+$z-index-default: 1;
+$z-index-modal: 1000;
+$z-index-tooltip: 2000;
