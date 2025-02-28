@@ -1,55 +1,108 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Box, Card, CardContent, Typography, Chip, Avatar, IconButton, TextField } from '@mui/material';
+import { ThumbUp, Favorite, SentimentVerySatisfied, EmojiEvents } from '@mui/icons-material';
+import { motion } from 'framer-motion';
+import CommentThread from './CommentThread';
 
-export default function Post({ id, username, date, text, tags, userId, reactions, comments, onDelete, onEdit }) {
+export default function Post({ post, onReaction }) {
+  const [showCommentInput, setShowCommentInput] = useState(false);
+
+  const handleToggleCommentInput = () => {
+    setShowCommentInput((prevState) => !prevState);
+  };
+
   return (
-    <div key={id} className="post-container p-6 max-w-xl mx-auto bg-white shadow-lg rounded-md mb-4">
-      <div id="wrapper-postusername-and-post-date" className="flex justify-between items-center mb-2">
-        <div className="post-username font-semibold">{username}</div>
-        {date && <div className="post-date text-sm text-gray-500">{date}</div>}
-      </div>
-
-      <div className="post-text mb-4">{text}</div>
-
-      <div className="post-reactions mb-4 flex space-x-4">
-        <button onClick={() => onEdit(id)} className="text-blue-500 hover:text-blue-700">
-          Edit
-        </button>
-        <button onClick={() => onDelete(id)} className="text-red-500 hover:text-red-700">
-          Delete
-        </button>
-      </div>
-
-      {tags && tags.length > 0 && (
-        <div className="post-tags mb-4">
-          {tags.map((tag, index) => (
-            <span key={index} className="post-tag text-indigo-500">#{tag}</span>
-          ))}
-        </div>
-      )}
-
-      <div className="comments-section">
-        {comments && comments.length > 0 && (
-          <div className="comments-list mb-4">
-            {comments.map((comment, index) => (
-              <div key={index} className="comment p-4 mb-2 border-t border-gray-200">
-                <span className="comment-username font-semibold">{comment.username}: </span>
-                <span className="comment-text">{comment.text}</span>
-              </div>
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <Card sx={{
+        borderRadius: 'var(--border-radius)',
+        boxShadow: '0 0 15px rgba(0, 0, 0, 0.1)',
+        transition: 'transform 0.3s, box-shadow 0.3s',
+        '&:hover': {
+          transform: 'scale(1.02)',
+          boxShadow: '0 10px 25px rgba(0, 0, 0, 0.15)',
+        },
+        backgroundColor: 'var(--light)',
+      }}>
+        <CardContent>
+          <Box display="flex" alignItems="center" marginBottom={2}>
+            <Avatar sx={{ marginRight: 2, width: 40, height: 40 }} src={post.user.profileImage} alt={post.user.firstName} />
+            <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'var(--dark)' }}>
+              {post.user.firstName} {post.user.lastName}
+            </Typography>
+          </Box>
+          <Typography variant="body1" paragraph sx={{ fontSize: '1.1rem', color: 'var(--dark)' }}>
+            {post.content}
+          </Typography>
+          {post.image && (
+            <Box marginBottom={2}>
+              <img src={post.image} alt="Post" style={{ width: '100%', borderRadius: '8px', objectFit: 'cover' }} />
+            </Box>
+          )}
+          <Box display="flex" flexWrap="wrap" gap={1} marginBottom={2}>
+            <Typography variant="subtitle2" sx={{ color: 'var(--dark)' }}>Tags: </Typography>
+            {post.tags.map((tag, index) => (
+              <Chip key={index} label={tag} color="primary" size="small" sx={{ marginBottom: 1 }} />
             ))}
-          </div>
-        )}
-
-        <div className="add-comment mb-4">
-          <input
-            type="text"
-            placeholder="Write a comment..."
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-          <button className="w-full py-2 bg-green-500 text-white font-bold rounded-md hover:bg-green-600 mt-2">
-            Submit Comment
-          </button>
-        </div>
-      </div>
-    </div>
+          </Box>
+          <Typography variant="body2" color="textSecondary" sx={{ marginBottom: 2 }}>
+            <strong>Reactions:</strong> {post.reactions.length}
+          </Typography>
+          <Box display="flex" gap={2} marginTop={2}>
+            <IconButton onClick={() => onReaction(post._id, 'Like')} color="primary">
+              <ThumbUp />
+            </IconButton>
+            <IconButton onClick={() => onReaction(post._id, 'Love')} color="secondary">
+              <Favorite />
+            </IconButton>
+            <IconButton onClick={() => onReaction(post._id, 'Laugh')} color="warning">
+              <SentimentVerySatisfied />
+            </IconButton>
+            <IconButton onClick={() => onReaction(post._id, 'Celebrate')} color="info">
+              <EmojiEvents />
+            </IconButton>
+          </Box>
+          <Box marginTop={2}>
+            <button 
+              onClick={handleToggleCommentInput} 
+              style={{
+                padding: '8px 12px',
+                backgroundColor: 'var(--accent)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+              }}>
+              {showCommentInput ? 'Cancel' : 'Add Comment'}
+            </button>
+            {showCommentInput && (
+              <Box marginTop={2}>
+                <TextField
+                  fullWidth
+                  multiline
+                  rows={3}
+                  placeholder="Write a comment..."
+                  variant="outlined"
+                  sx={{ marginBottom: 2 }}
+                />
+                <button 
+                  style={{
+                    padding: '8px 12px',
+                    backgroundColor: 'var(--primary)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '5px',
+                  }}>
+                  Submit Comment
+                </button>
+              </Box>
+            )}
+          </Box>
+          <CommentThread comments={post.comments} />
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }

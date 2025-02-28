@@ -9,7 +9,8 @@ const fetchSuggestions = async (query) => {
       params: {
         autocomplete: 'true',
         name: query,
-        breed: query, 
+        breed: query,
+        type: query,
       },
     });
     return response.data;
@@ -35,9 +36,9 @@ export default function SearchBar({ onSearch }) {
 
   useEffect(() => {
     const fetchAutoSuggestions = async () => {
-      if (searchTerm.name || searchTerm.breed) {
+      if (searchTerm.name || searchTerm.breed || searchTerm.type) {
         setLoadingSuggestions(true);
-        const query = searchTerm.name || searchTerm.breed;
+        const query = searchTerm.name || searchTerm.breed || searchTerm.type;
         const fetchedSuggestions = await fetchSuggestions(query);
         setSuggestions(fetchedSuggestions);
         setLoadingSuggestions(false);
@@ -47,7 +48,7 @@ export default function SearchBar({ onSearch }) {
     };
 
     fetchAutoSuggestions();
-  }, [searchTerm.name, searchTerm.breed]);
+  }, [searchTerm.name, searchTerm.breed, searchTerm.type]);
 
   const handleSearch = () => {
     const searchParams = {
@@ -59,6 +60,10 @@ export default function SearchBar({ onSearch }) {
       weightKg: isAdvancedSearch ? searchTerm.weightKg : 0,
     };
     onSearch(searchParams);
+
+
+    const searchParamsQuery = new URLSearchParams(searchParams).toString();
+    window.open(`/search?${searchParamsQuery}`, '_blank');
   };
 
   const handleEnterPress = (event) => {
@@ -189,17 +194,23 @@ export default function SearchBar({ onSearch }) {
                 className="w-full px-4 py-2 border rounded-md bg-gray-100"
               />
               {suggestions.length > 0 && (
-                <ul className="suggestions-list">
+                <div className="modal-suggestions">
                   {loadingSuggestions ? (
-                    <li>Loading...</li>
+                    <div>Loading...</div>
                   ) : (
-                    suggestions.map((suggestion, index) => (
-                      <li key={index} onClick={() => handleSuggestionClick(suggestion)}>
-                        {suggestion.name} - {suggestion.breed} ({suggestion.type})
-                      </li>
-                    ))
+                    <ul>
+                      {suggestions.map((suggestion, index) => (
+                        <li key={index} onClick={() => handleSuggestionClick(suggestion)}>
+                          <img src={suggestion.picture} alt={suggestion.name} width={50} height={50} />
+                          <div>
+                            <h3>{suggestion.name}</h3>
+                            <p>{suggestion.breed} ({suggestion.type})</p>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
                   )}
-                </ul>
+                </div>
               )}
             </div>
             <div>

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { Table, Button, Modal, Form, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 import UserPetsModal from './UserPetsModal';
 import { SERVER_URL } from '../../api';
-import LoadingSpinner from '../../components/LoadingSpinner';
 
 const itemsPerPage = 8;
 
@@ -24,7 +24,14 @@ export default function UsersDashboard() {
     try {
       const response = await axios.get(`${SERVER_URL}/users`);
       const modifiedUsers = response.data.map(user => ({ ...user, id: user._id }));
-      modifiedUsers.sort((a, b) => a.lastName.localeCompare(b.lastName));
+
+      // Ensure localeCompare does not throw by safely handling undefined/empty strings
+      modifiedUsers.sort((a, b) => {
+        const lastNameA = a.lastName || '';
+        const lastNameB = b.lastName || '';
+        return lastNameA.localeCompare(lastNameB);
+      });
+
       setUsers(modifiedUsers);
       setLoading(false);
     } catch (error) {
@@ -32,7 +39,7 @@ export default function UsersDashboard() {
     }
   };
 
-  const handleUserPetsClick = (user) => {
+  const handleUserPetsClick = async (user) => {
     setSelectedUser(user);
     setShowUserPetsModal(true);
   };
@@ -118,117 +125,110 @@ export default function UsersDashboard() {
   };
 
   return (
-    <div className='p-4'>
-      <div className="flex justify-between items-center mb-4">
-        <h2 className='text-2xl font-semibold'>Users</h2>
-        <div className="flex items-center">
-          <span className='mr-4'>Total Accounts: {users.length}</span>
-          <div className="flex space-x-2">
-            {loading ? (
-              <LoadingSpinner />
-            ) : (
-              Array.from({ length: Math.ceil(users.length / itemsPerPage) }).map((_, index) => (
-                <button
-                  key={index}
-                  className={`p-2 ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-                  onClick={() => setCurrentPage(index + 1)}
-                >
-                  {index + 1}
-                </button>
-              ))
-            )}
-          </div>
+    <div className='admin-dashboard-container'>
+      <div className="dashboard-header">
+        <h2 className='admin-dashboard-name'>Users</h2>
+      </div>
+      <div className="status-counts">
+        <span className='dashboard-counter'>Total Accounts: {users.length}</span>
+        <div className="pagination-container">
+          Page:
+          {loading ? (
+            <Spinner animation="grow" variant="light" />
+          ) : (
+            Array.from({ length: Math.ceil(users.length / itemsPerPage) }).map((_, index) => (
+              <Button
+                className="pagination-btn"
+                key={index}
+                onClick={() => setCurrentPage(index + 1)}
+                variant={currentPage === index + 1 ? 'light' : 'transparent'}
+              >
+                {index + 1}
+              </Button>
+            ))
+          )}
         </div>
       </div>
-
-      <table className="min-w-full border-collapse">
-        <thead className="bg-gray-200">
+      <Table striped bordered hover className="custom-table">
+        <thead>
           <tr>
-            <th className="p-2 text-left">Last Name</th>
-            <th className="p-2 text-left">First Name</th>
-            <th className="p-2 text-left">User ID</th>
-            <th className="p-2 text-left">Email</th>
-            <th className="p-2 text-left">Phone</th>
-            <th className="p-2 text-left">Bio</th>
-            <th className="p-2 text-center">User's Pets</th>
-            <th className="p-2 text-center">Change Role</th>
-            <th className="p-2 text-center">Delete</th>
+            <th>Last Name</th>
+            <th>First Name</th>
+            <th>User's id</th>
+            <th>Email</th>
+            <th>Phone Number</th>
+            <th>Short Bio</th>
+            <th>User's pets</th>
+            <th>Change Role</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
           {users.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((user) => (
             <tr key={user.id}>
-              <td className="p-2">{user.lastName}</td>
-              <td className="p-2">{user.firstName}</td>
-              <td className="p-2">{user.id}</td>
-              <td className="p-2">{user.email}</td>
-              <td className="p-2">{user.phoneNumber}</td>
-              <td className="p-2">{user.shortBio}</td>
-              <td className="p-2 text-center">
-                <button
-                  className="bg-blue-500 text-white p-2 rounded"
-                  onClick={() => handleUserPetsClick(user)}
-                >
-                  View Pets
+              <td>{user.lastName}</td>
+              <td>{user.firstName}</td>
+              <td>{user.id}</td>
+              <td>{user.email}</td>
+              <td>{user.phoneNumber}</td>
+              <td>{user.shortBio}</td>
+              <td>
+                <button className='dashboard-icon-viewpets' onClick={() => handleUserPetsClick(user)}>
                 </button>
               </td>
-              <td className="p-2 text-center">
+              <td>
                 <button
-                  className="bg-yellow-500 text-white p-2 rounded"
+                  className='dashboard-icon-edit'
                   onClick={() => handleOpenConfirmationModal(user)}
                 >
-                  Edit Role
                 </button>
                 {user.role || 'user'}
               </td>
-              <td className="p-2 text-center">
-                <button
-                  className="bg-red-500 text-white p-2 rounded"
-                  onClick={() => handleDeleteUserClick(user)}
-                >
-                  Delete
+              <td>
+                <button className='dashboard-icon-delete' onClick={() => handleDeleteUserClick(user)}>
                 </button>
               </td>
             </tr>
           ))}
         </tbody>
-      </table>
-      {showConfirmationModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h2>Edit Role</h2>
-            <label htmlFor="role">Change Role</label>
-            <select
-              id="role"
-              value={selectedUserRole}
-              onChange={(e) => setSelectedUserRole(e.target.value)}
-            >
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-            </select>
-            <button className="bg-blue-500 text-white p-2 rounded mt-4" onClick={handleSaveRole}>
-              Save
-            </button>
-            <button className="bg-gray-500 text-white p-2 rounded mt-4" onClick={handleCloseModals}>
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-      {showDeleteWarningModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h2>Delete User</h2>
-            <p>Are you sure you want to delete {selectedUser && selectedUser.firstName}?</p>
-            <button className="bg-gray-500 text-white p-2 rounded" onClick={handleCloseModals}>
-              Cancel
-            </button>
-            <button className="bg-red-500 text-white p-2 rounded" onClick={handleDeleteUser}>
-              Delete
-            </button>
-          </div>
-        </div>
-      )}
+      </Table>
+
+      <Modal show={showConfirmationModal} onHide={handleCloseModals}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group controlId="roleSelect">
+            <Form.Label>Change Role:</Form.Label>
+            <Form.Control as="select" value={selectedUserRole} onChange={(e) => setSelectedUserRole(e.target.value)}>
+              <option value="user">user</option>
+              <option value="admin">admin</option>
+            </Form.Control>
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" className='admin-dashboard-modal-btn' onClick={handleSaveRole}>
+            Save
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showDeleteWarningModal} onHide={handleCloseModals}>
+        <Modal.Header closeButton>
+          <Modal.Title>Delete User</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete {selectedUser && selectedUser.firstName}?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button className='admin-dashboard-modal-btn' variant="secondary" onClick={handleCloseModals}>
+            Cancel
+          </Button>
+          <Button className='admin-dashboard-modal-btn' variant="secondary" onClick={handleDeleteUser}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <UserPetsModal
         showUserPetsModal={showUserPetsModal}
         setShowUserPetsModal={setShowUserPetsModal}

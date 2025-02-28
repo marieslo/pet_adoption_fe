@@ -1,176 +1,169 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
-import ModalLoginSignUp from './ModalLoginSignUp.jsx';
-import { useAuth } from '../context/AuthProvider.jsx';
+import { AppBar, Toolbar, Button, IconButton, Box, Drawer, List, Divider, Menu, MenuItem } from '@mui/material';
+import { Logout, Menu as MenuIcon, Home as HomeIcon, AccountCircle as AccountCircleIcon, Pageview as PageViewIcon, Favorite as FavoriteIcon, StorageRounded, Pets as PetsIcon, People as PeopleIcon } from '@mui/icons-material';
+import gsap from 'gsap';
+import ModalLoginSignUp from './ModalLoginSignUp';
+import ModalConfirmAction from './ModalConfirmAction';
+import { useAuth } from '../context/AuthProvider';
+import HeaderDrawerListItem from './HeaderDrawerListItem';
+import HeaderNavButton from './HeaderNavButton';
 
 export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [modalShow, setModalShow] = useState(false);
-  const [alertShow, setAlertShow] = useState(false);
   const { user, logout, isAdmin } = useAuth();
+  const [modalShow, setModalShow] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [username, setUsername] = useState('');
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [openLogoutModal, setOpenLogoutModal] = useState(false);
+  const headerRef = useRef(null);
 
+  useEffect(() => setLoading(false), [user]);
   useEffect(() => {
-    setLoading(false);
-  }, [user]);
-
-  const handleModalOpen = () => setModalShow(true);
-  const handleModalClose = () => setModalShow(false);
-
-  useEffect(() => {
-    if (user) {
-      setUsername(user.username);
+    if (headerRef.current) {
+      gsap.from(headerRef.current, {
+        opacity: 1,
+        duration: 1,
+        ease: 'power3.out',
+      });
     }
-  }, [user]);
+  }, []);
 
-  const handleLogout = () => setAlertShow(true);
+  const handleLogout = () => setOpenLogoutModal(true);
   const handleLogoutConfirm = () => {
     logout();
     navigate('/');
-    setAlertShow(false);
+    setOpenLogoutModal(false);
   };
-
-  const activeLinkStyle = 'text-red-600 font-bold';
+  const handleLogoutCancel = () => setOpenLogoutModal(false);
+  const toggleDrawer = () => setDrawerOpen(!drawerOpen);
+  const handleAdminMenuClick = (event) => setAnchorEl(event.currentTarget);
+  const handleAdminMenuClose = () => setAnchorEl(null);
 
   return (
-    <nav className="bg-white shadow-md fixed top-0 left-0 w-full z-50 px-6 py-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <NavLink to="/" className="text-gray-800 font-bold text-xl">PetCare</NavLink>
-        </div>
-        <button
-          className="lg:hidden text-gray-800 focus:outline-none"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            className="w-6 h-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
-        </button>
-        <div className={`lg:flex items-center space-x-4 ${mobileMenuOpen ? 'block' : 'hidden'} lg:block`}>
-          <div className="flex flex-col lg:flex-row lg:space-x-6 lg:space-y-0 space-y-4">
+    <>
+      <AppBar
+        position="sticky"
+        sx={{
+          backgroundColor: 'transparent',
+          boxShadow: 'none',
+          top: 0,
+          zIndex: 10,
+          transition: 'top 0.3s',
+          fontFamily: 'var(--font-body)',
+          textTransform: 'uppercase',
+        }}
+        ref={headerRef}
+      >
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', padding: { xs: '0 8px', sm: '0 16px' } }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {!user && location.pathname !== '/' && (
-              <NavLink to="/" className="text-gray-800 hover:text-red-600">Back</NavLink>
+              <Button
+                color="inherit"
+                component={NavLink}
+                to="/"
+                sx={{ marginLeft: 2, cursor: 'pointer', fontFamily: 'var(--font-body)', textTransform: 'uppercase' }}
+              >
+                Back
+              </Button>
             )}
             {user && !loading && (
               <>
-                <NavLink
-                  to="/home"
-                  className={`text-gray-800 hover:text-red-600 ${location.pathname === '/home' ? activeLinkStyle : ''}`}
-                >
-                  Home
-                </NavLink>
-
-                <NavLink
-                  to={`/users/profile/${user._id}`}
-                  className={`text-gray-800 hover:text-red-600 ${location.pathname === `/users/profile/${user._id}` ? activeLinkStyle : ''}`}
-                >
-                  {user.firstName}'s Profile
-                </NavLink>
-
-                <NavLink
-                  to="/users/mypets"
-                  className={`text-gray-800 hover:text-red-600 ${location.pathname === '/users/mypets' ? activeLinkStyle : ''}`}
-                >
-                  Favorite Pets
-                </NavLink>
-
-                <NavLink
-                  to="/pets/search"
-                  className={`text-gray-800 hover:text-red-600 ${location.pathname === '/pets/search' ? activeLinkStyle : ''}`}
-                >
-                  Search
-                </NavLink>
-
-                <NavLink
-                  to="/users/myposts"
-                  className={`text-gray-800 hover:text-red-600 ${location.pathname === '/users/myposts' ? activeLinkStyle : ''}`}
-                >
-                  My Posts
-                </NavLink>
-
+                <HeaderNavButton to="/home" icon={<HomeIcon />} label="Home" activePath={location.pathname} />
+                <HeaderNavButton to="/pets/search" icon={<PageViewIcon />} label="Search" activePath={location.pathname} />
+                <HeaderNavButton to="/users/mypets" icon={<FavoriteIcon />} label="Favorite Pets" activePath={location.pathname} />
                 {isAdmin && (
-                  <div className="relative">
-                    <button className="text-gray-800 hover:text-red-600">Admin Dashboards</button>
-                    <div className="absolute bg-white shadow-lg mt-2 w-40 rounded-md">
-                      <NavLink
-                        to="/petsdashboard"
-                        className={`block px-4 py-2 text-gray-800 hover:bg-gray-200 ${location.pathname === '/petsdashboard' ? activeLinkStyle : ''}`}
-                      >
-                        All Pets
-                      </NavLink>
-                      <NavLink
-                        to="/usersdashboard"
-                        className={`block px-4 py-2 text-gray-800 hover:bg-gray-200 ${location.pathname === '/usersdashboard' ? activeLinkStyle : ''}`}
-                      >
-                        All Users
-                      </NavLink>
-                    </div>
-                  </div>
+                  <>
+                    <Button
+                      color="inherit"
+                      onClick={handleAdminMenuClick}
+                      sx={{
+                        marginLeft: 2,
+                        display: { xs: 'none', sm: 'inline-block' },
+                        cursor: 'pointer',
+                        fontFamily: 'var(--font-body)',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      <StorageRounded sx={{ marginRight: 1 }} /> Admin
+                    </Button>
+                    <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleAdminMenuClose}>
+                      <MenuItem component={NavLink} to="/petsdashboard" onClick={handleAdminMenuClose}>
+                        <PetsIcon sx={{ marginRight: 1 }} /> All Pets
+                      </MenuItem>
+                      <MenuItem component={NavLink} to="/usersdashboard" onClick={handleAdminMenuClose}>
+                        <PeopleIcon sx={{ marginRight: 1 }} /> All Users
+                      </MenuItem>
+                    </Menu>
+                  </>
                 )}
+                <HeaderNavButton to={`/users/profile/${user._id}`} icon={<AccountCircleIcon />} label="Profile Settings" activePath={location.pathname} />
+                <HeaderNavButton to="#" icon={<Logout />} label="Log Out" activePath={location.pathname} onClick={handleLogout} />
               </>
             )}
-          </div>
-          <div className="flex items-center space-x-4">
-            {user ? (
-              <>
-                <span
-                  onClick={handleLogout}
-                  className="text-gray-800 cursor-pointer hover:text-red-600"
-                >
-                  Log Out
-                </span>
-                {alertShow && (
-                  <div className="absolute top-16 right-6 bg-white shadow-lg rounded-md p-4 text-center">
-                    <p>Are you sure you want to log out?</p>
-                    <div className="flex justify-center space-x-4">
-                      <button
-                        className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
-                        onClick={handleLogoutConfirm}
-                      >
-                        Yes
-                      </button>
-                      <button
-                        className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300"
-                        onClick={() => setAlertShow(false)}
-                      >
-                        No
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </>
-            ) : (
+          </Box>
+
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {!user && (
               <span
-                onClick={handleModalOpen}
-                className="text-gray-800 cursor-pointer hover:text-red-600"
+                onClick={() => setModalShow(true)}
+                className="nav-link login-icon"
+                style={{ cursor: 'pointer', fontFamily: 'var(--font-body)', textTransform: 'uppercase' }}
               >
                 Log In / Sign Up
               </span>
             )}
-          </div>
-        </div>
-      </div>
+          </Box>
+
+          <IconButton
+            color="var(--secondary)"
+            sx={{ display: { xs: 'block', sm: 'none' }, marginLeft: 2 }}
+            onClick={toggleDrawer}
+          >
+            <MenuIcon sx={{ fontFamily: 'var(--font-body)', textTransform: 'uppercase' }} />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+
+      <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer}>
+        <List sx={{ backgroundColor: 'var(--secondary)', height: '100vh' }}>
+          {user && !loading && (
+            <>
+              <HeaderDrawerListItem to="/home" icon={<HomeIcon />} label="Home" onClick={toggleDrawer} />
+              <HeaderDrawerListItem to="/pets/search" icon={<PageViewIcon />} label="Search" onClick={toggleDrawer} />
+              <HeaderDrawerListItem to="/users/mypets" icon={<FavoriteIcon />} label="Favorite Pets" onClick={toggleDrawer} />
+              <HeaderDrawerListItem to={`/users/profile/${user._id}`} icon={<AccountCircleIcon />} label="Profile Settings" onClick={toggleDrawer} />
+              {isAdmin && (
+                <>
+                  <Divider />
+                  <HeaderDrawerListItem to="/petsdashboard" icon={<PetsIcon />} label="All Pets" onClick={toggleDrawer} />
+                  <HeaderDrawerListItem to="/usersdashboard" icon={<PeopleIcon />} label="All Users" onClick={toggleDrawer} />
+                  <Divider />
+                </>
+              )}
+              <HeaderDrawerListItem to="#" icon={<Logout />} label="Log Out" onClick={handleLogout} />
+            </>
+          )}
+        </List>
+      </Drawer>
+
+      <ModalConfirmAction
+        open={openLogoutModal}
+        onClose={handleLogoutCancel}
+        title="Log Out"
+        onConfirm={handleLogoutConfirm}
+        onCancel={handleLogoutCancel}
+        confirmText="Yes"
+        cancelText="No"
+      />
       <ModalLoginSignUp
         show={modalShow}
-        onHide={handleModalClose}
-        onSignup={(userData) => console.log('Signing up:', userData)}
-        onLogin={(userData) => console.log('Logging in:', userData)}
-        onAdminStatusChange={(isAdmin) => console.log('Admin status changed:', isAdmin)}
+        onHide={() => setModalShow(false)}
+        onSignupSuccess={(userData) => console.log('Signing up:', userData)}
+        onLoginSuccess={() => console.log('Logging in:', user)}
       />
-    </nav>
+    </>
   );
 }

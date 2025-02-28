@@ -1,23 +1,23 @@
 import React, { useEffect, useState, useContext } from 'react';
+import { Card, Spinner, Alert } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
-import { FetchPetsContext } from '../context/FetchPetsProvider';
-import { usePetsOfUserContext } from '../context/PetsOfUserProvider';
-import { useAuth } from '../context/AuthProvider';
-import { ThumbUp, ThumbDown } from '@mui/icons-material';
 import localforage from 'localforage';
-import LoadingSpinner from '../components/LoadingSpinner';
+import { FetchPetsContext } from '../context/FetchPetsProvider';
+import { useMyPetsContext } from '../context/MyPetsProvider';
+import { useAuth } from '../context/AuthProvider';
+import { Favorite, FavoriteBorder } from '@mui/icons-material';
 
 export default function SinglePetPage() {
   const { id } = useParams();
   const { fetchPetById } = useContext(FetchPetsContext);
-  const { likePet, unlikePet, adoptPet, fosterPet, returnPet, adoptedPets, fosteredPets, isOwner } = usePetsOfUserContext();
+  const { likePet, unlikePet, adoptPet, fosterPet, returnPet, adoptedPets, fosteredPets, isOwner } = useMyPetsContext(); 
   const { user } = useAuth();
 
   const [showAlert, setShowAlert] = useState(false);
   const [loading, setLoading] = useState(true);
   const [petData, setPetData] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
-
+  
   useEffect(() => {
     const fetchPetData = async () => {
       try {
@@ -76,7 +76,7 @@ export default function SinglePetPage() {
       setShowAlert(true);
     }
   };
-
+  
   const handleFoster = async () => {
     try {
       await fosterPet(id);
@@ -89,7 +89,7 @@ export default function SinglePetPage() {
       setShowAlert(true);
     }
   };
-
+  
   const handleReturn = async () => {
     try {
       await returnPet(id);
@@ -104,7 +104,7 @@ export default function SinglePetPage() {
   };
 
   if (loading) {
-    return <LoadingSpinner />;
+    return <Spinner className='single-pet-page-spinner' animation="grow" variant="light" />;
   }
 
   if (!petData) {
@@ -127,70 +127,68 @@ export default function SinglePetPage() {
 
   return (
     <>
-      <div className="flex justify-center mt-6">
-        <div className="bg-white shadow-lg rounded-lg w-96 p-6">
-          <div className="relative">
-            <button
-              className="absolute top-2 right-2 text-primary"
-              onClick={isLiked ? handleUnlike : handleLike}
-            >
-              {isLiked ? (
-                <ThumbUp className="text-blue-500" />
-              ) : (
-                <ThumbDown className="text-gray-500" />
-              )}
-            </button>
-            <div className="relative">
-              <img src={picture} alt={`Image of ${name}`} className="w-full h-64 object-cover rounded-lg" />
-              <h2 className="mt-4 text-2xl font-semibold text-center">{name}</h2>
-              <p className="mt-2 text-center text-gray-600">{bio}</p>
+      <div className='single-pet-card-container'>
+        <Card className='single-page-pet-card'>
+          <button className="like-btn-singlepage" onClick={isLiked ? handleUnlike : handleLike}>
+            {isLiked ? (
+              <Favorite className="like-icon" />
+            ) : (
+              <FavoriteBorder className="like-icon" />
+            )}
+          </button>
+          <Card.Body>
+            <div className='pet-picture-and-info-container'>
+              <div className="custom-frame">
+                <Card.Img
+                  variant="top"
+                  src={picture}
+                  alt={`Image of ${name}`}
+                  className="card-img"
+                />
+              </div>
+              <Card.Title className='single-page-card-title'>{name}</Card.Title>
+              <Card.Text className='single-page-card-bio'>{bio}</Card.Text>
             </div>
-            <div className="mt-4">
-              <p><span className="font-semibold">Type:</span> {type}</p>
-              <p><span className="font-semibold">Status:</span> {adoptionStatus}</p>
-              <p><span className="font-semibold">Height, cm:</span> {heightCm}</p>
-              <p><span className="font-semibold">Weight, kg:</span> {weightKg}</p>
-              <p><span className="font-semibold">Color:</span> {color}</p>
-              <p><span className="font-semibold">Hypoallergenic:</span> {hypoallergenic ? 'Yes' : 'No'}</p>
-              <p><span className="font-semibold">Dietary Restrictions:</span> {dietaryRestrictions}</p>
-              <p><span className="font-semibold">Breed:</span> {breed}</p>
+            <br />
+            <div className='single-pet-card-fields-container'>
+              <Card.Text><u>Type:</u> {type}</Card.Text>
+              <Card.Text><u>Status:</u> {adoptionStatus}</Card.Text>
+              <Card.Text><u>Height, cm:</u> {heightCm}</Card.Text>
+              <Card.Text><u>Weight, kg:</u> {weightKg}</Card.Text>
+              <Card.Text><u>Color:</u> {color}</Card.Text>
+              <Card.Text><u>Hypoallergenic:</u> {hypoallergenic ? 'Yes' : 'No'}</Card.Text>
+              <Card.Text><u>Dietary Restrictions:</u> {dietaryRestrictions}</Card.Text>
+              <Card.Text><u>Breed:</u> {breed}</Card.Text>
             </div>
-            <div className="flex justify-center gap-4 mt-4">
-              {adoptionStatus === 'adoptable' ? (
+            <div className="pet-buttons">
+              {(adoptionStatus === 'adoptable') ? (
                 <>
-                  <button
-                    onClick={handleAdopt}
-                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                  >
+                  <button className='pet-page-btn' onClick={handleAdopt}>
                     Adopt
                   </button>
-                  <button
-                    onClick={handleFoster}
-                    className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600"
-                  >
+                  <button className='pet-page-btn' onClick={handleFoster}>
                     Foster
                   </button>
                 </>
               ) : (
-                <button
-                  onClick={handleReturn}
-                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                >
-                  Return
-                </button>
+                // isOwner && (
+                  <button
+                    className='pet-page-btn'
+                    onClick={handleReturn}
+                  >
+                    Return
+                  </button>
+                // )
               )}
             </div>
-          </div>
-        </div>
+          </Card.Body>
+        </Card>
+        {showAlert && (
+          <Alert className='alert-single-pet-page' variant="warning" onClose={() => setShowAlert(false)} dismissible>
+            <p>Something went wrong. Please try again later</p>
+          </Alert>
+        )}
       </div>
-
-      {showAlert && (
-        <div className="alert-single-pet-page absolute top-20 left-1/2 transform -translate-x-1/2 w-80">
-          <div className="bg-yellow-100 p-4 text-yellow-800 rounded-lg shadow-md">
-            <p>Please log in to perform this action</p>
-          </div>
-        </div>
-      )}
     </>
   );
 }

@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { usePostContext } from '../context/PostProvider';
+import { usePostStore} from '../store/usePostStore';
 
-export default function CreatePost({ updatedUsername, pets }) {
-  const { handleCreatePost } = usePostContext();
+export default function CreatePost({ pets }) {
+  const { handleCreatePost } = usePostStore();
   const [postText, setPostText] = useState('');
   const [tags, setTags] = useState([]);
   const [selectedPet, setSelectedPet] = useState('');
@@ -39,7 +39,6 @@ export default function CreatePost({ updatedUsername, pets }) {
       <textarea
         value={postText}
         onChange={handlePostChange}
-        placeholder={`What do you have in mind, ${updatedUsername}?`}
         className="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4"
       />
 
@@ -72,4 +71,4 @@ export default function CreatePost({ updatedUsername, pets }) {
       </button>
     </div>
   );
-}
+} 

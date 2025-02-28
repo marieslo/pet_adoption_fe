@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import './AdminDashboards.scss';
+import { Table, Button, Modal, Spinner } from 'react-bootstrap';
 import axios from 'axios';
-import LoadingSpinner from '../../components/LoadingSpinner';
+import { SERVER_URL } from '../../api';
 
 const itemsPerPage = 4;
 
@@ -77,29 +77,29 @@ export default function PetsDashboard() {
         <span className="dashboard-counter">Adopted: {adoptedCount}</span>
         <span className="dashboard-counter">Fostered: {fosteredCount}</span>
         <span className="dashboard-counter">Adoptable: {adoptableCount}</span>
-        <button onClick={handleAddNewPet} className="add-new-pet-btn">
+        <Button onClick={handleAddNewPet} className="add-new-pet-btn" variant="secondary">
           Add Pet
-        </button>
+        </Button>
       </div>
       <div className="pagination-container">
         Page:
         {loading ? (
-          <LoadingSpinner />
+          <Spinner animation="grow" variant="light" /> 
         ) : (
           Array.from({ length: Math.ceil(pets.length / itemsPerPage) }).map((_, index) => (
-            <button
-            className={`pagination-btn ${currentPage === index + 1 ? 'active' : ''}`}
-            key={index}
-            onClick={() => paginate(index + 1)}
-          >
-            {index + 1}
-          </button>
-          
+            <Button
+              className="pagination-btn"
+              key={index}
+              onClick={() => paginate(index + 1)}
+              variant={currentPage === index + 1 ? 'light' : 'transparent'}
+            >
+              {index + 1}
+            </Button>
           ))
         )}
       </div>
 
-      <table striped bordered hover className="custom-table">
+      <Table striped bordered hover className="custom-table">
         <thead>
           <tr>
             <th>Name</th>
@@ -127,15 +127,15 @@ export default function PetsDashboard() {
               <td className="w-max-content">{pet.type}</td>
               <td className="w-max-content">{pet.adoptionStatus}</td>
               <td>
-                <div className="picture-frame">
-                  <img src={pet.picture} alt={pet.name} />
-                </div>
+                  <div className="picture-frame">
+                    <img src={pet.picture} alt={pet.name} />
+                  </div>
               </td>
               <td>{pet.heightCm}</td>
               <td>{pet.weightKg}</td>
               <td>{pet.color}</td>
               <td>{pet.bio}</td>
-              <td>{pet.hypoallergenic ? 'yes' : 'no'}</td>
+              <td>{pet.hypoallergenic ? 'yes' : 'no'}</td> 
               <td>{pet.dietaryRestrictions}</td>
               <td>{pet.breed}</td>
               <td>
@@ -154,28 +154,24 @@ export default function PetsDashboard() {
             </tr>
           ))}
         </tbody>
-      </table>
-      {showDeleteModal && (
-        <div className="custom-modal-overlay">
-          <div className="custom-modal">
-            <div className="custom-modal-header">
-              <h3>Delete Pet</h3>
-              <button className="close-modal-btn" onClick={handleDeleteCancel}>×</button>
-            </div>
-            <div className="custom-modal-body">
-              Are you sure you want to delete {selectedPet && selectedPet.name}?
-            </div>
-            <div className="custom-modal-footer">
-              <button className="modal-btn cancel-btn" onClick={handleDeleteCancel}>
-                Cancel
-              </button>
-              <button className="modal-btn delete-btn" onClick={handleDeleteConfirm}>
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      </Table>
+
+      <Modal show={showDeleteModal} onHide={handleDeleteCancel}>
+        <Modal.Header closeButton>
+          <Modal.Title>Delete Pet</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete {selectedPet && selectedPet.name}?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button className='admin-dashboard-modal-btn' variant="secondary" onClick={handleDeleteCancel}>
+            Cancel
+          </Button>
+          <Button className='admin-dashboard-modal-btn' variant="secondary" onClick={handleDeleteConfirm}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
