@@ -1,85 +1,96 @@
 import React, { useState } from 'react';
-import SignUpForm from './SignUpForm';
+import { Dialog, DialogContent, DialogTitle, IconButton, Tabs, Tab } from '@mui/material';
+import { Close as CloseIcon } from '@mui/icons-material';
 import LoginForm from './LoginForm';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import localforage from 'localforage';
-import { SERVER_URL } from '../api';
+import SignupForm from './SignUpForm';
 
-export default function ModalLoginSignUp({ show, onHide }) {
-  const [isLoginPage, setIsLoginPage] = useState(true);
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+export default function ModalLoginSignUp({
+  show,
+  onHide,
+  onLoginSuccess,
+  onSignupSuccess,
+  customTabColor = '#FF3FA4',
+}) {
+  const [selectedTab, setSelectedTab] = useState(0);
 
-  const handleTogglePage = () => {
-    setIsLoginPage(!isLoginPage);
+  const handleTabChange = (_, newValue) => {
+    setSelectedTab(newValue);
   };
 
-  const handleRedirectToHome = () => {
+  const handleLoginSuccess = () => {
+    console.log('Login Success - Closing modal');
+    onLoginSuccess();
     onHide();
-    navigate('/home');
   };
 
-  const handleLogin = async (userData) => {
-    try {
-      const response = await axios.post(`${SERVER_URL}/auth/login`, userData);
-      const { data: { user, token } } = response;
-      await localforage.setItem('user', JSON.stringify(user));
-      await localforage.setItem('token', token);
-      handleRedirectToHome();
-    } catch (error) {
-      console.error('Error during login:', error);
-      setError('User not registered or incorrect password');
-    }
-  };
-
-  const handleSignup = async (formData) => {
-    try {
-      const response = await axios.post(`${SERVER_URL}/auth/signup`, formData);
-      const { data: { user, token } } = response;
-      await localforage.setItem('user', JSON.stringify(user));
-      await localforage.setItem('token', token);
-      handleRedirectToHome();
-    } catch (error) {
-      console.error('Error during signup:', error);
-      setError('Signup process was unsuccessful');
-    }
+  const handleSignupSuccess = (userData) => {
+    console.log('Signup Success - Closing modal');
+    onSignupSuccess(userData);
+    onHide();
   };
 
   return (
-    <div className={`fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 ${show ? 'block' : 'hidden'}`}>
-      <div className="bg-white p-6 rounded-lg w-96">
-        <div className="flex justify-between items-center border-b pb-4">
-          <div
-            className={`text-lg font-semibold cursor-pointer ${isLoginPage ? 'text-blue-500' : 'text-gray-600'}`}
-            onClick={handleTogglePage}
-          >
-            Login
-          </div>
-          <div
-            className={`text-lg font-semibold cursor-pointer ${!isLoginPage ? 'text-blue-500' : 'text-gray-600'}`}
-            onClick={handleTogglePage}
-          >
-            Sign Up
-          </div>
-        </div>
+    <Dialog
+      open={show}
+      onClose={onHide}
+      fullWidth
+      PaperProps={{
+        sx: {
+          borderRadius: 'var(--border-radius)',
+          padding: '20px',
+          position: 'fixed',
+          top: '0',
+          width: '80%',
+          maxWidth: '360px',
+          height: 'auto',
+          '@media (max-width: 600px)': {
+            width: '90%',
+            padding: '15px',
+          },
+          '@media (max-width: 400px)': {
+            width: '95%',
+            padding: '10px',
+          },
+        },
+      }}
+    >
+      <DialogTitle className="position-relative">
+        <IconButton onClick={onHide} className="position-absolute top-0 end-0 p-1">
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
 
-        {error && <div className="text-red-500 mt-4">{error}</div>}
-
-        <div className="mt-4">
-          {isLoginPage ? (
-            <LoginForm onSubmit={handleLogin} onLoginSuccess={handleRedirectToHome} />
+      <DialogContent>
+        <Tabs value={selectedTab} onChange={handleTabChange} centered>
+          <Tab
+            label="Log In"
+            sx={{
+              color: selectedTab === 0 ? customTabColor : 'inherit',
+              '&.Mui-selected': {
+                color: customTabColor,
+                fontWeight: 'bold',
+              },
+            }}
+          />
+          <Tab
+            label="Sign Up"
+            sx={{
+              color: selectedTab === 1 ? customTabColor : 'inherit',
+              '&.Mui-selected': {
+                color: customTabColor,
+                fontWeight: 'bold',
+              },
+            }}
+          />
+        </Tabs>
+        <div>
+          {selectedTab === 0 ? (
+            <LoginForm onLoginSuccess={handleLoginSuccess} />
           ) : (
-            <SignUpForm onSubmit={handleSignup} onSignupSuccess={handleRedirectToHome} />
+            <SignupForm onSignupSuccess={handleSignupSuccess} />
           )}
         </div>
-
-        <div className="mt-4 text-center">
-          <button onClick={onHide} className="text-gray-500 hover:text-gray-800">
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

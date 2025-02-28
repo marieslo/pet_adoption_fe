@@ -4,11 +4,11 @@ import { useAuth } from './AuthProvider';
 import { useParams } from 'react-router-dom'; 
 import { SERVER_URL } from '../api';
 
-const PetsOfUserContext = createContext();
+const MyPetsContext = createContext();
 
-export const usePetsOfUserContext = () => useContext(PetsOfUserContext);
+export const useMyPetsContext = () => useContext(MyPetsContext);
 
-export default function PetsOfUserProvider ({ children }) {
+export default function MyPetsProvider ({ children }) {
   const { user } = useAuth();
   const { id } = useParams(); 
   const [likedPets, setLikedPets] = useState([]);
@@ -100,7 +100,7 @@ export default function PetsOfUserProvider ({ children }) {
   };
   
   return (
-    <PetsOfUserContext.Provider
+    <MyPetsContext.Provider
       value={{
         likedPets,
         setLikedPets,
@@ -126,6 +126,6 @@ export default function PetsOfUserProvider ({ children }) {
       }}
     >
       {children}
-    </PetsOfUserContext.Provider>
+    </MyPetsContext.Provider>
   );
 }

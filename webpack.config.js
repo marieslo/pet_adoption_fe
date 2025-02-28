@@ -1,53 +1,55 @@
 import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-const __dirname = path.resolve();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export default {
-  entry: './main.jsx',
-  output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist'),
-    publicPath: '/',
-  },
+  entry: './src/main.jsx',
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
+        test: /\.(js|jsx|ts|tsx)$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript'], // Add TypeScript support
+          },
         },
       },
       {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
+      {
         test: /\.scss$/,
-        use: [
-          'style-loader',
-          'css-loader',
-          'sass-loader',
-        ],
+        use: ['style-loader', 'css-loader', 'sass-loader'],
       },
     ],
   },
-  resolve: {
-    extensions: ['.js', '.jsx'],
-  },
-  mode: 'development',  // Change to 'production' for production builds
   plugins: [
     new HtmlWebpackPlugin({
       template: './public/index.html',
     }),
   ],
   devServer: {
-    static: path.resolve(__dirname, 'public'),
+    static: {
+      directory: path.join(__dirname, 'dist'),
+    },
     open: true,
-    port: 8080,
-    proxy: [
-      {
-        context: ['/api'],
-        target: 'http://localhost:3000',
-        secure: false,
-      },
-    ],
+    hot: true, 
+  },
+  resolve: {
+    extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'], 
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+    },
+  },
+  output: {
+    filename: 'main.js',
+    path: path.resolve(__dirname, 'dist'),
   },
 };

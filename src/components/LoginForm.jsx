@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Form, Alert, Spinner } from 'react-bootstrap';
 import { useAuth } from '../context/AuthProvider';
 
 export default function LoginForm({ onLoginSuccess }) {
@@ -25,48 +26,38 @@ export default function LoginForm({ onLoginSuccess }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {showAlert && <div className="text-red-500 bg-red-100 p-3 rounded-md">User not registered or incorrect password</div>}
-
-      <div>
-        <label htmlFor="email" className="block text-lg font-semibold">Email address</label>
-        <input
+    <Form onSubmit={handleSubmit}>
+      {showAlert && <Alert variant="danger">User not registered or incorrect password</Alert>}
+      
+      <Form.Group controlId="formBasicEmail">
+        <Form.Label>Email address</Form.Label>
+        <Form.Control
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
-      </div>
-
-      <div>
-        <label htmlFor="password" className="block text-lg font-semibold">Password</label>
-        <input
+      </Form.Group>
+      
+      <Form.Group controlId="formBasicPassword">
+        <Form.Label>Password</Form.Label>
+        <Form.Control
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
-      </div>
+      </Form.Group>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full bg-blue-500 text-white p-3 mt-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-      >
+      <button className="switch-login-signup-btn" type="submit">
         {loading ? (
-          <span className="flex justify-center items-center space-x-2">
-            <svg className="w-5 h-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
-              <path d="M4 12a8 8 0 0 1 8-8 8 8 0 0 0 0 16" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
-            </svg>
-            <span>Loading...</span>
-          </span>
+          <>
+            <Spinner as="span" animation="grow" size="sm" role="status" aria-hidden="true" />
+          </>
         ) : (
           'Login'
         )}
       </button>
-    </form>
+    </Form>
   );
 }

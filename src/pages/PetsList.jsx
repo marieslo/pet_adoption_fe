@@ -1,5 +1,5 @@
 import React from 'react';
-import PetCard from '../../components/PetCard';
+import PetCard from '../components/PetCard';
 
 export default function PetsList({ title, cssClass, pets, onLike, onUnlike }) {
   const hasPets = pets.length > 0;

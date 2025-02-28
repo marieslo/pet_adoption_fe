@@ -7,12 +7,11 @@ export default function HomePage() {
 
   return (
     <div
-      className="relative bg-cover bg-right h-screen w-screen z-1"
-      style={{ backgroundImage: "url('../../styles/backgrounds/home-page-background.jpg')" }}
+      className="home-page-container"
     >
       {user && (
         <div
-          className="absolute top-0 left-0 mt-48 ml-24 text-xl"
+          className="absolute top-1/2 left-1/4 transform -translate-x-1/2 -translate-y-1/2 text-xl md:text-2xl lg:text-3xl text-white text-center px-6 sm:px-12"
           style={{
             color: 'var(--primary-color)', 
             fontFamily: 'var(--font-primary)', 
