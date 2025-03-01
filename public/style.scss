@@ -1,20 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Darker+Grotesque:wght@300..900&display=swap');
 
 :root {
-  --primary: #837364;
+  --primary: #a25579;
   --secondary: #a49085;
   --accent: #a72d66;
   --light:#efdede;
   --dark: #392222;
-  --font-header: "Archivo", "serif";
-  --font-body: "Archivo", "sans-serif";
+  --font-body: "Darker Grotesque", "serif";
   --border-radius: 30px;
 }
 
 body {
   margin: 0;
   padding: 0;
-  font-family: var(--font-body), sans-serif;
+  font-family: var(--font-body), serif;
   background-color: var(--secondary);
   cursor: none;
 }
@@ -41,11 +40,14 @@ body {
 }
 
 
-.welcome-page-container, .fav-pets-page-container, .profile-page-container {
-  background-size: cover;
-  background-position: center;
+.welcome-page-container, 
+.fav-pets-page-container, 
+.profile-page-container {
+  background-size: auto 70%;
+  background-position: left bottom;
+  background-repeat: no-repeat;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh; 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -53,15 +55,24 @@ body {
   overflow: hidden;
 }
 
+@media (max-width: 768px) {
+  .welcome-page-container, 
+  .fav-pets-page-container, 
+  .profile-page-container {
+    background-size: auto 30%; 
+  }
+}
+
+
 .welcome-page-container {
-  background-image: url('./backgrounds/welcome-page-background.jpg');
+  background-image: url('./backgrounds/welcome-page-background.png');
 }
 
 .fav-pets-page-container {
-background-image: url('./backgrounds/fav-page-background.jpg');
+background-image: url('./backgrounds/fav-page-background.png');
 }
 
 .profile-page-container {
-  background-image: url('./backgrounds/profile-page-background.jpg');
+  background-image: url('./backgrounds/profile-page-background.png');
     
 }

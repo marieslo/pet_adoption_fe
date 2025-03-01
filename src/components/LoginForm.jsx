@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Form, Alert, Spinner } from 'react-bootstrap';
+import { Alert } from 'react-bootstrap';
 import { useAuth } from '../context/AuthProvider';
+import CustomInput from './CustomInput';
+import CustomButton from './CustomButton';
 
 export default function LoginForm({ onLoginSuccess }) {
   const [email, setEmail] = useState('');
@@ -26,38 +28,33 @@ export default function LoginForm({ onLoginSuccess }) {
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
       {showAlert && <Alert variant="danger">User not registered or incorrect password</Alert>}
       
-      <Form.Group controlId="formBasicEmail">
-        <Form.Label>Email address</Form.Label>
-        <Form.Control
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-      </Form.Group>
-      
-      <Form.Group controlId="formBasicPassword">
-        <Form.Label>Password</Form.Label>
-        <Form.Control
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-      </Form.Group>
+      <CustomInput
+        label="Email address"
+        name="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        type="email"
+        required
+      />
 
-      <button className="switch-login-signup-btn" type="submit">
-        {loading ? (
-          <>
-            <Spinner as="span" animation="grow" size="sm" role="status" aria-hidden="true" />
-          </>
-        ) : (
-          'Login'
-        )}
-      </button>
-    </Form>
+      <CustomInput
+        label="Password"
+        name="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        type="password"
+        required
+      />
+
+      <CustomButton
+        text="Login"
+        color="#a72d66"
+        isLoading={loading}
+        type="submit"
+      />
+    </form>
   );
 }

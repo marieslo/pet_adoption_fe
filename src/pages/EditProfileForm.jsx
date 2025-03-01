@@ -1,8 +1,8 @@
-// EditProfileForm.jsx
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthProvider.jsx';
-import { Box, Button, Typography, Alert, CircularProgress } from '@mui/material';
-import CustomTextField from '../components/CustomTextField';
+import { Box, Typography, Alert } from '@mui/material';
+import CustomInput from '../components/CustomInput.jsx';
+import CustomButton from '../components/CustomButton.jsx';
 
 export default function EditProfileForm({ onSave, initialData }) {
   const { updateUser, updateUserPassword } = useAuth();
@@ -17,6 +17,7 @@ export default function EditProfileForm({ onSave, initialData }) {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     const handleKeyPress = (event) => {
@@ -60,6 +61,8 @@ export default function EditProfileForm({ onSave, initialData }) {
     }
   };
 
+  const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
+
   return (
     <Box
       sx={{
@@ -95,7 +98,7 @@ export default function EditProfileForm({ onSave, initialData }) {
         </Alert>
       )}
 
-      <CustomTextField
+      <CustomInput
         label="Email"
         type="email"
         name="email"
@@ -104,34 +107,40 @@ export default function EditProfileForm({ onSave, initialData }) {
         placeholder="Enter your email"
       />
 
-      <CustomTextField
+      <CustomInput
         label="Current Password"
-        type="password"
+        type={showPassword ? 'text' : 'password'}
         name="currentPassword"
         value={formData.currentPassword}
         onChange={handleChange}
         placeholder="***********"
+        showPassword={showPassword}
+        togglePasswordVisibility={togglePasswordVisibility}
       />
 
-      <CustomTextField
+      <CustomInput
         label="New Password"
-        type="password"
+        type={showPassword ? 'text' : 'password'}
         name="newPassword"
         value={formData.newPassword}
         onChange={handleChange}
         placeholder="At least 6 characters"
+        showPassword={showPassword}
+        togglePasswordVisibility={togglePasswordVisibility}
       />
 
-      <CustomTextField
+      <CustomInput
         label="Confirm New Password"
-        type="password"
+        type={showPassword ? 'text' : 'password'}
         name="confirmNewPassword"
         value={formData.confirmNewPassword}
         onChange={handleChange}
         placeholder="Confirm new password"
+        showPassword={showPassword}
+        togglePasswordVisibility={togglePasswordVisibility}
       />
 
-      <CustomTextField
+      <CustomInput
         label="First Name"
         type="text"
         name="firstName"
@@ -139,7 +148,8 @@ export default function EditProfileForm({ onSave, initialData }) {
         onChange={handleChange}
         placeholder="Your first name"
       />
-      <CustomTextField
+
+      <CustomInput
         label="Short Bio"
         type="text"
         name="shortBio"
@@ -147,22 +157,12 @@ export default function EditProfileForm({ onSave, initialData }) {
         onChange={handleChange}
         placeholder="A short bio about yourself"
       />
-      <Button
-        variant="contained"
-        fullWidth
-        sx={{ 
-          backgroundColor: 'var(--primary)', 
-          color: 'var(--light)', 
-          borderRadius: 'var(--border-radius)',
-          '&:hover': {
-            backgroundColor: 'var(--accent)'
-          }
-        }}
+
+      <CustomButton
+        text={loading ? 'Saving...' : 'Save'}
+        isLoading={loading}
         onClick={handleSave}
-        disabled={loading}
-      >
-        {loading ? <CircularProgress size={24} sx={{ color: 'var(--light)' }} /> : 'Save'}
-      </Button>
+      />
     </Box>
   );
 }

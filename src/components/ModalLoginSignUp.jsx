@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogTitle, IconButton, Tabs, Tab } from '@mui/material';
-import { Close as CloseIcon } from '@mui/icons-material';
+import CloseIcon from '@mui/icons-material/Close';
 import LoginForm from './LoginForm';
 import SignupForm from './SignUpForm';
+import { useNavigate } from 'react-router-dom';
 
 export default function ModalLoginSignUp({
   show,
@@ -12,22 +13,28 @@ export default function ModalLoginSignUp({
   customTabColor = '#FF3FA4',
 }) {
   const [selectedTab, setSelectedTab] = useState(0);
-
+  const navigate = useNavigate(); 
+  
   const handleTabChange = (_, newValue) => {
     setSelectedTab(newValue);
   };
 
-  const handleLoginSuccess = () => {
-    console.log('Login Success - Closing modal');
-    onLoginSuccess();
+  const handleRedirectToHome = () => {
     onHide();
+    navigate('/home');
+  };
+
+
+  const handleLoginSuccess = () => {
+  onLoginSuccess();
+   handleRedirectToHome();
   };
 
   const handleSignupSuccess = (userData) => {
-    console.log('Signup Success - Closing modal');
     onSignupSuccess(userData);
-    onHide();
+    handleRedirectToHome();
   };
+
 
   return (
     <Dialog

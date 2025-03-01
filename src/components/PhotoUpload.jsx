@@ -1,10 +1,12 @@
-// src/components/PhotoUpload.jsx
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Box, Typography, IconButton } from '@mui/material';
-import { Delete } from 'lucide-react';
+import { Delete, Person } from '@mui/icons-material';
+import { blue } from '@mui/material/colors';
 
-export default function PhotoUpload ({ photo, onPhotoChange }) {
+export default function PhotoUpload({ photo, onPhotoChange }) {
+  const [isSkipping, setIsSkipping] = useState(false);
+
   const onDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
     const reader = new FileReader();
@@ -21,10 +23,15 @@ export default function PhotoUpload ({ photo, onPhotoChange }) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
-      'image/*': []
+      'image/*': [],
     },
     maxFiles: 1,
   });
+
+  const handleSkip = () => {
+    setIsSkipping(true);
+    onPhotoChange(null);
+  };
 
   return (
     <Box sx={{ mb: 2 }}>
@@ -72,6 +79,20 @@ export default function PhotoUpload ({ photo, onPhotoChange }) {
               <Delete />
             </IconButton>
           </Box>
+        ) : isSkipping ? (
+          <Box
+            sx={{
+              width: '150px',
+              height: '150px',
+              backgroundColor: blue[300], 
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Person sx={{ fontSize: 50, color: 'white' }} />
+          </Box>
         ) : (
           <Typography>
             {isDragActive
@@ -80,6 +101,11 @@ export default function PhotoUpload ({ photo, onPhotoChange }) {
           </Typography>
         )}
       </Box>
+      <Box sx={{ mt: 1 }}>
+        <button onClick={handleSkip} style={{ padding: '10px', cursor: 'pointer' }}>
+          Skip
+        </button>
+      </Box>
     </Box>
   );
-};
+}

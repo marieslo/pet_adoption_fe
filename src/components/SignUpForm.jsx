@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { Alert, Button, InputAdornment, IconButton, Checkbox, FormControlLabel, TextField, Tooltip, Stepper, Step, StepLabel } from '@mui/material'; // Corrected import
+import { Alert, InputAdornment, IconButton, Checkbox, FormControlLabel, Stepper, Step, StepLabel, Box} from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import axios from 'axios';
 import localforage from 'localforage';
 import { useAuth } from '../context/AuthProvider';
 import { SERVER_URL } from '../api';
-
-
+import CustomInput from './CustomInput';
+import CustomButton from './CustomButton';
+import { styled } from '@mui/material/styles';
 
 export default function SignupForm({ onSignupSuccess }) {
   const [formData, setFormData] = useState({
@@ -23,6 +24,34 @@ export default function SignupForm({ onSignupSuccess }) {
   const [activeStep, setActiveStep] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
+
+  const CustomStepLabel = styled(StepLabel)(({ theme }) => ({
+    '&.Mui-active': {
+      color: theme.palette.primary.main,
+      fontWeight: 'bold',
+    },
+    '&.Mui-completed': {
+      color: theme.palette.secondary.main,
+      fontWeight: 'bold',
+    },
+    '&.Mui-stepLabel': {
+      color: theme.palette.text.primary,
+      fontSize: '16px',
+      transition: 'color 0.3s ease, font-weight 0.3s ease',
+    },
+    '&:hover': {
+      cursor: 'pointer',
+      color: theme.palette.primary.dark,
+    },
+  }));
+
+  const StyledStepper = styled(Stepper)(({ theme }) => ({
+    backgroundColor: theme.palette.background.paper,
+    padding: '20px 0',
+    '& .MuiStepConnector-root': {
+      borderColor: theme.palette.primary.light,
+    },
+  }));
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -44,16 +73,12 @@ export default function SignupForm({ onSignupSuccess }) {
       }
 
       const response = await axios.post(`${SERVER_URL}/auth/signup`, formData);
-      console.log('User registered successfully:', response.data);
-      const {
-        data: { user, token },
-      } = response;
+      const { data: { user, token } } = response;
       await localforage.setItem('user', JSON.stringify(user));
       await localforage.setItem('token', token);
       await login({ email: formData.email, password: formData.password });
       onSignupSuccess();
     } catch (error) {
-      console.error('Error registering user:', error.message);
       setError(error.message);
     } finally {
       setLoading(false);
@@ -84,7 +109,7 @@ export default function SignupForm({ onSignupSuccess }) {
   };
 
   const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
+    setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
   const isNextButtonEnabled = () => {
@@ -101,110 +126,85 @@ export default function SignupForm({ onSignupSuccess }) {
 
   return (
     <div>
-      <Stepper activeStep={activeStep} alternativeLabel>
-        <Step>
-          <StepLabel>Email and Name</StepLabel>
-        </Step>
-        <Step>
-          <StepLabel>Password</StepLabel>
-        </Step>
-        <Step>
-          <StepLabel>Confirmation</StepLabel>
-        </Step>
-      </Stepper>
+      <Box sx={{ width: '100%' }}>
+        <StyledStepper activeStep={activeStep} alternativeLabel>
+          <Step>
+            <CustomStepLabel>Name and email</CustomStepLabel>
+          </Step>
+          <Step>
+            <CustomStepLabel>Password</CustomStepLabel>
+          </Step>
+          <Step>
+            <CustomStepLabel>Admin-level access</CustomStepLabel>
+          </Step>
+        </StyledStepper>
+      </Box>
 
       <form onSubmit={handleSignup}>
         {error && <Alert severity="error">{error}</Alert>}
-        
+
         {activeStep === 0 && (
           <div>
-            <TextField
+            <CustomInput
               label="First Name"
-              type="text"
               name="firstName"
               value={formData.firstName}
               onChange={handleInputChange}
-              fullWidth
               required
-              sx={{
-                marginBottom: 2,
-                height: 40,
-                borderRadius: '10px',
-                backgroundColor: '#f3f3f3',
-              }}
             />
-            <TextField
+            <CustomInput
               label="Email"
-              type="email"
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              fullWidth
+              type="email"
               required
-              sx={{
-                marginBottom: 2,
-                height: 40,
-                borderRadius: '10px',
-                backgroundColor: '#f3f3f3',
-              }}
             />
           </div>
         )}
-        
+
         {activeStep === 1 && (
           <div>
-            <TextField
+            <CustomInput
               label="Password"
-              type={showPassword ? 'text' : 'password'}
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              fullWidth
+              type={showPassword ? 'text' : 'password'} 
               required
-              sx={{
-                marginBottom: 2,
-                height: 40,
-                borderRadius: '10px',
-                backgroundColor: '#f3f3f3',
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={togglePasswordVisibility}>
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
               }}
             />
-            <Tooltip
-              title="Password Requirements: 6 characters minimum, one uppercase letter, one lowercase letter, one number, one special character"
-              placement="right"
-            >
-              <IconButton sx={{ marginLeft: '8px' }}>?</IconButton>
-            </Tooltip>
-            <TextField
+            <CustomInput
               label="Confirm Password"
-              type={showPassword ? 'text' : 'password'}
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleInputChange}
-              fullWidth
-              sx={{
-                marginBottom: 2,
-                height: 40,
-                borderRadius: '10px',
-                backgroundColor: '#f3f3f3',
+              type={showPassword ? 'text' : 'password'}
+              required
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={togglePasswordVisibility}>
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
               }}
             />
-            {passwordMismatch && (
-              <Alert severity="error">Passwords do not match</Alert>
-            )}
-            <InputAdornment position="end">
-              <IconButton onClick={togglePasswordVisibility}>
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
+            {passwordMismatch && <Alert severity="error">Passwords do not match</Alert>}
           </div>
         )}
-        
+
         {activeStep === 2 && (
           <div>
-            <p>Check your data:</p>
-            <p>Email: {formData.email}</p>
-            <p>First Name: {formData.firstName}</p>
-            <p>Password: ******** (hidden for security)</p> 
             <FormControlLabel
               control={
                 <Checkbox
@@ -217,71 +217,35 @@ export default function SignupForm({ onSignupSuccess }) {
               label="To see all the features register as an admin"
             />
 
-            <Button
+            <CustomButton
+              text="Sign Up"
+              color="var(--accent)"
+              isLoading={loading}
               type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
               disabled={loading || passwordMismatch || !isValidEmail(formData.email)}
-              sx={{
-                marginBottom: 2,
-                fontSize: '16px',
-                padding: '12px',
-                borderRadius: '10px',
-                backgroundColor: '#4caf50',
-                '&:hover': {
-                  backgroundColor: '#45a049',
-                },
-              }}
-            >
-
-                Sign Up
-
-            </Button>
+            />
           </div>
         )}
-        
+
         {activeStep < 2 && (
-          <Button
+          <CustomButton
+            text="Next"
+            color="var(--primary)"
+            isLoading={loading}
             type="button"
-            variant="contained"
-            color="primary"
             onClick={handleNextStep}
             disabled={!isNextButtonEnabled()}
-            sx={{
-              width: '100%',
-              padding: '12px',
-              marginBottom: 2,
-              borderRadius: '10px',
-              backgroundColor: '#4caf50',
-              '&:hover': {
-                backgroundColor: '#45a049',
-              },
-            }}
-          >
-            Next
-          </Button>
+          />
         )}
 
         {activeStep > 0 && (
-          <Button
+          <CustomButton
+            text="Back"
+            color="var(--primary)"
+            isLoading={loading}
             type="button"
-            variant="outlined"
-            color="secondary"
             onClick={handleBackStep}
-            sx={{
-              width: '100%',
-              padding: '12px',
-              marginBottom: 2,
-              borderRadius: '10px',
-              backgroundColor: '#f44336',
-              '&:hover': {
-                backgroundColor: '#e53935',
-              },
-            }}
-          >
-            Back
-          </Button>
+          />
         )}
       </form>
     </div>
