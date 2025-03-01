@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useMyPetsContext } from '../context/MyPetsProvider';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthProvider';
-import localforage from 'localforage'; 
-import { Favorite, FavoriteBorder, Visibility } from '@mui/icons-material'; 
-import { Box, Card, CardMedia, CardContent, Typography, IconButton, Alert } from '@mui/material';
+import localforage from 'localforage';
+import { Card, CardMedia, CardContent, CardActions, Typography, IconButton, Alert } from '@mui/material';
+import { Favorite, FavoriteBorder, Visibility } from '@mui/icons-material';
 import { SERVER_URL } from '../api';
+import { motion } from 'framer-motion';
 
-export default function PetCard ({ pet }) {
+export default function PetCard({ pet }) {
   const { _id, picture, name } = pet;
   const imageUrl = picture;
-  const isDefaultImage = !imageUrl;
 
   const navigate = useNavigate();
   const { likePet, unlikePet } = useMyPetsContext();
@@ -74,67 +74,39 @@ export default function PetCard ({ pet }) {
   return (
     <>
       {showAlert && (
-        <Alert
-          className="alert-modal-ask-login"
-          variant="warning"
-          onClose={() => setShowAlert(false)}
-          dismissible
-        >
-          <p>Please log in to see details or save this pet</p>
+        <Alert severity="warning" onClose={() => setShowAlert(false)}>
+          Please log in to see details or save this pet
         </Alert>
       )}
-      <Box sx={{ display: 'flex', justifyContent: 'center', margin: 2 }}>
-        <Card sx={{
-          position: 'relative',
-          width: '100%',
-          maxWidth: 345,
-          margin: 2,
-          backgroundColor: 'lightgrey',
-          boxShadow: 3,
-          borderRadius: 2,
-          fontFamily: 'Arial, sans-serif',
-          '&.adopted': { backgroundColor: 'lightgreen' },
-          '&.available': { backgroundColor: 'lightblue' },
-          '&.pending': { backgroundColor: 'lightyellow' }
-        }}>
+      <motion.div whileHover={{ scale: 1.05 }} className="d-flex justify-content-center my-3">
+        <Card sx={{ maxWidth: 345, boxShadow: 3, borderRadius: 2, bgcolor: 'background.paper' }}>
           {imageUrl ? (
-            <CardMedia
-              component="img"
-              alt={`Image of ${name}`}
-              height="200"
-              image={imageUrl}
-              sx={{ objectFit: 'cover', borderRadius: 2 }}
-            />
+            <CardMedia component="img" height="200" image={imageUrl} alt={`Image of ${name}`} />
           ) : (
-            <Box sx={{
-              display: 'flex', justifyContent: 'center', alignItems: 'center', height: 200,
-              backgroundColor: '#f5f5f5', borderRadius: 2
-            }}>
-              <FavoriteBorder sx={{ fontSize: 100, color: '#ccc' }} />
-            </Box>
+            <CardMedia
+              sx={{ height: 200, display: 'flex', justifyContent: 'center', alignItems: 'center', bgcolor: 'grey.300' }}
+            >
+              <FavoriteBorder sx={{ fontSize: 100, color: 'grey.700' }} />
+            </CardMedia>
           )}
           <CardContent>
             <Typography variant="h6">{name}</Typography>
-            <Typography variant="body2" color="textSecondary">{adoptionStatus}</Typography>
-            <Box sx={{
-              display: 'flex', justifyContent: 'space-between', position: 'absolute', bottom: 10, left: 10
-            }}>
-              <IconButton onClick={handleSeeMore} sx={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', borderRadius: '50%' }}>
-                <Visibility sx={{ fontSize: 30, color: '#401e12' }} />
-              </IconButton>
-              {user && (
-                <IconButton onClick={handleLike} sx={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', borderRadius: '50%' }}>
-                  {isLiked ? (
-                    <Favorite sx={{ fontSize: 40, color: '#d32f2f' }} />
-                  ) : (
-                    <FavoriteBorder sx={{ fontSize: 40, color: '#d32f2f' }} />
-                  )}
-                </IconButton>
-              )}
-            </Box>
+            <Typography variant="body2" color="textSecondary">
+              {adoptionStatus}
+            </Typography>
           </CardContent>
+          <CardActions sx={{ justifyContent: 'space-between' }}>
+            <IconButton onClick={handleSeeMore} color="primary">
+              <Visibility fontSize="large" />
+            </IconButton>
+            {user && (
+              <IconButton onClick={handleLike} color="secondary">
+                {isLiked ? <Favorite fontSize="large" /> : <FavoriteBorder fontSize="large" />}
+              </IconButton>
+            )}
+          </CardActions>
         </Card>
-      </Box>
+      </motion.div>
     </>
   );
-};
+}

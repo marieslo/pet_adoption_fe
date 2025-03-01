@@ -1,40 +1,94 @@
 import React from 'react';
-import { TextField } from '@mui/material';
+import { TextField, InputAdornment, IconButton } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-export default function CustomInput ({ label, name, value, onChange, type = 'text', required = false, error = '', sx = {} }) {
-  return (
-    <TextField
-      label={label}
-      name={name}
-      value={value}
-      onChange={onChange}
-      type={type}
-      fullWidth
-      required={required}
-      variant="outlined"
-      margin="normal"
-      error={!!error}
-      sx={{
-        input: { color: 'text.primary', padding: '8px 12px', textAlign: 'left', fontSize: '14px' },
-        borderRadius: '25px',
-        '& .MuiInputLabel-root': {
-          fontSize: '12px',
-          color: '#FF3FA4',
-        },
-        '& .MuiOutlinedInput-root': {
-          borderRadius: '25px',
-          '& fieldset': {
-            borderColor: '#FF3FA4',
-          },
-          '&:hover fieldset': {
-            borderColor: '#FF3FA4',
-          },
-          '&.Mui-focused fieldset': {
-            borderColor: '#FF3FA4',
-          },
-        },
-        ...sx,
-      }}
-    />
-  );
+const getCssVariable = (variable) => {
+  return getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
 };
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: getCssVariable('--accent') || getCssVariable('--primary') || '#a72d66',
+    },
+  },
+  components: {
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '--TextField-radius': 'var(--border-radius)',
+          '--TextField-height': '50px',
+          '& .MuiOutlinedInput-root': {
+            borderRadius: 'var(--TextField-radius)',
+            height: 'var(--TextField-height)',
+            display: 'flex',
+            alignItems: 'center',
+            padding: '0',
+          },
+          '& .MuiOutlinedInput-input': {
+            padding: '10px 12px',
+            fontSize: '14px',
+            textAlign: 'left',
+            lineHeight: 'normal',
+            alignItems: 'center',
+          },
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: getCssVariable('--accent') || getCssVariable('--primary') || '#a72d66',
+          },
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: getCssVariable('--accent') || getCssVariable('--primary') || '#a72d66',
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: getCssVariable('--accent') || getCssVariable('--primary') || '#a72d66',
+          },
+          '& label.Mui-focused': {
+            color: getCssVariable('--accent') || getCssVariable('--primary') || '#a72d66',
+          },
+          '& label': {
+            fontSize: '14px',
+          },
+          '& input::placeholder': {
+            fontSize: '16px',
+            textAlign: 'center',
+          },
+        },
+      },
+    },
+  },
+});
+
+export default function CustomInput({
+  label,
+  name,
+  value,
+  onChange,
+  type = 'text',
+  placeholder,
+  showPassword,
+  togglePasswordVisibility
+}) {
+  return (
+    <ThemeProvider theme={theme}>
+      <TextField
+        fullWidth
+        label={label}
+        type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        sx={{ mb: 1 }}
+        InputProps={{
+          endAdornment: type === 'password' && (
+            <InputAdornment position="end">
+              <IconButton onClick={togglePasswordVisibility}>
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+      />
+    </ThemeProvider>
+  );
+}
