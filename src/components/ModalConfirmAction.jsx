@@ -15,18 +15,19 @@ export default function ModalConfirmAction ({ open, onClose, title, onConfirm, o
         },
       }}
     >
-      <DialogTitle sx={{ textAlign: 'center', color: 'var(--light)' }}>
-        {title}
+      <DialogTitle variant="body1" sx={{ textAlign: 'center', color: 'var(--light)'}}> 
+        You're going to{' '}
+         {title}
       </DialogTitle>
-      <DialogContent sx={{ textAlign: 'center', color: 'var(--light)' }}>
+      {/* <DialogContent sx={{ textAlign: 'center', color: 'var(--light)' }}>
         <Typography variant="body1">Are you sure?</Typography>
-      </DialogContent>
+      </DialogContent> */}
       <DialogActions
         sx={{
           display: 'flex',
           justifyContent: 'center',
           backgroundColor: 'var(--secondary)',
-          padding: '16px',
+          padding: '10px',
         }}
       >
         <Button
