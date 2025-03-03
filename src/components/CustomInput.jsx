@@ -1,6 +1,5 @@
 import React from 'react';
-import { TextField, InputAdornment, IconButton } from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { TextField } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const getCssVariable = (variable) => {
@@ -65,8 +64,8 @@ export default function CustomInput({
   onChange,
   type = 'text',
   placeholder,
-  showPassword,
-  togglePasswordVisibility
+  error,
+  helperText,
 }) {
   return (
     <ThemeProvider theme={theme}>
@@ -79,15 +78,8 @@ export default function CustomInput({
         onChange={onChange}
         placeholder={placeholder}
         sx={{ mb: 1 }}
-        InputProps={{
-          endAdornment: type === 'password' && (
-            <InputAdornment position="end">
-              <IconButton onClick={togglePasswordVisibility}>
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
+        error={error}
+        helperText={helperText}
       />
     </ThemeProvider>
   );

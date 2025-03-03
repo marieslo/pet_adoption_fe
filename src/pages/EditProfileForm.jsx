@@ -17,7 +17,6 @@ export default function EditProfileForm({ onSave, initialData }) {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     const handleKeyPress = (event) => {
@@ -60,8 +59,6 @@ export default function EditProfileForm({ onSave, initialData }) {
       setLoading(false);
     }
   };
-
-  const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
   return (
     <Box
@@ -109,35 +106,26 @@ export default function EditProfileForm({ onSave, initialData }) {
 
       <CustomInput
         label="Current Password"
-        type={showPassword ? 'text' : 'password'}
         name="currentPassword"
+        type="password"
         value={formData.currentPassword}
         onChange={handleChange}
-        placeholder="***********"
-        showPassword={showPassword}
-        togglePasswordVisibility={togglePasswordVisibility}
       />
 
       <CustomInput
         label="New Password"
-        type={showPassword ? 'text' : 'password'}
         name="newPassword"
+        type="password"
         value={formData.newPassword}
         onChange={handleChange}
-        placeholder="At least 6 characters"
-        showPassword={showPassword}
-        togglePasswordVisibility={togglePasswordVisibility}
       />
 
       <CustomInput
         label="Confirm New Password"
-        type={showPassword ? 'text' : 'password'}
         name="confirmNewPassword"
+        type="password"
         value={formData.confirmNewPassword}
         onChange={handleChange}
-        placeholder="Confirm new password"
-        showPassword={showPassword}
-        togglePasswordVisibility={togglePasswordVisibility}
       />
 
       <CustomInput

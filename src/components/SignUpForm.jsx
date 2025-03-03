@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
-import { Alert, InputAdornment, IconButton, Checkbox, FormControlLabel, Stepper, Step, StepLabel, Box} from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Alert, Checkbox, FormControlLabel } from '@mui/material';
 import axios from 'axios';
-import localforage from 'localforage';
 import { useAuth } from '../context/AuthProvider';
 import { SERVER_URL } from '../api';
 import CustomInput from './CustomInput';
 import CustomButton from './CustomButton';
-import { styled } from '@mui/material/styles';
 
 export default function SignupForm({ onSignupSuccess }) {
   const [formData, setFormData] = useState({
@@ -21,37 +18,9 @@ export default function SignupForm({ onSignupSuccess }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [passwordMismatch, setPasswordMismatch] = useState(false);
-  const [activeStep, setActiveStep] = useState(0);
-  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); 
+
   const { login } = useAuth();
-
-  const CustomStepLabel = styled(StepLabel)(({ theme }) => ({
-    '&.Mui-active': {
-      color: theme.palette.primary.main,
-      fontWeight: 'bold',
-    },
-    '&.Mui-completed': {
-      color: theme.palette.secondary.main,
-      fontWeight: 'bold',
-    },
-    '&.Mui-stepLabel': {
-      color: theme.palette.text.primary,
-      fontSize: '16px',
-      transition: 'color 0.3s ease, font-weight 0.3s ease',
-    },
-    '&:hover': {
-      cursor: 'pointer',
-      color: theme.palette.primary.dark,
-    },
-  }));
-
-  const StyledStepper = styled(Stepper)(({ theme }) => ({
-    backgroundColor: theme.palette.background.paper,
-    padding: '20px 0',
-    '& .MuiStepConnector-root': {
-      borderColor: theme.palette.primary.light,
-    },
-  }));
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -62,20 +31,27 @@ export default function SignupForm({ onSignupSuccess }) {
     setFormData({ ...formData, isAdmin: e.target.checked });
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword((prevShowConfirmPassword) => !prevShowConfirmPassword);
+  };
+
   const handleSignup = async (e) => {
     e.preventDefault();
     setLoading(true);
-    try {
-      if (!isValidPassword(formData.password)) {
-        throw new Error(
-          'Password must contain at least one letter, one digit, and be at least 6 characters long.'
-        );
-      }
 
+    if (formData.password !== formData.confirmPassword) {
+      setPasswordMismatch(true);
+      setLoading(false);
+      return;
+    }
+
+    try {
       const response = await axios.post(`${SERVER_URL}/auth/signup`, formData);
       const { data: { user, token } } = response;
-      await localforage.setItem('user', JSON.stringify(user));
-      await localforage.setItem('token', token);
       await login({ email: formData.email, password: formData.password });
       onSignupSuccess();
     } catch (error) {
@@ -85,168 +61,89 @@ export default function SignupForm({ onSignupSuccess }) {
     }
   };
 
-  const isValidEmail = (email) => {
-    const regex = /^[a-zA-Z0-9._%+-]+@[a-zAZ0-9.-]+\.[a-zA-Z]{2,}$/;
-    return regex.test(email);
-  };
+  const isValidEmail = (email) => /^[a-zA-Z0-9._%+-]+@[a-zAZ0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
 
-  const isValidPassword = (password) => {
-    return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/.test(password);
-  };
-
-  const handleNextStep = () => {
-    setPasswordMismatch(formData.password !== formData.confirmPassword);
-
-    if (activeStep === 0 && isValidEmail(formData.email) && formData.firstName.trim()) {
-      setActiveStep(activeStep + 1);
-    } else if (activeStep === 1 && formData.password === formData.confirmPassword && isValidPassword(formData.password)) {
-      setActiveStep(activeStep + 1);
-    }
-  };
-
-  const handleBackStep = () => {
-    setActiveStep(activeStep - 1);
-  };
-
-  const togglePasswordVisibility = () => {
-    setShowPassword((prevShowPassword) => !prevShowPassword);
-  };
-
-  const isNextButtonEnabled = () => {
-    if (activeStep === 0) {
-      return isValidEmail(formData.email) && formData.firstName.trim();
-    }
-
-    if (activeStep === 1) {
-      return formData.password === formData.confirmPassword && isValidPassword(formData.password);
-    }
-
-    return true;
+  const isFormValid = () => {
+    return (
+      isValidEmail(formData.email) &&
+      formData.firstName.trim() &&
+      formData.password === formData.confirmPassword
+    );
   };
 
   return (
     <div>
-      <Box sx={{ width: '100%' }}>
-        <StyledStepper activeStep={activeStep} alternativeLabel>
-          <Step>
-            <CustomStepLabel>Name and email</CustomStepLabel>
-          </Step>
-          <Step>
-            <CustomStepLabel>Password</CustomStepLabel>
-          </Step>
-          <Step>
-            <CustomStepLabel>Admin-level access</CustomStepLabel>
-          </Step>
-        </StyledStepper>
-      </Box>
-
       <form onSubmit={handleSignup}>
         {error && <Alert severity="error">{error}</Alert>}
 
-        {activeStep === 0 && (
-          <div>
-            <CustomInput
-              label="First Name"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleInputChange}
-              required
-            />
-            <CustomInput
-              label="Email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              type="email"
-              required
-            />
-          </div>
-        )}
-
-        {activeStep === 1 && (
-          <div>
-            <CustomInput
-              label="Password"
-              name="password"
-              value={formData.password}
-              onChange={handleInputChange}
-              type={showPassword ? 'text' : 'password'} 
-              required
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton onClick={togglePasswordVisibility}>
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-            <CustomInput
-              label="Confirm Password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleInputChange}
-              type={showPassword ? 'text' : 'password'}
-              required
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton onClick={togglePasswordVisibility}>
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-            {passwordMismatch && <Alert severity="error">Passwords do not match</Alert>}
-          </div>
-        )}
-
-        {activeStep === 2 && (
-          <div>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={formData.isAdmin}
-                  onChange={handleCheckboxChange}
-                  name="isAdmin"
-                  color="primary"
-                />
-              }
-              label="To see all the features register as an admin"
-            />
-
-            <CustomButton
-              text="Sign Up"
-              color="var(--accent)"
-              isLoading={loading}
-              type="submit"
-              disabled={loading || passwordMismatch || !isValidEmail(formData.email)}
-            />
-          </div>
-        )}
-
-        {activeStep < 2 && (
-          <CustomButton
-            text="Next"
-            color="var(--primary)"
-            isLoading={loading}
-            type="button"
-            onClick={handleNextStep}
-            disabled={!isNextButtonEnabled()}
+        {/* First Name and Email */}
+        <div>
+          <CustomInput
+            label="First Name"
+            name="firstName"
+            value={formData.firstName}
+            onChange={handleInputChange}
+            required
           />
-        )}
-
-        {activeStep > 0 && (
-          <CustomButton
-            text="Back"
-            color="var(--primary)"
-            isLoading={loading}
-            type="button"
-            onClick={handleBackStep}
+          <CustomInput
+            label="Email"
+            name="email"
+            value={formData.email}
+            onChange={handleInputChange}
+            type="email"
+            required
           />
-        )}
+        </div>
+
+        {/* Password and Confirm Password */}
+        <div>
+          <CustomInput
+            label="Password"
+            name="password"
+            value={formData.password}
+            onChange={handleInputChange}
+            type="password"
+            required
+            helperText="Password must contain at least one letter, one digit, and be at least 6 characters long."
+            togglePasswordVisibility={togglePasswordVisibility}
+            showPassword={showPassword}
+          />
+          <CustomInput
+            label="Confirm Password"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleInputChange}
+            type="password"
+            required
+            error={formData.password !== formData.confirmPassword}
+            helperText={formData.password !== formData.confirmPassword ? "Passwords do not match" : ""}
+            togglePasswordVisibility={toggleConfirmPasswordVisibility}
+            showPassword={showConfirmPassword}
+          />
+        </div>
+
+        {/* Admin Access */}
+        <div>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={formData.isAdmin}
+                onChange={handleCheckboxChange}
+                name="isAdmin"
+                color="primary"
+              />
+            }
+            label="To see all the features register as an admin"
+          />
+
+          <CustomButton
+            text="Sign Up"
+            color="var(--accent)"
+            isLoading={loading}
+            type="submit"
+            disabled={loading || !isFormValid()}
+          />
+        </div>
       </form>
     </div>
   );
