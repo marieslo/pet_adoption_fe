@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Darker+Grotesque:wght@300..900&display=swap');
+
+:root {
+  --primary: #a25579;
+  --secondary: #b29b8f;
+  --accent: #a72d66;
+  --light:#e9dddd;
+  --dark: #392222;
+  --font-body: "Darker Grotesque", "serif";
+  --border-radius: 30px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-body), serif;
+  background-color: var(--secondary);
+}
+
+.welcome-page-container, 
+.fav-pets-page-container, 
+.profile-page-container {
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100vh; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  overflow: hidden;
+}
+
+.welcome-page-container, .home-page-container {
+  background-image: url('https://res.cloudinary.com/nkwjho4xf/image/upload/v1741190671/pet-adoption/welcome-page-background_jirxwu.jpg');
+}
+
+.fav-pets-page-container {
+background-image: url('https://res.cloudinary.com/nkwjho4xf/image/upload/v1741191743/pet-adoption/2150747649_mg03mc.jpg');
+}
+
+.profile-page-container {
+  background-image: url('https://res.cloudinary.com/nkwjho4xf/image/upload/v1741190670/pet-adoption/profile-page-background_bbs3ww.jpg'); 
+}
+
+.single-pet-card-container{
+  background-image: url('https://res.cloudinary.com/nkwjho4xf/image/upload/v1741190670/pet-adoption/single-pet-page-background_kirjzl.jpg');
+}
+
+@media (max-width: 1000px) {
+  .welcome-page-container, 
+  .home-page-container
+  .fav-pets-page-container, 
+  .profile-page-container {
+    background-image: none; 
+  }
+}

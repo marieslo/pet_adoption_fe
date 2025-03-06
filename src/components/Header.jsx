@@ -44,10 +44,10 @@ export default function Header() {
 
   return (
     <>
-      <AppBar
-        position="sticky"
+      <AppBar 
+        position="fixed"
         sx={{
-          backgroundColor: 'transparent',
+          backgroundColor: '#b29b8f',
           boxShadow: 'none',
           top: 0,
           zIndex: 10,
@@ -57,7 +57,7 @@ export default function Header() {
         }}
         ref={headerRef}
       >
-        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', padding: { xs: '0 8px', sm: '0 16px' } }}>
+        <Toolbar sx={{ display: 'flex', justifyContent: 'center'}}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {!user && location.pathname !== '/' && (
               <Button
@@ -89,12 +89,12 @@ export default function Header() {
                     >
                       <StorageRounded sx={{ marginRight: 1 }} /> Admin
                     </Button>
-                    <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleAdminMenuClose}>
+                    <Menu sx={{ marginRight: 1, color: "var(--secondary)"}} anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleAdminMenuClose}>
                       <MenuItem component={NavLink} to="/petsdashboard" onClick={handleAdminMenuClose}>
-                        <PetsIcon sx={{ marginRight: 1 }} /> All Pets
+                        <PetsIcon sx={{ marginRight: 1, color: "var(--secondary)"}} /> All Pets
                       </MenuItem>
                       <MenuItem component={NavLink} to="/usersdashboard" onClick={handleAdminMenuClose}>
-                        <PeopleIcon sx={{ marginRight: 1 }} /> All Users
+                        <PeopleIcon sx={{ marginRight: 1, color: "var(--secondary)"}} /> All Users
                       </MenuItem>
                     </Menu>
                   </>

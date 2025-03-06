@@ -31,13 +31,13 @@ export default function SignupForm({ onSignupSuccess }) {
     setFormData({ ...formData, isAdmin: e.target.checked });
   };
 
-  const togglePasswordVisibility = () => {
-    setShowPassword((prevShowPassword) => !prevShowPassword);
-  };
+  // const togglePasswordVisibility = () => {
+  //   setShowPassword((prevShowPassword) => !prevShowPassword);
+  // };
 
-  const toggleConfirmPasswordVisibility = () => {
-    setShowConfirmPassword((prevShowConfirmPassword) => !prevShowConfirmPassword);
-  };
+  // const toggleConfirmPasswordVisibility = () => {
+  //   setShowConfirmPassword((prevShowConfirmPassword) => !prevShowConfirmPassword);
+  // };
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -105,8 +105,8 @@ export default function SignupForm({ onSignupSuccess }) {
             type="password"
             required
             helperText="Password must contain at least one letter, one digit, and be at least 6 characters long."
-            togglePasswordVisibility={togglePasswordVisibility}
-            showPassword={showPassword}
+            // togglePasswordVisibility={togglePasswordVisibility}
+            // showPassword={showPassword}
           />
           <CustomInput
             label="Confirm Password"
@@ -117,8 +117,8 @@ export default function SignupForm({ onSignupSuccess }) {
             required
             error={formData.password !== formData.confirmPassword}
             helperText={formData.password !== formData.confirmPassword ? "Passwords do not match" : ""}
-            togglePasswordVisibility={toggleConfirmPasswordVisibility}
-            showPassword={showConfirmPassword}
+            // togglePasswordVisibility={toggleConfirmPasswordVisibility}
+            // showPassword={showConfirmPassword}
           />
         </div>
 

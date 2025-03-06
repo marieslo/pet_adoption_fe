@@ -1,23 +1,24 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Card, Spinner, Alert } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import localforage from 'localforage';
 import { FetchPetsContext } from '../context/FetchPetsProvider';
 import { useMyPetsContext } from '../context/MyPetsProvider';
 import { useAuth } from '../context/AuthProvider';
 import { Favorite, FavoriteBorder } from '@mui/icons-material';
+import { Card, Typography, Box, Grid } from '@mui/material';
+import { motion } from 'framer-motion';
+
+import CustomButton from '../components/CustomButton';
 
 export default function SinglePetPage() {
   const { id } = useParams();
   const { fetchPetById } = useContext(FetchPetsContext);
-  const { likePet, unlikePet, adoptPet, fosterPet, returnPet, adoptedPets, fosteredPets, isOwner } = useMyPetsContext(); 
+  const { likePet, unlikePet, adoptPet, fosterPet, returnPet } = useMyPetsContext();
   const { user } = useAuth();
-
-  const [showAlert, setShowAlert] = useState(false);
   const [loading, setLoading] = useState(true);
   const [petData, setPetData] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
-  
+
   useEffect(() => {
     const fetchPetData = async () => {
       try {
@@ -32,163 +33,148 @@ export default function SinglePetPage() {
       }
     };
     fetchPetData();
-  }, [fetchPetById, id, user._id, adoptedPets, fosteredPets]);
+  }, [fetchPetById, id, user?._id]);
 
   const handleLike = async () => {
-    try {
-      if (!user) {
-        setShowAlert(true);
-      } else {
-        await likePet(id);
-        setIsLiked(true);
-        await localforage.setItem(`likedStatus_${user._id}_${id}`, true);
-      }
-    } catch (error) {
-      console.error('Error liking pet:', error);
-      setShowAlert(true);
-    }
+    if (!user) return setShowAlert(true);
+    await likePet(id);
+    setIsLiked(true);
+    await localforage.setItem(`likedStatus_${user._id}_${id}`, true);
   };
 
   const handleUnlike = async () => {
-    try {
-      if (!user) {
-        setShowAlert(true);
-        return;
-      }
-      await unlikePet(id);
-      setIsLiked(false);
-      await localforage.removeItem(`likedStatus_${user._id}_${id}`);
-    } catch (error) {
-      console.error('Error updating liked status:', error);
-      setShowAlert(true);
-    }
+    if (!user) return setShowAlert(true);
+    await unlikePet(id);
+    setIsLiked(false);
+    await localforage.removeItem(`likedStatus_${user._id}_${id}`);
   };
 
   const handleAdopt = async () => {
-    try {
-      await adoptPet(id);
-      setPetData(prevPetData => ({
-        ...prevPetData,
-        adoptionStatus: 'adopted'
-      }));
-    } catch (error) {
-      console.error('Error adopting pet:', error);
-      setShowAlert(true);
-    }
+    await adoptPet(id);
+    setPetData(prev => ({ ...prev, adoptionStatus: 'adopted' }));
   };
-  
+
   const handleFoster = async () => {
-    try {
-      await fosterPet(id);
-      setPetData(prevPetData => ({
-        ...prevPetData,
-        adoptionStatus: 'fostered'
-      }));
-    } catch (error) {
-      console.error('Error fostering pet:', error);
-      setShowAlert(true);
-    }
+    await fosterPet(id);
+    setPetData(prev => ({ ...prev, adoptionStatus: 'fostered' }));
   };
-  
+
   const handleReturn = async () => {
-    try {
-      await returnPet(id);
-      setPetData(prevPetData => ({
-        ...prevPetData,
-        adoptionStatus: 'adoptable'
-      }));
-    } catch (error) {
-      console.error('Error returning pet:', error);
-      setShowAlert(true);
-    }
+    await returnPet(id);
+    setPetData(prev => ({ ...prev, adoptionStatus: 'adoptable' }));
   };
 
-  if (loading) {
-    return <Spinner className='single-pet-page-spinner' animation="grow" variant="light" />;
-  }
+  if (loading) return <Typography>Loading...</Typography>;
+  if (!petData) return <Typography>No pet data found</Typography>;
 
-  if (!petData) {
-    return <div>No pet data found</div>;
-  }
-
-  const {
-    picture,
-    name,
-    adoptionStatus,
-    bio,
-    type,
-    heightCm,
-    weightKg,
-    color,
-    hypoallergenic,
-    dietaryRestrictions,
-    breed,
-  } = petData;
+  const { picture, name, adoptionStatus, bio, type, heightCm, weightKg, color, hypoallergenic, dietaryRestrictions, breed } = petData;
 
   return (
-    <>
-      <div className='single-pet-card-container'>
-        <Card className='single-page-pet-card'>
-          <button className="like-btn-singlepage" onClick={isLiked ? handleUnlike : handleLike}>
-            {isLiked ? (
-              <Favorite className="like-icon" />
-            ) : (
-              <FavoriteBorder className="like-icon" />
-            )}
-          </button>
-          <Card.Body>
-            <div className='pet-picture-and-info-container'>
-              <div className="custom-frame">
-                <Card.Img
-                  variant="top"
+    <Box sx={{
+      backgroundImage: "url('https://res.cloudinary.com/nkwjho4xf/image/upload/v1741190670/pet-adoption/single-pet-page-background_kirjzl.jpg')",
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'flex-start',
+      minHeight: '100vh',
+      width: '100vw',
+      paddingTop: '64px',
+      paddingBottom: '80px', 
+      position: 'relative',
+    }}>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+        <Grid container spacing={2} alignItems="center" justifyContent="center">
+          {/* Pet Info Card */}
+          <Grid item xs={12} sm={10} md={8} sx={{ display: 'flex', justifyContent: 'center'}}>
+            <Card sx={{
+              borderRadius: 'var(--border-radius)',
+              overflow: 'hidden',
+              padding: 2,
+              backgroundColor: 'rgba(72, 60, 50, 0.8)', 
+              color: 'var(--light)',
+              display: 'flex',
+              flexDirection: { xs: 'column', md: 'row' },
+              gap: 2,
+              textAlign: 'start',
+              position: 'relative',
+              width: '100%',
+              margin: '0 auto', 
+            }}>
+              <Box sx={{
+                position: 'relative',
+                width: '100%',
+                maxWidth: '400px',
+                height: 'auto',
+                maxHeight: '500px',
+                marginBottom: { xs: 2, md: 0 }, 
+              }}>
+                <Box
+                  component="img"
                   src={picture}
-                  alt={`Image of ${name}`}
-                  className="card-img"
+                  alt={name}
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    borderRadius: 'var(--border-radius)',
+                  }}
                 />
-              </div>
-              <Card.Title className='single-page-card-title'>{name}</Card.Title>
-              <Card.Text className='single-page-card-bio'>{bio}</Card.Text>
-            </div>
-            <br />
-            <div className='single-pet-card-fields-container'>
-              <Card.Text><u>Type:</u> {type}</Card.Text>
-              <Card.Text><u>Status:</u> {adoptionStatus}</Card.Text>
-              <Card.Text><u>Height, cm:</u> {heightCm}</Card.Text>
-              <Card.Text><u>Weight, kg:</u> {weightKg}</Card.Text>
-              <Card.Text><u>Color:</u> {color}</Card.Text>
-              <Card.Text><u>Hypoallergenic:</u> {hypoallergenic ? 'Yes' : 'No'}</Card.Text>
-              <Card.Text><u>Dietary Restrictions:</u> {dietaryRestrictions}</Card.Text>
-              <Card.Text><u>Breed:</u> {breed}</Card.Text>
-            </div>
-            <div className="pet-buttons">
-              {(adoptionStatus === 'adoptable') ? (
-                <>
-                  <button className='pet-page-btn' onClick={handleAdopt}>
-                    Adopt
-                  </button>
-                  <button className='pet-page-btn' onClick={handleFoster}>
-                    Foster
-                  </button>
-                </>
-              ) : (
-                // isOwner && (
-                  <button
-                    className='pet-page-btn'
-                    onClick={handleReturn}
-                  >
-                    Return
-                  </button>
-                // )
-              )}
-            </div>
-          </Card.Body>
-        </Card>
-        {showAlert && (
-          <Alert className='alert-single-pet-page' variant="warning" onClose={() => setShowAlert(false)} dismissible>
-            <p>Something went wrong. Please try again later</p>
-          </Alert>
-        )}
-      </div>
-    </>
+                
+                <Box sx={{
+                  position: 'absolute',
+                  top: 10,
+                  right: 10,
+                  zIndex: 2,
+                  cursor: 'pointer',
+                }}>
+                  {isLiked ? (
+                    <Favorite sx={{ color: 'var(--accent)', fontSize: 60 }} onClick={handleUnlike} />
+                  ) : (
+                    <FavoriteBorder sx={{ color: 'var(--accent)', fontSize: 60 }} onClick={handleLike} />
+                  )}
+                </Box>
+              </Box>
+
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'start',
+                alignItems: 'start',
+                paddingTop: { xs: 2, md: 0 },
+                width: '100%',
+              }}>
+                <Typography variant="h4" sx={{ fontWeight: 'bold' }}>{name}</Typography>
+                <Typography sx={{ fontStyle: 'italic', marginTop: 2, marginBottom: 2 }}>{bio}</Typography>
+                <Typography><span style={{ fontStyle: 'italic', fontSize: '12px'}}>Status:</span> {adoptionStatus}</Typography>
+                <Typography><span style={{ fontStyle: 'italic', fontSize: '12px'}}>Type:</span> {type}</Typography>
+                <Typography><span style={{ fontStyle: 'italic', fontSize: '12px'}}>Height:</span> {heightCm} cm</Typography>
+                <Typography><span style={{ fontStyle: 'italic', fontSize: '12px'}}>Weight:</span> {weightKg} kg</Typography>
+                <Typography><span style={{ fontStyle: 'italic', fontSize: '12px'}}>Color:</span> {color}</Typography>
+                <Typography><span style={{ fontStyle: 'italic', fontSize: '12px'}}>Hypoallergenic:</span> {hypoallergenic ? 'Yes' : 'No'}</Typography>
+                <Typography><span style={{ fontStyle: 'italic', fontSize: '12px'}}>Dietary Restrictions:</span> {dietaryRestrictions}</Typography>
+                <Typography><span style={{ fontStyle: 'italic', fontSize: '12px'}}>Breed:</span> {breed}</Typography>
+
+                <Box sx={{
+                  marginTop: 2,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  gap: 2,
+                }}>
+                  {adoptionStatus === 'adoptable' ? (
+                    <>
+                      <CustomButton text="Adopt" onClick={handleAdopt} />
+                      <CustomButton text="Foster" onClick={handleFoster} />
+                    </>
+                  ) : (
+                    <CustomButton text="Return" color="var(--secondary)" onClick={handleReturn} />
+                  )}
+                </Box>
+              </Box>
+            </Card>
+          </Grid>
+        </Grid>
+      </motion.div>
+    </Box>
   );
 }
