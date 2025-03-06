@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, Link, Container } from '@mui/material';
+import { Box, Link, Container } from '@mui/material';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -21,28 +21,40 @@ export default function Footer() {
           sx={{
             display: 'flex',
             justifyContent: 'space-between',
-            flexDirection: { xs: 'column', sm: 'row' },
-            alignItems: 'center',
-            textAlign: { xs: 'center', sm: 'left' },
+            alignItems: 'end',
+            flexDirection: 'row',
+            textAlign: { xs: 'left', sm: 'left' }, 
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Typography
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'start', fontSize: '14px' }}>
+            <div>
+              Pets images are sourced from&nbsp;
+            <Link
+              href="https://commons.wikimedia.org/"
+              target="_blank"
               sx={{
-                fontSize: '12px',
+                fontSize: '14px',
                 color: 'var(--dark)',
-                margin: 0,
+                textDecoration: 'none',
+                fontStyle: 'italic',
+                '&:hover': {
+                  color: 'var(--accent)',
+                },
               }}
             >
+              Wikimedia Commons
+            </Link>
+            </div>
+            <div>
               Background images designed by&nbsp;
-            </Typography>
             <Link
               href="https://www.freepik.com"
               target="_blank"
               sx={{
-                fontSize: '12px',
+                fontSize: '14px',
                 color: 'var(--dark)',
                 textDecoration: 'none',
+                fontStyle: 'italic',
                 '&:hover': {
                   color: 'var(--accent)',
                 },
@@ -50,22 +62,18 @@ export default function Footer() {
             >
               Freepik
             </Link>
+            </div>
           </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Typography
-              sx={{
-                fontSize: '12px',
-                color: 'var(--dark)',
-              }}
-            >
+          <Box sx={{ display: 'flex', alignItems: 'center', fontSize: '14px' }}>
+            <div>
               © 2023-{currentYear}&nbsp;
-            </Typography>
+            </div>
             <Link
               href="https://www.linkedin.com/in/marie-slovokhotov/"
               target="_blank"
               rel="noopener noreferrer"
               sx={{
-                fontSize: '12px',
+                fontSize: '14px',
                 color: 'var(--dark)',
                 textDecoration: 'none',
                 '&:hover': {
@@ -73,7 +81,7 @@ export default function Footer() {
                 },
               }}
             >
-            Marie Slovokhotov
+              Marie Slovokhotov
             </Link>
           </Box>
         </Box>

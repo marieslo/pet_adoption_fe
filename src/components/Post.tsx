@@ -1,108 +1,126 @@
-import React, { useState } from 'react';
-import { Box, Card, CardContent, Typography, Chip, Avatar, IconButton, TextField } from '@mui/material';
-import { ThumbUp, Favorite, SentimentVerySatisfied, EmojiEvents } from '@mui/icons-material';
-import { motion } from 'framer-motion';
-import CommentThread from './CommentThread';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { ThumbUp, Comment} from "@mui/icons-material";
+import { Box, Typography, IconButton, Textarea, Divider } from '@mui/joy';
+import CustomButton from "./CustomButton";
+import CommentThread from "./CommentThread";
 
 export default function Post({ post, onReaction }) {
   const [showCommentInput, setShowCommentInput] = useState(false);
 
-  const handleToggleCommentInput = () => {
-    setShowCommentInput((prevState) => !prevState);
-  };
-
   return (
     <motion.div
-      initial={{ opacity: 0, y: 50 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <Card sx={{
+      transition={{ duration: 0.4 }}
+      style={{
+        width: '100%',
+        maxWidth: '600px',
+        margin: 'auto',
+        backgroundColor: 'white',
+        border: '1px solid #e1e1e1',
         borderRadius: 'var(--border-radius)',
-        boxShadow: '0 0 15px rgba(0, 0, 0, 0.1)',
-        transition: 'transform 0.3s, box-shadow 0.3s',
-        '&:hover': {
-          transform: 'scale(1.02)',
-          boxShadow: '0 10px 25px rgba(0, 0, 0, 0.15)',
-        },
-        backgroundColor: 'var(--light)',
-      }}>
-        <CardContent>
-          <Box display="flex" alignItems="center" marginBottom={2}>
-            <Avatar sx={{ marginRight: 2, width: 40, height: 40 }} src={post.user.profileImage} alt={post.user.firstName} />
-            <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'var(--dark)' }}>
-              {post.user.firstName} {post.user.lastName}
-            </Typography>
-          </Box>
-          <Typography variant="body1" paragraph sx={{ fontSize: '1.1rem', color: 'var(--dark)' }}>
-            {post.content}
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        overflow: 'hidden',
+        transition: 'all 0.2s ease',
+      }}
+    >
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, padding: 2, backgroundColor: 'var(--light)', borderBottom: '1px solid #e1e1e1' }}>
+        <img
+          src={post.user.profileImage || "/default-avatar.png"}
+          alt={post.user.firstName}
+          style={{ width: 48, height: 48, borderRadius: '50%', objectFit: 'cover' }}
+        />
+        <div>
+          <Typography sx={{ color: 'var(--dark)', fontWeight: 'bold' }}>
+            {post.user.firstName} {post.user.lastName}
           </Typography>
-          {post.image && (
-            <Box marginBottom={2}>
-              <img src={post.image} alt="Post" style={{ width: '100%', borderRadius: '8px', objectFit: 'cover' }} />
+          <Typography sx={{ color: 'var(--dark)' }}>
+            {post.timestamp}
+          </Typography>
+        </div>
+      </Box>
+
+
+      <Box sx={{ padding: 2 }}>
+        <Typography sx={{ color: 'var(--dark)', fontSize: '1rem' }}>
+          {post.content}
+        </Typography>
+        {post.image && (
+          <Box sx={{ mt: 2 }}>
+            <img
+              src={post.image}
+              alt="Post"
+              style={{ width: '30%', borderRadius: 'var(--border-radius)', objectFit: 'cover', border: '1px solid #e1e1e1' }}
+            />
+          </Box>
+        )}
+        {showCommentInput && (
+          <Box sx={{ mt: 2 }}>
+            <Textarea
+              minRows={3}
+              placeholder="Write a comment..."
+              sx={{
+                width: '100%',
+                padding: 1.5,
+                borderRadius: 'var(--border-radius)',
+                border: '1px solid #e1e1e1',
+                backgroundColor: 'var(--light)',
+                '&:focus': { borderColor: 'var(--primary)', outline: 'none' },
+                fontFamily: 'var(--font-body)',
+                color: 'var(--dark)',
+              }}
+            />
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+              <CustomButton
+                text="Cancel"
+                isLoading={false} 
+                onClick={() => setShowCommentInput(false)}
+                color="var(--accent)"
+                sx={{
+                  '&:hover': { backgroundColor: 'var(--accent-dark)' },
+                  borderRadius: 'var(--border-radius)',
+                  fontWeight: 'bold',
+                  fontSize: '14px',
+                  padding: '4px 8px',
+                }}
+              />
+              <CustomButton
+                text="Submit"
+                isLoading={false}
+                onClick={() => {}}
+                color="var(--primary)"
+                sx={{
+                  '&:hover': { backgroundColor: 'var(--accent)' },
+                  borderRadius: 'var(--border-radius)',
+                  fontWeight: 'bold',
+                  fontSize: '14px',
+                  padding: '4px 8px',
+                }}
+              />
             </Box>
-          )}
-          <Box display="flex" flexWrap="wrap" gap={1} marginBottom={2}>
-            <Typography variant="subtitle2" sx={{ color: 'var(--dark)' }}>Tags: </Typography>
-            {post.tags.map((tag, index) => (
-              <Chip key={index} label={tag} color="primary" size="small" sx={{ marginBottom: 1 }} />
-            ))}
           </Box>
-          <Typography variant="body2" color="textSecondary" sx={{ marginBottom: 2 }}>
-            <strong>Reactions:</strong> {post.reactions.length}
-          </Typography>
-          <Box display="flex" gap={2} marginTop={2}>
-            <IconButton onClick={() => onReaction(post._id, 'Like')} color="primary">
-              <ThumbUp />
-            </IconButton>
-            <IconButton onClick={() => onReaction(post._id, 'Love')} color="secondary">
-              <Favorite />
-            </IconButton>
-            <IconButton onClick={() => onReaction(post._id, 'Laugh')} color="warning">
-              <SentimentVerySatisfied />
-            </IconButton>
-            <IconButton onClick={() => onReaction(post._id, 'Celebrate')} color="info">
-              <EmojiEvents />
-            </IconButton>
-          </Box>
-          <Box marginTop={2}>
-            <button 
-              onClick={handleToggleCommentInput} 
-              style={{
-                padding: '8px 12px',
-                backgroundColor: 'var(--accent)',
-                color: 'white',
-                border: 'none',
-                borderRadius: '5px',
-              }}>
-              {showCommentInput ? 'Cancel' : 'Add Comment'}
-            </button>
-            {showCommentInput && (
-              <Box marginTop={2}>
-                <TextField
-                  fullWidth
-                  multiline
-                  rows={3}
-                  placeholder="Write a comment..."
-                  variant="outlined"
-                  sx={{ marginBottom: 2 }}
-                />
-                <button 
-                  style={{
-                    padding: '8px 12px',
-                    backgroundColor: 'var(--primary)',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '5px',
-                  }}>
-                  Submit Comment
-                </button>
-              </Box>
-            )}
-          </Box>
-          <CommentThread comments={post.comments} />
-        </CardContent>
-      </Card>
+        )}
+      </Box>
+
+      <Divider sx={{ borderColor: '#e1e1e1' }} />
+      <Box sx={{ padding: 2, backgroundColor: '#f7f7f7',  display: 'flex', justifyContent: 'end',  }}>
+
+        {/* Reactions */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mt: 2 }}>
+          <IconButton onClick={() => onReaction(post._id, "Like")} sx={{ color: 'var(--dark)', '&:hover': { color: 'var(--primary)' } }}>
+            <ThumbUp sx={{ fontSize: 20}} />
+            <Typography sx={{ color: 'var(--dark)' }}>{post.reactions.length}</Typography>
+          </IconButton>
+
+          {/* Comment Icon - toggles the comment input */}
+          <IconButton onClick={() => setShowCommentInput(!showCommentInput)} sx={{ color: 'var(--dark)', '&:hover': { color: 'blue' } }}>
+            <Comment sx={{ fontSize: 20 }} />
+          </IconButton>
+        </Box>
+
+        <CommentThread comments={post.comments} />
+      </Box>
     </motion.div>
   );
 }

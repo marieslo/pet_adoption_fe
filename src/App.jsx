@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Cursor from './components/Cursor';
 import AddPetForm from './pages/admin/AddPetForm';
 import EditPetForm from './pages/admin/EditPetForm';
 import PetsDashboard from './pages/admin/PetsDashboard';
@@ -17,7 +16,7 @@ import { AuthProvider } from './context/AuthProvider';
 import FetchPetsProvider from './context/FetchPetsProvider';
 import MyPetsProvider from './context/MyPetsProvider';
 import { Container, Row, Col } from 'react-bootstrap';
-import '../public/style.scss';
+import '../public/styles.css';
 
 export default function App() {
   return (
@@ -26,7 +25,6 @@ export default function App() {
         <FetchPetsProvider>
           <MyPetsProvider>
             <Router>
-              <Cursor/>
               <Container fluid className="px-4">
               <Header />
                 <Row>
