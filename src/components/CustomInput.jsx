@@ -19,6 +19,7 @@ const theme = createTheme({
           '--TextField-radius': 'var(--border-radius)',
           '--TextField-height': '50px',
           '& .MuiOutlinedInput-root': {
+            backgroundColor: 'var(--light)',
             borderRadius: 'var(--TextField-radius)',
             height: 'var(--TextField-height)',
             display: 'flex',

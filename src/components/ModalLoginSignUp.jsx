@@ -10,7 +10,7 @@ export default function ModalLoginSignUp({
   onHide,
   onLoginSuccess,
   onSignupSuccess,
-  customTabColor = '#FF3FA4',
+  customTabColor = 'var(--accent)',
 }) {
   const [selectedTab, setSelectedTab] = useState(0);
   const navigate = useNavigate(); 
@@ -44,7 +44,7 @@ export default function ModalLoginSignUp({
       PaperProps={{
         sx: {
           borderRadius: 'var(--border-radius)',
-          padding: '20px',
+          paddingBottom: '10px',
           position: 'fixed',
           top: '0',
           width: '80%',
@@ -52,27 +52,35 @@ export default function ModalLoginSignUp({
           height: 'auto',
           '@media (max-width: 600px)': {
             width: '90%',
-            padding: '15px',
           },
           '@media (max-width: 400px)': {
             width: '95%',
-            padding: '10px',
           },
         },
       }}
     >
       <DialogTitle className="position-relative">
-        <IconButton onClick={onHide} className="position-absolute top-0 end-0 p-1">
+        <IconButton onClick={onHide}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
 
       <DialogContent>
-        <Tabs value={selectedTab} onChange={handleTabChange} centered>
+      <Tabs 
+          value={selectedTab} 
+          onChange={handleTabChange} 
+          centered 
+          sx={{ 
+            marginBottom: 2,
+            border: 'none',
+          }}
+          indicatorColor="transparent"
+        >
           <Tab
             label="Log In"
             sx={{
-              color: selectedTab === 0 ? customTabColor : 'inherit',
+              color: selectedTab === 0 ? customTabColor : 'rgb(153, 146, 146)',
+              border: 'none',
               '&.Mui-selected': {
                 color: customTabColor,
                 fontWeight: 'bold',
@@ -82,7 +90,7 @@ export default function ModalLoginSignUp({
           <Tab
             label="Sign Up"
             sx={{
-              color: selectedTab === 1 ? customTabColor : 'inherit',
+              color: selectedTab === 1 ? customTabColor : 'rgb(153, 146, 146)',
               '&.Mui-selected': {
                 color: customTabColor,
                 fontWeight: 'bold',

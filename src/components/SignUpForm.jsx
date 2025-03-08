@@ -18,7 +18,6 @@ export default function SignupForm({ onSignupSuccess }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [passwordMismatch, setPasswordMismatch] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false); 
 
   const { login } = useAuth();
 
@@ -30,14 +29,6 @@ export default function SignupForm({ onSignupSuccess }) {
   const handleCheckboxChange = (e) => {
     setFormData({ ...formData, isAdmin: e.target.checked });
   };
-
-  // const togglePasswordVisibility = () => {
-  //   setShowPassword((prevShowPassword) => !prevShowPassword);
-  // };
-
-  // const toggleConfirmPasswordVisibility = () => {
-  //   setShowConfirmPassword((prevShowConfirmPassword) => !prevShowConfirmPassword);
-  // };
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -61,7 +52,7 @@ export default function SignupForm({ onSignupSuccess }) {
     }
   };
 
-  const isValidEmail = (email) => /^[a-zA-Z0-9._%+-]+@[a-zAZ0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
+  const isValidEmail = (email) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
 
   const isFormValid = () => {
     return (
@@ -75,7 +66,7 @@ export default function SignupForm({ onSignupSuccess }) {
     <div>
       <form onSubmit={handleSignup}>
         {error && <Alert severity="error">{error}</Alert>}
-
+    
         {/* First Name and Email */}
         <div>
           <CustomInput
@@ -95,7 +86,6 @@ export default function SignupForm({ onSignupSuccess }) {
           />
         </div>
 
-        {/* Password and Confirm Password */}
         <div>
           <CustomInput
             label="Password"
@@ -105,8 +95,6 @@ export default function SignupForm({ onSignupSuccess }) {
             type="password"
             required
             helperText="Password must contain at least one letter, one digit, and be at least 6 characters long."
-            // togglePasswordVisibility={togglePasswordVisibility}
-            // showPassword={showPassword}
           />
           <CustomInput
             label="Confirm Password"
@@ -117,12 +105,10 @@ export default function SignupForm({ onSignupSuccess }) {
             required
             error={formData.password !== formData.confirmPassword}
             helperText={formData.password !== formData.confirmPassword ? "Passwords do not match" : ""}
-            // togglePasswordVisibility={toggleConfirmPasswordVisibility}
-            // showPassword={showConfirmPassword}
           />
         </div>
 
-        {/* Admin Access */}
+
         <div>
           <FormControlLabel
             control={
@@ -130,10 +116,16 @@ export default function SignupForm({ onSignupSuccess }) {
                 checked={formData.isAdmin}
                 onChange={handleCheckboxChange}
                 name="isAdmin"
-                color="primary"
+                color="var(--accent)"
               />
             }
-            label="To see all the features register as an admin"
+            label="I'd like to see all the features. Register me as an admin"
+            sx={{
+              '& .MuiFormControlLabel-label': {
+                fontSize: '12px',
+                fontWeight: 400
+              },
+            }}
           />
 
           <CustomButton

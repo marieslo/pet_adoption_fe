@@ -57,7 +57,7 @@ export default function Header() {
         }}
         ref={headerRef}
       >
-        <Toolbar sx={{ display: 'flex', justifyContent: 'center'}}>
+        <Toolbar sx={{ display: 'flex', justifyContent: 'end'}}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {!user && location.pathname !== '/' && (
               <Button
@@ -116,7 +116,7 @@ export default function Header() {
               </span>
             )}
           </Box>
-
+          {user && !loading && (
           <IconButton
             color="var(--secondary)"
             sx={{ display: { xs: 'block', sm: 'none' }, marginLeft: 2 }}
@@ -124,6 +124,7 @@ export default function Header() {
           >
             <MenuIcon sx={{ fontFamily: 'var(--font-body)', textTransform: 'uppercase' }} />
           </IconButton>
+          )}
         </Toolbar>
       </AppBar>
 
@@ -161,8 +162,8 @@ export default function Header() {
       <ModalLoginSignUp
         show={modalShow}
         onHide={() => setModalShow(false)}
-        onSignupSuccess={(userData) => console.log('Signing up:', userData)}
-        onLoginSuccess={() => console.log('Logging in:', user)}
+        onSignupSuccess={() => console.log('Signed in')}
+        onLoginSuccess={() => console.log('Logged in')}
       />
     </>
   );
