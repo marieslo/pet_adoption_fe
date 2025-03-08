@@ -69,22 +69,32 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const updateUserFunction = async (userData) => {
+  const updateUserFunction = async (userData, avatarFile) => {
     try {
       if (!user || !user._id) {
         throw new Error('User ID not found');
       }
-
+  
+      const formData = new FormData();
+      for (const key in userData) {
+        formData.append(key, userData[key]);
+      }
+  
+      if (avatarFile) {
+        formData.append('avatar', avatarFile);
+      }
+  
       const response = await axios.put(
         `${SERVER_URL}/users/profile/${user._id}`,
-        userData,
+        formData,
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
+            'Content-Type': 'multipart/form-data',
           },
         }
       );
-
+  
       const updatedUser = response.data;
       setUser(updatedUser);
       await localforage.setItem('user', JSON.stringify(updatedUser));
@@ -93,6 +103,7 @@ export const AuthProvider = ({ children }) => {
       throw error;
     }
   };
+  
 
   const updateUserPassword = async (currentPassword, newPassword) => {
     try {

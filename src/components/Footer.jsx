@@ -66,7 +66,7 @@ export default function Footer() {
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', fontSize: '14px' }}>
             <div>
-              © 2023-{currentYear}&nbsp;
+              © {currentYear}&nbsp;
             </div>
             <Link
               href="https://www.linkedin.com/in/marie-slovokhotov/"

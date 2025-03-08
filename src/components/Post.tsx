@@ -1,49 +1,62 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { ThumbUp, Comment} from "@mui/icons-material";
-import { Box, Typography, IconButton, Textarea, Divider } from '@mui/joy';
+import { ThumbUp, Comment, Delete, Edit } from "@mui/icons-material";
+import { Box, Typography, IconButton, Textarea, Divider, Avatar } from '@mui/joy';
 import CustomButton from "./CustomButton";
 import CommentThread from "./CommentThread";
+import moment from "moment";
 
-export default function Post({ post, onReaction }) {
+export default function Post({ post, onReaction, onDelete, onEdit }) {
   const [showCommentInput, setShowCommentInput] = useState(false);
+
+
+  const handleDelete = () => {
+    onDelete(post._id);
+  };
+
+
+  const formattedDate = (date) => {
+    return moment(date).format('DD MMM YYYY, HH:mm');
+  };
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      style={{
-        width: '100%',
-        maxWidth: '600px',
-        margin: 'auto',
-        backgroundColor: 'white',
-        border: '1px solid #e1e1e1',
-        borderRadius: 'var(--border-radius)',
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-        overflow: 'hidden',
-        transition: 'all 0.2s ease',
-      }}
-    >
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, padding: 2, backgroundColor: 'var(--light)', borderBottom: '1px solid #e1e1e1' }}>
-        <img
-          src={post.user.profileImage || "/default-avatar.png"}
-          alt={post.user.firstName}
-          style={{ width: 48, height: 48, borderRadius: '50%', objectFit: 'cover' }}
-        />
-        <div>
-          <Typography sx={{ color: 'var(--dark)', fontWeight: 'bold' }}>
-            {post.user.firstName} {post.user.lastName}
-          </Typography>
-          <Typography sx={{ color: 'var(--dark)' }}>
-            {post.timestamp}
-          </Typography>
-        </div>
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.4 }}
+    style={{
+      width: '100%',
+      maxWidth: '600px',
+      margin: 'auto',
+      backgroundColor: 'white',
+      border: '1px solid #e1e1e1',
+      borderRadius: 'var(--border-radius)',
+      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+      overflow: 'hidden',
+      transition: 'all 0.2s ease',
+    }}
+  >
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 2, padding: 2, backgroundColor: 'var(--secondary)', borderBottom: '1px solid #e1e1e1' }}>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+    <Avatar src={post.user.avatar || undefined}>
+      {!post.user.avatar && post.user.firstName
+        ? post.user.firstName.slice(0, 2).toUpperCase()
+        : 'PL'}
+    </Avatar>
+    <Typography sx={{ color: 'var(--dark)', fontWeight: 'bold' }}>
+      {post.user.firstName}
+    </Typography>
+  </Box>
+
+  <Box sx={{ textAlign: 'right' }}>
+    <Typography sx={{ color: 'var(--dark)', fontSize: '0.875rem' }}>
+      {formattedDate(post.createdAt)}{post.updatedAt && ` (Updated: ${formattedDate(post.updatedAt)})`}
+    </Typography>
+  </Box>
       </Box>
 
-
       <Box sx={{ padding: 2 }}>
-        <Typography sx={{ color: 'var(--dark)', fontSize: '1rem' }}>
+        <Typography sx={{ backgroundColor: 'var(--light', color: 'var(--dark)', fontSize: '1rem' }}>
           {post.content}
         </Typography>
         {post.image && (
@@ -102,25 +115,31 @@ export default function Post({ post, onReaction }) {
           </Box>
         )}
       </Box>
-
       <Divider sx={{ borderColor: '#e1e1e1' }} />
-      <Box sx={{ padding: 2, backgroundColor: '#f7f7f7',  display: 'flex', justifyContent: 'end',  }}>
-
-        {/* Reactions */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mt: 2 }}>
-          <IconButton onClick={() => onReaction(post._id, "Like")} sx={{ color: 'var(--dark)', '&:hover': { color: 'var(--primary)' } }}>
-            <ThumbUp sx={{ fontSize: 20}} />
+      <Box sx={{ padding: 1, backgroundColor: 'var(--secondary)', display: 'flex', justifyContent: 'end' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <IconButton onClick={() => onReaction(post._id, "Like")} sx={{ color: 'var(--dark)', '&:hover': { color: 'var(--accent)' } }}>
+            <ThumbUp sx={{ fontSize: 20, marginRight: 1 }} />
             <Typography sx={{ color: 'var(--dark)' }}>{post.reactions.length}</Typography>
           </IconButton>
 
-          {/* Comment Icon - toggles the comment input */}
-          <IconButton onClick={() => setShowCommentInput(!showCommentInput)} sx={{ color: 'var(--dark)', '&:hover': { color: 'blue' } }}>
+          <IconButton onClick={() => setShowCommentInput(!showCommentInput)} sx={{ color: 'var(--dark)', '&:hover': { color: 'var(--accent)'} }}>
             <Comment sx={{ fontSize: 20 }} />
           </IconButton>
-        </Box>
 
-        <CommentThread comments={post.comments} />
+          {post.user._id === post.user._id && (
+            <>
+              <IconButton onClick={handleDelete} sx={{ color: 'var(--dark)', '&:hover': { color: 'var(--accent)'} }}>
+                <Delete sx={{ fontSize: 20 }} />
+              </IconButton>
+              <IconButton onClick={onEdit} sx={{ color: 'var(--dark)', '&:hover': { color: 'var(--accent)'} }}>
+                <Edit sx={{ fontSize: 20 }} />
+              </IconButton>
+            </>
+          )}
+        </Box>
       </Box>
+      <CommentThread comments={post.comments} />
     </motion.div>
   );
 }

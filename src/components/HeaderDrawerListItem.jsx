@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom';
 export default function HeaderDrawerListItem({ to, icon, label, onClick }) {
   return (
     <ListItem
-      button
+      button="true"
       component={NavLink}
       to={to}
       onClick={onClick}

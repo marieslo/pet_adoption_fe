@@ -9,7 +9,7 @@ import Footer from './components/Footer';
 import WelcomePage from './pages/WelcomePage';
 import HomePage from './pages/HomePage';
 import SearchPage from './pages/SearchPage';
-import MyProfilePage from './pages/MyProfilePage';
+import ProfilePage from './pages/ProfilePage';
 import MyPetsPage from './pages/MyPetsPage';
 import SinglePetPage from './pages/SinglePetPage';
 import { AuthProvider } from './context/AuthProvider';
@@ -32,7 +32,7 @@ export default function App() {
                     <Routes>
                       <Route path="/" element={<WelcomePage />} />
                       <Route path="/home" element={<HomePage />} />
-                      <Route path="/users/profile/:id" element={<MyProfilePage />} />
+                      <Route path="/users/profile/:id" element={<ProfilePage />} />
                       <Route path="/users/mypets" element={<MyPetsPage />} />
                       <Route path="/pets/search" element={<SearchPage />} />
                       <Route path="/pets/:id" element={<SinglePetPage />} />
