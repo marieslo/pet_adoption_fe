@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthProvider.jsx';
 import { Box, Grid, Alert, Typography, Avatar} from '@mui/material';
-import CustomInput from '../components/CustomInput.jsx';
-import CustomButton from '../components/CustomButton.jsx';
+import CustomInput from './CustomInput.jsx';
+import CustomButton from './CustomButton.jsx';
 
 
 export default function EditProfileForm({ onSave, initialData }) {
@@ -19,7 +19,7 @@ export default function EditProfileForm({ onSave, initialData }) {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [avatarFile, setAvatarFile] = useState(null);
-  const [avatarPreview, setAvatarPreview] = useState(initialData.avatar || ''); // Using the avatar URL from initialData
+  const [avatarPreview, setAvatarPreview] = useState(initialData.avatar || ''); 
   
   useEffect(() => {
     const handleKeyPress = (event) => {
@@ -91,7 +91,7 @@ export default function EditProfileForm({ onSave, initialData }) {
             borderRadius: 'var(--border-radius)',
             overflow: 'hidden',
             padding: 2,
-            backgroundColor: 'rgb(235, 215, 215)', 
+            backgroundColor: 'rgb(188, 168, 168)', 
             color: 'var(--accent)',
             display: 'flex',
             flexDirection: 'column',
@@ -115,8 +115,6 @@ export default function EditProfileForm({ onSave, initialData }) {
               {errorMessage}
             </Alert>
           )}
-
-          {/* Email and First Name inputs in a row */}
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <CustomInput
@@ -126,7 +124,7 @@ export default function EditProfileForm({ onSave, initialData }) {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Enter your email"
-                sx={{ mb: 1, width: '100%' }} // Ensure full width of input
+                sx={{ mb: 1, width: '100%' }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>

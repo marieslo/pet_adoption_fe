@@ -28,7 +28,7 @@ export default function Post({ post, onReaction, onDelete, onEdit }) {
       width: '100%',
       maxWidth: '600px',
       margin: 'auto',
-      backgroundColor: 'white',
+      backgroundColor: 'var(--light)',
       border: '1px solid #e1e1e1',
       borderRadius: 'var(--border-radius)',
       boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
@@ -36,12 +36,12 @@ export default function Post({ post, onReaction, onDelete, onEdit }) {
       transition: 'all 0.2s ease',
     }}
   >
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 2, padding: 2, backgroundColor: 'var(--secondary)', borderBottom: '1px solid #e1e1e1' }}>
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 2, padding: 2, backgroundColor: 'rgb(188, 168, 168)', borderBottom: '1px solid #e1e1e1' }}>
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
     <Avatar src={post.user.avatar || undefined}>
       {!post.user.avatar && post.user.firstName
         ? post.user.firstName.slice(0, 2).toUpperCase()
-        : 'PL'}
+        : 'Pet Lover'}
     </Avatar>
     <Typography sx={{ color: 'var(--dark)', fontWeight: 'bold' }}>
       {post.user.firstName}
@@ -49,7 +49,7 @@ export default function Post({ post, onReaction, onDelete, onEdit }) {
   </Box>
 
   <Box sx={{ textAlign: 'right' }}>
-    <Typography sx={{ color: 'var(--dark)', fontSize: '0.875rem' }}>
+    <Typography sx={{ color: 'var(--light)', fontSize: '0.875rem', fontStyle: 'italic' }}>
       {formattedDate(post.createdAt)}{post.updatedAt && ` (Updated: ${formattedDate(post.updatedAt)})`}
     </Typography>
   </Box>
@@ -91,7 +91,7 @@ export default function Post({ post, onReaction, onDelete, onEdit }) {
                 onClick={() => setShowCommentInput(false)}
                 color="var(--accent)"
                 sx={{
-                  '&:hover': { backgroundColor: 'var(--accent-dark)' },
+                  '&:hover': { backgroundColor: ' #b29b8f' },
                   borderRadius: 'var(--border-radius)',
                   fontWeight: 'bold',
                   fontSize: '14px',
@@ -116,7 +116,7 @@ export default function Post({ post, onReaction, onDelete, onEdit }) {
         )}
       </Box>
       <Divider sx={{ borderColor: '#e1e1e1' }} />
-      <Box sx={{ padding: 1, backgroundColor: 'var(--secondary)', display: 'flex', justifyContent: 'end' }}>
+      <Box sx={{ padding: 1, backgroundColor: 'rgb(239, 206, 189)', display: 'flex', justifyContent: 'end' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <IconButton onClick={() => onReaction(post._id, "Like")} sx={{ color: 'var(--dark)', '&:hover': { color: 'var(--accent)' } }}>
             <ThumbUp sx={{ fontSize: 20, marginRight: 1 }} />

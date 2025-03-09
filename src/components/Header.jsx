@@ -73,7 +73,7 @@ export default function Header() {
               <>
                 <HeaderNavButton to="/home" icon={<HomeIcon />} label="Home" activePath={location.pathname} />
                 <HeaderNavButton to="/pets/search" icon={<PageViewIcon />} label="Search" activePath={location.pathname} />
-                <HeaderNavButton to="/users/mypets" icon={<FavoriteIcon />} label="Favorite Pets" activePath={location.pathname} />
+                <HeaderNavButton to="/users/favoritepets" icon={<FavoriteIcon />} label="Favorite Pets" activePath={location.pathname} />
                 {isAdmin && (
                   <>
                     <Button
@@ -134,7 +134,7 @@ export default function Header() {
             <>
               <HeaderDrawerListItem to="/home" icon={<HomeIcon />} label="Home" onClick={toggleDrawer} />
               <HeaderDrawerListItem to="/pets/search" icon={<PageViewIcon />} label="Search" onClick={toggleDrawer} />
-              <HeaderDrawerListItem to="/users/mypets" icon={<FavoriteIcon />} label="Favorite Pets" onClick={toggleDrawer} />
+              <HeaderDrawerListItem to="/users/favoritepets" icon={<FavoriteIcon />} label="Favorite Pets" onClick={toggleDrawer} />
               <HeaderDrawerListItem to={`/users/profile/${user._id}`} icon={<AccountCircleIcon />} label="Profile Settings" onClick={toggleDrawer} />
               {isAdmin && (
                 <>

@@ -1,54 +1,78 @@
 import React, { useState, useEffect } from 'react';
-import { useFetchPets } from '../context/FetchPetsProvider';
-import SearchBar from '../components/SearchBar';
-import SearchResults from '../components/SearchResults';
-import { Box, Container, Grid, Typography, Paper, Button } from '@mui/material';
+import { Box, Container, Grid, Paper } from '@mui/material';
 import gsap from 'gsap';
+import { useFetchPets } from '../context/FetchPetsProvider';
+import SearchInput from '../components/SearchInput';
+import SearchFilters from '../components/SearchFilters';
+import SearchResetButton from '../components/SearchResetButton';
+import SearchResults from '../components/SearchResults';
 
 export default function SearchPage() {
-  const { petsData, searchPets, fetchPets } = useFetchPets();
+  const { petsData, fetchPets } = useFetchPets();
   const [filteredPets, setFilteredPets] = useState([]);
-  const [searchTerm, setSearchTerm] = useState(null);
-  const [isAdvancedSearch, setIsAdvancedSearch] = useState(false);
-
-  const [advancedSearchTerm, setAdvancedSearchTerm] = useState({
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filters, setFilters] = useState({
     type: '',
     adoptionStatus: '',
-    heightCm: 0,
-    weightKg: 0,
-    name: '',
     breed: '',
+    weightMin: 0,
+    weightMax: 100,
+    heightMin: 0,
+    heightMax: 100,
   });
 
   useEffect(() => {
     fetchPets();
   }, [fetchPets]);
 
-  const handleSearch = async (searchTerm) => {
-    try {
-      setSearchTerm(searchTerm);
-      const filteredPets = await searchPets(searchTerm);
-      setFilteredPets(filteredPets);
-    } catch (error) {
-      console.error('Error during search:', error.message);
-    }
+  useEffect(() => {
+    filterPets(searchTerm, filters);
+  }, [petsData]);
+
+  const handleSearch = (searchTerm) => {
+    setSearchTerm(searchTerm);
+    filterPets(searchTerm, filters);
+  };
+
+  const handleFilterChange = (filterName, value) => {
+    const newFilters = { ...filters, [filterName]: value };
+    setFilters(newFilters);
+    filterPets(searchTerm, newFilters);
+  };
+
+  const filterPets = (searchTerm, filters) => {
+    const filtered = petsData.filter((pet) => {
+      const matchesSearch =
+        pet.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        pet.breed.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesFilters =
+        (!filters.type || pet.type.toLowerCase().includes(filters.type.toLowerCase())) &&
+        (!filters.adoptionStatus || pet.adoptionStatus.toLowerCase().includes(filters.adoptionStatus.toLowerCase())) &&
+        (!filters.breed || pet.breed.toLowerCase().includes(filters.breed.toLowerCase())) &&
+        pet.weightKg >= filters.weightMin &&
+        pet.weightKg <= filters.weightMax &&
+        pet.heightCm >= filters.heightMin &&
+        pet.heightCm <= filters.heightMax;
+
+      return matchesSearch && matchesFilters;
+    });
+
+    setFilteredPets(filtered);
   };
 
   const handleClearSearch = () => {
-    setSearchTerm(null);
-    setFilteredPets([]);
-    setAdvancedSearchTerm({
+    setSearchTerm('');
+    setFilters({
       type: '',
       adoptionStatus: '',
-      heightCm: 0,
-      weightKg: 0,
-      name: '',
       breed: '',
+      weightMin: 0,
+      weightMax: 100,
+      heightMin: 0,
+      heightMax: 100,
     });
-  };
-
-  const handleToggleSearchMode = () => {
-    setIsAdvancedSearch((prev) => !prev);
+    setFilteredPets(petsData);
   };
 
   useEffect(() => {
@@ -60,122 +84,19 @@ export default function SearchPage() {
   }, []);
 
   return (
-    <Container sx={{ mt: 4 }}>
-      <Grid container justifyContent="center">
-        <Grid item xs={12} md={8}>
-          <Paper sx={{ padding: 4, backgroundColor: '#fafafa', borderRadius: 2, boxShadow: 3 }}>
-            <Box className="search-container">
-              <Typography variant="h4" gutterBottom align="center">
-                Find Your Perfect Pet
-              </Typography>
-              <SearchBar
-                onSearch={handleSearch}
-                isAdvancedSearch={isAdvancedSearch}
-                onToggleSearchMode={handleToggleSearchMode}
-              />
+    <Container sx={{ mt: 10, mb: 6, minWidth: '360px', maxWidth: '100%' }}>
+      <Grid container justifyContent="center" spacing={4}>
+        <Grid item xs={12} sm={8} md={5}>
+          <Paper sx={{ padding: 3, backgroundColor: 'var(--light)', borderRadius: 'var(--border-radius)', boxShadow: 3 }}>
+            <Box className="search-container" sx={{ width: '100%' }}>
+              <SearchInput value={searchTerm} onChange={handleSearch} placeholder="Search by Name or Breed" />
+              <SearchFilters filters={filters} onFilterChange={handleFilterChange} />
+              <SearchResetButton onClick={handleClearSearch} />
             </Box>
           </Paper>
         </Grid>
-        <Grid item xs={12} md={8} sx={{ mt: 4 }}>
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Button
-              onClick={handleClearSearch}
-              variant="outlined"
-              color="primary"
-              sx={{ marginBottom: 3 }}
-            >
-              Clear Search
-            </Button>
-          </Box>
-
-          {isAdvancedSearch && (
-            <Paper sx={{ padding: 4, backgroundColor: '#fafafa', borderRadius: 2, boxShadow: 3 }}>
-              <div className="advanced-search-settings space-y-4">
-                <div className="space-y-2">
-                  <label htmlFor="adoptionStatus" className="text-sm font-medium text-gray-700">
-                    Adoption Status:
-                  </label>
-                  <select
-                    id="adoptionStatus"
-                    value={advancedSearchTerm.adoptionStatus}
-                    onChange={(e) =>
-                      setAdvancedSearchTerm({ ...advancedSearchTerm, adoptionStatus: e.target.value })
-                    }
-                    className="w-full px-4 py-2 border rounded-md bg-gray-100"
-                  >
-                    <option value="">Any</option>
-                    <option value="adoptable">Adoptable</option>
-                    <option value="adopted">Adopted</option>
-                    <option value="fostered">Fostered</option>
-                  </select>
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="heightRange" className="text-sm font-medium text-gray-700">
-                    Height, over cm: {advancedSearchTerm.heightCm}
-                  </label>
-                  <input
-                    id="heightRange"
-                    type="range"
-                    value={advancedSearchTerm.heightCm}
-                    min="1"
-                    max="100"
-                    onChange={(e) =>
-                      setAdvancedSearchTerm({ ...advancedSearchTerm, heightCm: e.target.value })
-                    }
-                    className="w-full"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="weightRange" className="text-sm font-medium text-gray-700">
-                    Weight, over kg: {advancedSearchTerm.weightKg}
-                  </label>
-                  <input
-                    id="weightRange"
-                    type="range"
-                    value={advancedSearchTerm.weightKg}
-                    min="1"
-                    max="100"
-                    onChange={(e) =>
-                      setAdvancedSearchTerm({ ...advancedSearchTerm, weightKg: e.target.value })
-                    }
-                    className="w-full"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="name" className="text-sm font-medium text-gray-700">
-                    Name:
-                  </label>
-                  <input
-                    id="name"
-                    type="text"
-                    placeholder="Enter pet's name"
-                    value={advancedSearchTerm.name}
-                    onChange={(e) => setAdvancedSearchTerm({ ...advancedSearchTerm, name: e.target.value })}
-                    className="w-full px-4 py-2 border rounded-md bg-gray-100"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="breed" className="text-sm font-medium text-gray-700">
-                    Breed:
-                  </label>
-                  <input
-                    id="breed"
-                    type="text"
-                    placeholder="Enter pet's breed"
-                    value={advancedSearchTerm.breed}
-                    onChange={(e) => setAdvancedSearchTerm({ ...advancedSearchTerm, breed: e.target.value })}
-                    className="w-full px-4 py-2 border rounded-md bg-gray-100"
-                  />
-                </div>
-              </div>
-            </Paper>
-          )}
-
-          <SearchResults petsData={searchTerm ? filteredPets : petsData} loading={false} error={null} />
+        <Grid item xs={12} sm={8} md={7}>
+          <SearchResults petsData={filteredPets} loading={false} error={null} />
         </Grid>
       </Grid>
     </Container>
