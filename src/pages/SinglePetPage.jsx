@@ -85,7 +85,6 @@ export default function SinglePetPage() {
     }}>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
         <Grid container spacing={2} alignItems="center" justifyContent="center">
-          {/* Pet Info Card */}
           <Grid item xs={12} sm={10} md={8} sx={{ display: 'flex', justifyContent: 'center'}}>
             <Card sx={{
               borderRadius: 'var(--border-radius)',

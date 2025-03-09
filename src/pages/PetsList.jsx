@@ -7,7 +7,7 @@ export default function PetsList({ title, cssClass, pets, onLike, onUnlike }) {
   const renderPets = () => {
     return pets.map((pet, index) => (
       <PetCard
-        key={pet._id || index} 
+        key={pet._id || index}
         pet={pet}
         onLike={onLike}
         onUnlike={onUnlike}
@@ -19,7 +19,7 @@ export default function PetsList({ title, cssClass, pets, onLike, onUnlike }) {
     <div className='pets-section'>
       {hasPets && <h2 className={`my-pets-${cssClass}`}>{title}:</h2>}
       <div className={`pets-list ${cssClass}`}>
-        {hasPets ? renderPets() : <p className='no-pets'></p>}
+        {hasPets ? renderPets() : <p className='no-pets'>No pets available</p>}
       </div>
     </div>
   );

@@ -10,12 +10,13 @@ import WelcomePage from './pages/WelcomePage';
 import HomePage from './pages/HomePage';
 import SearchPage from './pages/SearchPage';
 import ProfilePage from './pages/ProfilePage';
-import MyPetsPage from './pages/MyPetsPage';
+import FavoritePetsPage from './pages/FavoritePetsPage';
 import SinglePetPage from './pages/SinglePetPage';
 import { AuthProvider } from './context/AuthProvider';
 import FetchPetsProvider from './context/FetchPetsProvider';
 import MyPetsProvider from './context/MyPetsProvider';
 import { Container, Row, Col } from 'react-bootstrap';
+import ProtectedRoute from './context/ProtectedRoute';
 import '../public/styles.css';
 
 export default function App() {
@@ -33,13 +34,20 @@ export default function App() {
                       <Route path="/" element={<WelcomePage />} />
                       <Route path="/home" element={<HomePage />} />
                       <Route path="/users/profile/:id" element={<ProfilePage />} />
-                      <Route path="/users/mypets" element={<MyPetsPage />} />
+                      <Route path="/users/favoritepets" element={<FavoritePetsPage />} />
                       <Route path="/pets/search" element={<SearchPage />} />
                       <Route path="/pets/:id" element={<SinglePetPage />} />
                       <Route path="/pets/addpet" element={<AddPetForm />} />
                       <Route path="/pets/addpet/:id" element={<EditPetForm />} />
-                      <Route path="/petsdashboard" element={<PetsDashboard />} />
-                      <Route path="/usersdashboard" element={<UsersDashboard />} />
+                     {/* Admin protected routes */}
+                     <Route 
+                        path="/petsdashboard" 
+                        element={<ProtectedRoute element={<PetsDashboard />} />} 
+                      />
+                      <Route 
+                        path="/usersdashboard" 
+                        element={<ProtectedRoute element={<UsersDashboard />} />} 
+                      />
                     </Routes>
                   </Col>
                 </Row>

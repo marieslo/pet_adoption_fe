@@ -12,7 +12,7 @@ export default function PetCard({ pet }) {
     return <Typography>No pet data available</Typography>;
   }
 
-  const { _id, picture, name } = pet;
+  const { _id, picture, name, breed } = pet;
   const imageUrl = picture || '';
 
   const navigate = useNavigate();
@@ -81,8 +81,8 @@ export default function PetCard({ pet }) {
   };
 
   return (
-    <Card sx={{ width: '200px', height: '300px', border: 1, borderRadius: 6, borderColor: 'white', position: 'relative', overflow: 'hidden' }}>
-      <CardActions sx={{ padding: 0, justifyContent: 'space-between', position: 'absolute', top: 10, left: 10, right: 10, zIndex: 2, cursor: 'pointer' }}>
+    <Card sx={{ width: '200px', height: '300px', border: 1, borderRadius: 6, borderColor: 'white', position: 'relative', overflow: 'hidden' }} onClick={() => navigate(`/pets/${_id}`)}>
+      <CardActions sx={{ padding: 0, justifyContent: 'space-between', position: 'absolute', top: 10, left: 10, right: 10, zIndex: 2, cursor: 'pointer' }} >
         {isLiked ? (
           <Favorite sx={{ color: 'var(--accent)', fontSize: 30 }} onClick={handleUnlike} />
         ) : (
@@ -97,11 +97,14 @@ export default function PetCard({ pet }) {
         <Typography variant="h6" align="center" noWrap sx={{ color: 'white' }}>
           {name}
         </Typography>
+        <Typography variant="body2" color="white" noWrap align="center" fontWeight={'bolder'}>
+          {breed}
+        </Typography>
         <Typography variant="body2" color="white" noWrap align="center" fontStyle={'italic'}>
           {adoptionStatus}
         </Typography>
       </CardContent>
-      {showAlert && <div>Please log in to like pets!</div>}
+      {showAlert && <div>Please log in to add pets to favorites</div>}
     </Card>
   );
 }

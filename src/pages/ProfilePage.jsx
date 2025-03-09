@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuth } from '../context/AuthProvider.jsx';
-import EditProfileForm from './EditProfileForm.jsx';
+import EditProfileForm from '../components/EditProfileForm.jsx';
 
 export default function ProfilePage() {
   const { user } = useAuth();
