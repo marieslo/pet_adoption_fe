@@ -91,7 +91,7 @@ export default function EditProfileForm({ onSave, initialData }) {
             borderRadius: 'var(--border-radius)',
             overflow: 'hidden',
             padding: 2,
-            backgroundColor: 'rgb(188, 168, 168)', 
+            backgroundColor: 'rgba(217, 192, 192, 0.71)', 
             color: 'var(--accent)',
             display: 'flex',
             flexDirection: 'column',

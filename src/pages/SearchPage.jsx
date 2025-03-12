@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Container, Grid, Paper } from '@mui/material';
-import gsap from 'gsap';
+import { Box, Container, Grid, Paper, Typography } from '@mui/material';
 import { useFetchPets } from '../context/FetchPetsProvider';
 import SearchInput from '../components/SearchInput';
 import SearchFilters from '../components/SearchFilters';
@@ -48,6 +47,7 @@ export default function SearchPage() {
 
       const matchesFilters =
         (!filters.type || pet.type.toLowerCase().includes(filters.type.toLowerCase())) &&
+        pet.adoptionStatus.toLowerCase() !== 'adopted' &&
         (!filters.adoptionStatus || pet.adoptionStatus.toLowerCase().includes(filters.adoptionStatus.toLowerCase())) &&
         (!filters.breed || pet.breed.toLowerCase().includes(filters.breed.toLowerCase())) &&
         pet.weightKg >= filters.weightMin &&
@@ -72,16 +72,8 @@ export default function SearchPage() {
       heightMin: 0,
       heightMax: 100,
     });
-    setFilteredPets(petsData);
+    filterPets('', filters);
   };
-
-  useEffect(() => {
-    gsap.fromTo(
-      '.search-container',
-      { opacity: 0, x: -100 },
-      { opacity: 1, x: 0, duration: 1, ease: 'power3.out' }
-    );
-  }, []);
 
   return (
     <Container sx={{ mt: 10, mb: 6, minWidth: '360px', maxWidth: '100%' }}>
@@ -94,6 +86,15 @@ export default function SearchPage() {
               <SearchResetButton onClick={handleClearSearch} />
             </Box>
           </Paper>
+          <Box sx={{ mt: 3, fontStyle: 'italic', color: '#ffffff' }}>
+            <Typography variant="body2" color="var{--light)">
+              <strong>Adoptable Pets:</strong> These pets are available for adoption and are looking for their forever home.
+              <br />
+              <br />
+              <strong>Fostered Pets:</strong> These pets are in temporary foster homes and are awaiting adoption. 
+              They are not yet available for adoption but are being cared for in the meantime.
+            </Typography>
+          </Box>
         </Grid>
         <Grid item xs={12} sm={8} md={7}>
           <SearchResults petsData={filteredPets} loading={false} error={null} />

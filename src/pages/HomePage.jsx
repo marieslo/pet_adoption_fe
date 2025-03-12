@@ -1,50 +1,26 @@
 import React from 'react';
-import { Box, Typography, Grid } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import { useAuth } from '../context/AuthProvider';
 import PostFeed from '../components/PostFeed';
-import AdoptablePetsFeed from '../components/AdoptablePetsFeed';
+import ClarifyingText from '../components/ClarifyingText';
 
 export default function HomePage() {
   const { user } = useAuth();
 
   return (
     <Box
-      className="home-page-container"
-      sx={{
-        position: 'relative',
-        minHeight: '100vh',
-        padding: 3,
-        pt: 12,
-      }}
-    >
-      <Grid container spacing={4}>
-        <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
-          {user && (
-                <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 1,
-                  marginLeft: '10%',
-                }}
-              >
-                <Typography
-                  fontSize='20px'
-                  fontWeight={600}
-                  sx={{ fontFamily: 'var(--font-body)', color: 'var(--accent)', margin: 4}}
-                >
-                  Glad to see you here, {user.firstName}!<br />
-                  Transform your life,<br />
-                  adopt a furry friend today!<br />
-                </Typography>
-              </Box>
-          )}
-          <Box sx={{ flexGrow: 1 }}>
-            <AdoptablePetsFeed />
-          </Box>
-        </Grid>
+      className="home-page-container">
+      <Box sx={{ mb: 4 }}>
+  <ClarifyingText
+    text={`Welcome, ${user.firstName}! You can ask or share something about a specific pet, clarify breed details, or talk about anything else on your mind.`}
+  />
+</Box>
+
+      <Grid container justifyContent="center">
         <Grid item xs={12} md={6}>
-          <PostFeed />
+          <Box sx={{ maxHeight: 'calc(100vh - 100px)', overflowY: 'auto', paddingBottom: '20px' }}>
+            <PostFeed />
+          </Box>
         </Grid>
       </Grid>
     </Box>

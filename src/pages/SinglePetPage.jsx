@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import localforage from 'localforage';
 import { FetchPetsContext } from '../context/FetchPetsProvider';
-import { useMyPetsContext } from '../context/MyPetsProvider';
+import { useFavoritePetsContext } from '../context/FavoritePetsProvider';
 import { useAuth } from '../context/AuthProvider';
 import { Favorite, FavoriteBorder } from '@mui/icons-material';
 import { Card, Typography, Box, Grid } from '@mui/material';
@@ -13,7 +13,7 @@ import CustomButton from '../components/CustomButton';
 export default function SinglePetPage() {
   const { id } = useParams();
   const { fetchPetById } = useContext(FetchPetsContext);
-  const { likePet, unlikePet, adoptPet, fosterPet, returnPet } = useMyPetsContext();
+  const { likePet, unlikePet, adoptPet, fosterPet, returnPet } = useFavoritePetsContext();
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [petData, setPetData] = useState(null);

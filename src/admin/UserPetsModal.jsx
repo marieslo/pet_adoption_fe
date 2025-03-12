@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import axios from 'axios';
-import { SERVER_URL } from '../../api';
+import { SERVER_URL } from '../api';
 
 export default function UserPetsModal({ showUserPetsModal, setShowUserPetsModal, selectedUser }) {
   const [userPets, setUserPets] = useState([]);
