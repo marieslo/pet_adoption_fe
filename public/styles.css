@@ -31,12 +31,13 @@ body {
   overflow: hidden;
 }
 
-.welcome-page-container, .home-page-container {
+.welcome-page-container {
   background-image: url('https://res.cloudinary.com/nkwjho4xf/image/upload/v1741190671/pet-adoption/welcome-page-background_jirxwu.jpg');
 }
 
 .fav-pets-page-container {
-background-image: url('https://res.cloudinary.com/nkwjho4xf/image/upload/v1741191743/pet-adoption/2150747649_mg03mc.jpg');
+  background-image: url('https://res.cloudinary.com/nkwjho4xf/image/upload/v1741191743/pet-adoption/2150747649_mg03mc.jpg');
+
 }
 
 .profile-page-container {
@@ -49,8 +50,7 @@ background-image: url('https://res.cloudinary.com/nkwjho4xf/image/upload/v174119
 
 @media (max-width: 1000px) {
   .welcome-page-container, 
-  .home-page-container
-  .fav-pets-page-container, 
+  .fav-pets-page-container,
   .profile-page-container {
     background-image: none; 
   }

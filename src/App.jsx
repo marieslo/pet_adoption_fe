@@ -1,9 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import AddPetForm from './pages/admin/AddPetForm';
-import EditPetForm from './pages/admin/EditPetForm';
-import PetsDashboard from './pages/admin/PetsDashboard';
-import UsersDashboard from './pages/admin/UsersDashboard';
+import AddPetForm from './admin/AddPetForm';
+import EditPetForm from './admin/EditPetForm';
+import PetsDashboard from './admin/PetsDashboard';
+import UsersDashboard from './admin/UsersDashboard';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import WelcomePage from './pages/WelcomePage';
@@ -14,7 +14,7 @@ import FavoritePetsPage from './pages/FavoritePetsPage';
 import SinglePetPage from './pages/SinglePetPage';
 import { AuthProvider } from './context/AuthProvider';
 import FetchPetsProvider from './context/FetchPetsProvider';
-import MyPetsProvider from './context/MyPetsProvider';
+import FavoritePetsProvider from './context/FavoritePetsProvider';
 import { Container, Row, Col } from 'react-bootstrap';
 import ProtectedRoute from './context/ProtectedRoute';
 import '../public/styles.css';
@@ -24,7 +24,7 @@ export default function App() {
     <div className="App">
       <AuthProvider>
         <FetchPetsProvider>
-          <MyPetsProvider>
+          <FavoritePetsProvider>
             <Router>
               <Container fluid className="px-4">
               <Header />
@@ -54,7 +54,7 @@ export default function App() {
                 <Footer />
               </Container>
             </Router>
-          </MyPetsProvider>
+          </FavoritePetsProvider>
         </FetchPetsProvider>
       </AuthProvider>
     </div>

@@ -2,3 +2,4 @@ node_modules/
 TO-DO
 api.js
 .DS_Store
+.env

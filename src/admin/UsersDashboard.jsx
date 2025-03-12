@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Modal, Form, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 import UserPetsModal from './UserPetsModal';
-import { SERVER_URL } from '../../api';
+import { SERVER_URL } from '../api';
 import AdminTable from './AdminTable';
 
 const itemsPerPage = 8;

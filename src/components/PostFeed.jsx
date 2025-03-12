@@ -1,23 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Grid, Typography, Switch, FormControlLabel } from '@mui/material';
+import { Box, Grid, Typography, Switch, FormControlLabel, Skeleton, Snackbar, Alert } from '@mui/material';
 import { useAuth } from '../context/AuthProvider';
 import { SERVER_URL } from '../api';
-import LoadingSpinner from './LoadingSpinner';
-import Post from './Post';
-import CustomButton from './CustomButton';
-import CustomInput from './CustomInput';
-
+import PostItem from './PostItem';
+import PostWriting from './PostWriting';
 
 export default function PostFeed() {
   const { user, authToken, loading } = useAuth();
   const [posts, setPosts] = useState([]);
-  const [newPostContent, setNewPostContent] = useState('');
-  const [loadingPost, setLoadingPost] = useState(false);
   const [showMyPosts, setShowMyPosts] = useState(false);
-  const [postToDelete, setPostToDelete] = useState(null);
-  const [postToEdit, setPostToEdit] = useState(null);
-  const [newPostContentForEdit, setNewPostContentForEdit] = useState('');
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+
+  const handleSnackbarClose = () => setSnackbarOpen(false);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -28,162 +25,152 @@ export default function PostFeed() {
         console.error('Error fetching posts:', error);
       }
     };
-
     fetchPosts();
-  }, []);
+  }, []); 
+  
 
-  const handleReaction = (postId, reaction) => {
-    if (!user) {
-      console.log('User not logged in');
+  const handleEditPost = (postId, editedContent) => {
+    if (!editedContent.trim()) {
+      setSnackbarMessage('Content cannot be empty.');
+      setSnackbarSeverity('warning');
+      setSnackbarOpen(true);
       return;
     }
-
-    axios.post(`${SERVER_URL}/posts/${postId}/reaction`, { reaction })
-      .then(response => {
-        console.log('Reaction added:', response.data);
+  
+    axios
+      .put(
+        `${SERVER_URL}/posts/${postId}`,
+        { content: editedContent },
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        setPosts((prevPosts) =>
+          prevPosts.map((post) =>
+            post._id === postId ? { ...post, content: editedContent } : post
+          )
+        );
+        setSnackbarMessage('Post updated successfully!');
+        setSnackbarSeverity('success');
+        setSnackbarOpen(true);
       })
-      .catch(error => {
-        console.error('Error adding reaction:', error);
+      .catch((error) => {
+        console.error('Error updating post:', error);
+        setSnackbarMessage('Error updating post. Please try again.');
+        setSnackbarSeverity('error');
+        setSnackbarOpen(true);
       });
   };
 
-  const handlePostSubmit = async () => {
-    if (!authToken) {
-      console.log('Authentication token not found. Please log in.');
-      return;
-    }
-    if (!newPostContent.trim()) {
-      console.log('Post content cannot be empty');
-      return;
-    }
-    setLoadingPost(true);
-    try {
-      const response = await axios.post(
-        `${SERVER_URL}/posts/create`,
-        { content: newPostContent },
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
-      const newPost = {
-        ...response.data,
-        user: user,
-      };
-      setPosts([newPost, ...posts]);
-      setNewPostContent('');
-    } catch (error) {
-      console.error('Error creating post:', error);
-    } finally {
-      setLoadingPost(false);
-    }
+  const handleDeletePost = (postId) => {
+    if (!postId) return;
+
+    axios.delete(`${SERVER_URL}/posts/${postId}`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    })
+    .then(() => {
+      setPosts(posts.filter(post => post._id !== postId));
+      setSnackbarMessage('Post deleted successfully!');
+      setSnackbarSeverity('success');
+      setSnackbarOpen(true);
+    })
+    .catch(error => {
+      console.error('Error deleting post:', error);
+      setSnackbarMessage('Error deleting post. Please try again.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+    });
   };
 
-  const handleDeletePost = () => {
-    if (postToDelete) {
-      axios.delete(`${SERVER_URL}/posts/${postToDelete._id}`, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      })
-      .then(() => {
-        setPosts(posts.filter(post => post._id !== postToDelete._id));
-        setOpenDeleteModal(false);
-      })
-      .catch(error => {
-        console.error('Error deleting post:', error);
-      });
+  const handleNewPost = (newPost) => {
+    if (!user || !user.firstName) {
+      setSnackbarMessage('User information is missing. Please log in again.');
+      setSnackbarSeverity('warning');
+      setSnackbarOpen(true);
+      return;
     }
+  
+    const postWithUserInfo = {
+      ...newPost,
+      user: {
+        _id: user._id,
+        firstName: user.firstName,
+        avatar: user.avatar,
+      },
+      pet: {
+        ...newPost.pet,
+      }
+    };
+    setPosts([postWithUserInfo, ...posts]); 
+    setSnackbarMessage('New post added!');
+    setSnackbarSeverity('success');
+    setSnackbarOpen(true);
   };
-
-  const handleEditPost = async () => {
-    if (!authToken || !postToEdit) {
-      console.log('Authentication token not found or no post selected for editing.');
-      return;
-    }
-    if (!newPostContentForEdit.trim()) {
-      console.log('Post content cannot be empty');
-      return;
-    }
-    try {
-      const response = await axios.put(
-        `${SERVER_URL}/posts/${postToEdit._id}`,
-        { content: newPostContentForEdit },
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
-      const updatedPosts = posts.map(post => 
-        post._id === postToEdit._id ? { ...post, content: newPostContentForEdit, updatedAt: response.data.updatedAt } : post
-      );
-      setPosts(updatedPosts);
-      setPostToEdit(null);
-      setNewPostContentForEdit('');
-    } catch (error) {
-      console.error('Error editing post:', error);
-    }
-  };
-
-  const handleComment = async (postId, commentContent) => {
-    if (!authToken) {
-      console.log('Authentication token not found. Please log in.');
-      return;
-    }
-    if (!commentContent.trim()) {
-      console.log('Comment content cannot be empty');
-      return;
-    }
-
-    try {
-      const response = await axios.post(
-        `${SERVER_URL}/posts/${postId}/comment`,
-        { content: commentContent },
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
-      const updatedPosts = posts.map((post) =>
-        post._id === postId
-          ? { ...post, comments: [...post.comments, response.data] }
-          : post
-      );
-      setPosts(updatedPosts);
-    } catch (error) {
-      console.error('Error adding comment:', error);
-    }
-  };
-
+  
 
   const filteredPosts = showMyPosts ? posts.filter(post => post.user._id === user?._id) : posts;
 
-  if (loading) return <LoadingSpinner />;
+  const handleReactToPost = (postId, reactionType) => {
+    axios
+      .post(
+        `${SERVER_URL}/posts/${postId}/reactions`,
+        { type: reactionType },
+        { headers: { Authorization: `Bearer ${authToken}` } }
+      )
+      .then((response) => {
+        setPosts(posts.map((post) =>
+          post._id === postId ? { ...post, reactions: response.data } : post
+        ));
+      })
+      .catch((error) => {
+        console.error('Error reacting to post:', error);
+      });
+  };
+
+  const handleCommentOnPost = (postId, commentContent) => {
+    if (!commentContent.trim()) return;
+
+    axios
+      .post(
+        `${SERVER_URL}/posts/${postId}/comments`,
+        { content: commentContent },
+        { headers: { Authorization: `Bearer ${authToken}` } }
+      )
+      .then((response) => {
+        setPosts(posts.map((post) =>
+          post._id === postId ? { ...post, comments: [...post.comments, response.data] } : post
+        ));
+      })
+      .catch((error) => {
+        console.error('Error commenting on post:', error);
+      });
+  };
+
+  if (loading) return (
+    <Box sx={{ width: '100%', mx: 'auto', mt: 4 }}>
+      <Skeleton variant="rectangular" width="100%" height={120} sx={{ marginBottom: 2 }} />
+      <Grid container spacing={2} justifyContent="center" sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px' }}>
+        {[...Array(4)].map((_, index) => (
+          <Grid item xs={12} key={index} sx={{ gridRowEnd: 'span 2', gridColumnEnd: index % 2 === 0 ? 'span 2' : 'span 1' }}>
+            <Skeleton variant="rectangular" width="100%" height={200} />
+            <Skeleton width="60%" sx={{ marginTop: 1 }} />
+            <Skeleton width="40%" sx={{ marginTop: 1 }} />
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
+  );
+  
 
   return (
-    <Box className="post-feed-wrapper" sx={{ maxWidth: '80vh', mx: 'auto', mt: 4 }}>
-      <Box sx={{ marginTop: 8,  marginBottom: 4, maxWidth: '40vh', }}>
-        <CustomInput
-          label="What's on your mind?"
-          name="newPostContent"
-          value={newPostContent}
-          onChange={(e) => setNewPostContent(e.target.value)}
-          placeholder="Share your thoughts here"
-          sx={{
-            backgroundColor: 'var(--light)', borderRadius: '8px', color: 'var(--dark)',
-            padding: '12px', marginBottom: '16px'
-          }}
-        />
-        <CustomButton
-          text={loadingPost ? 'Posting...' : 'Post'}
-          color="var(--accent)"
-          isLoading={loadingPost}
-          onClick={handlePostSubmit}
-          sx={{ width: '100%', padding: '12px', borderRadius: 'var(--border-radius)' }}
-        />
+    <Box className="post-feed-wrapper" sx={{ maxWidth: '80vh', mx: 'auto', mt: 2 }}>
+      <Box sx={{ marginTop: 8, marginBottom: 4, maxWidth: '40vh' }}>
+        <PostWriting onPostSubmit={handleNewPost} />
       </Box>
 
       <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
@@ -212,13 +199,20 @@ export default function PostFeed() {
       <Grid container spacing={2} justifyContent="center" sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px' }}>
         {filteredPosts.length > 0 ? (
           filteredPosts.map((post, index) => (
-            <Grid item xs={12} key={post._id} sx={{
-              gridRowEnd: 'span 2',
-              gridColumnEnd: index % 2 === 0 ? 'span 2' : 'span 1',
-            }}>
-              <Post post={post} onReaction={handleReaction} onDelete={handleDeletePost} onEdit={handleEditPost} onComment={handleComment} />
-            
-            </Grid>
+            post && post._id ? ( 
+              <Grid item xs={12} key={post._id} sx={{
+                gridRowEnd: 'span 2',
+                gridColumnEnd: index % 2 === 0 ? 'span 2' : 'span 1',
+              }}>
+                <PostItem
+                  post={post}
+                  onDelete={handleDeletePost}
+                  onEdit={handleEditPost}
+                  onReact={handleReactToPost}
+                  onComment={handleCommentOnPost}
+                />
+              </Grid>
+            ) : null
           ))
         ) : (
           <Typography variant="body1" color="textSecondary" align="center">
@@ -226,6 +220,15 @@ export default function PostFeed() {
           </Typography>
         )}
       </Grid>
+      <Snackbar 
+        open={snackbarOpen} 
+        autoHideDuration={6000} 
+        onClose={handleSnackbarClose}
+      >
+        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

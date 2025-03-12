@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useMyPetsContext } from '../context/MyPetsProvider';
+import { useFavoritePetsContext } from '../context/FavoritePetsProvider';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthProvider';
 import localforage from 'localforage';
@@ -16,7 +16,7 @@ export default function PetCard({ pet }) {
   const imageUrl = picture || '';
 
   const navigate = useNavigate();
-  const { likePet, unlikePet } = useMyPetsContext();
+  const { likePet, unlikePet } = useFavoritePetsContext();
   const { user } = useAuth();
   const [isLiked, setIsLiked] = useState(false);
   const [adoptionStatus, setAdoptionStatus] = useState('');
@@ -46,7 +46,8 @@ export default function PetCard({ pet }) {
     }
   };
 
-  const handleLike = async () => {
+  const handleLike = async (e) => {
+    e.stopPropagation();
     try {
       if (!user) {
         setShowAlert(true);
@@ -63,7 +64,8 @@ export default function PetCard({ pet }) {
     }
   };
 
-  const handleUnlike = async () => {
+  const handleUnlike = async (e) => {
+    e.stopPropagation();
     try {
       if (!user) {
         setShowAlert(true);
@@ -80,15 +82,20 @@ export default function PetCard({ pet }) {
     }
   };
 
+  const handleMore = (e) => {
+    e.stopPropagation();
+    navigate(`/pets/${_id}`);
+  };
+
   return (
-    <Card sx={{ width: '200px', height: '300px', border: 1, borderRadius: 6, borderColor: 'white', position: 'relative', overflow: 'hidden' }} onClick={() => navigate(`/pets/${_id}`)}>
+    <Card sx={{ width: '200px', height: '300px', border: 1, borderRadius: 6, borderColor: 'white', position: 'relative', overflow: 'hidden' }}>
       <CardActions sx={{ padding: 0, justifyContent: 'space-between', position: 'absolute', top: 10, left: 10, right: 10, zIndex: 2, cursor: 'pointer' }} >
         {isLiked ? (
           <Favorite sx={{ color: 'var(--accent)', fontSize: 30 }} onClick={handleUnlike} />
         ) : (
           <FavoriteBorder sx={{ color: 'var(--accent)', fontSize: 30 }} onClick={handleLike} />
         )}
-        <IconButton aria-label="more" onClick={() => navigate(`/pets/${_id}`)} sx={{ backgroundColor: 'rgba(255, 255, 255, 0.3)', borderRadius: '50%' }}>
+        <IconButton aria-label="more" onClick={handleMore} sx={{ backgroundColor: 'rgba(255, 255, 255, 0.3)', borderRadius: '50%' }}>
           <MoreVert />
         </IconButton>
       </CardActions>

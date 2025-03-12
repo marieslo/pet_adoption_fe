@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button, Modal } from 'react-bootstrap';
 import axios from 'axios';
-import { SERVER_URL } from '../../api';
+import { SERVER_URL } from '../api';
 import AdminTable from './AdminTable';
 
 const itemsPerPage = 4;

@@ -9,11 +9,13 @@ export const useFetchPets = () => {
   return useContext(FetchPetsContext);
 };
 
-export default function FetchPetsProvider ({ children })  {
+export default function FetchPetsProvider({ children }) {
   const [petsData, setPetsData] = useState([]);
   const [adoptablePets, setAdoptablePets] = useState([]);
+  const [newlyAddedPets, setNewlyAddedPets] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
 
   const fetchPets = useCallback(async () => {
     try {
@@ -23,6 +25,7 @@ export default function FetchPetsProvider ({ children })  {
       throw new Error(`Error fetching pets: ${error.message}`);
     }
   }, []);
+
 
   const fetchAdoptablePets = useCallback(async () => {
     try {
@@ -52,11 +55,12 @@ export default function FetchPetsProvider ({ children })  {
     const fetchPetsData = async () => {
       try {
         setLoading(true);
-      
-          const pets = await fetchPets();
-          setPetsData(pets);
-          await localforage.setItem('pets', pets);
-        
+        const pets = await fetchPets();
+        setPetsData(pets);
+        const sortedPets = pets.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+        const newlyAdded = sortedPets.slice(0, 5);  // Display the last 5 added pets
+        setNewlyAddedPets(newlyAdded);
+        await localforage.setItem('pets', pets);
         const adoptable = await fetchAdoptablePets();
         setAdoptablePets(adoptable);
       } catch (error) {
@@ -65,11 +69,11 @@ export default function FetchPetsProvider ({ children })  {
         setLoading(false);
       }
     };
+
     fetchPetsData();
   }, [fetchPets, fetchAdoptablePets]);
 
 
-  
   const searchPets = async (searchParams) => {
     try {
       setLoading(true);
@@ -87,6 +91,7 @@ export default function FetchPetsProvider ({ children })  {
   const value = {
     petsData,
     adoptablePets,
+    newlyAddedPets,
     setPetsData,
     fetchPets,
     fetchPetById,
@@ -96,4 +101,4 @@ export default function FetchPetsProvider ({ children })  {
   };
 
   return <FetchPetsContext.Provider value={value}>{children}</FetchPetsContext.Provider>;
-};
+}
