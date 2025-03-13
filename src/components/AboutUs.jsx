@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, Typography } from '@mui/joy';
+import { Box} from '@mui/joy';
+import ClarifyingText from './ClarifyingText';
 
 export default function AboutUs() {
   return (
@@ -12,16 +13,7 @@ export default function AboutUs() {
         marginTop: '100px'
       }}
     >
-      <Typography
-        fontSize='20px'
-        fontWeight={600}
-        sx={{ fontFamily: 'var(--font-body)', color: 'var(--accent)' }}
-      >
-        Are you planning to adopt a pet?<br />
-        We have dogs, cats, and other pets<br />
-        patiently waiting for a loving home.<br />
-        Find your new best friend today!
-      </Typography>
+      <ClarifyingText text=" Are you planning to adopt a pet? We have dogs, cats, and other pets. patiently waiting for a loving home. Find your new best friend today!" />
     </Box>
   );
 }

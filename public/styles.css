@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Darker+Grotesque:wght@300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Agbalumo&display=swap');
 
 :root {
   --primary: #a25579;
@@ -6,6 +7,7 @@
   --accent: #a72d66;
   --light:#fff2f2;
   --dark: #392222;
+  --font-logo: "Agbalumo", "system-ui";
   --font-body: "Darker Grotesque", "serif";
   --border-radius: 30px;
 }

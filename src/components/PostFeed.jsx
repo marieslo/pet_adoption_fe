@@ -133,8 +133,12 @@ export default function PostFeed() {
   };
 
   const handleCommentOnPost = (postId, commentContent) => {
-    if (!commentContent.trim()) return;
-
+    if (typeof commentContent !== 'string' || !commentContent.trim()) {
+      setSnackbarMessage('Content cannot be empty.');
+      setSnackbarSeverity('warning');
+      setSnackbarOpen(true);
+      return;
+    }
     axios
       .post(
         `${SERVER_URL}/posts/${postId}/comments`,
@@ -145,12 +149,19 @@ export default function PostFeed() {
         setPosts(posts.map((post) =>
           post._id === postId ? { ...post, comments: [...post.comments, response.data] } : post
         ));
+        setSnackbarMessage('Comment added!');
+        setSnackbarSeverity('success');
+        setSnackbarOpen(true);
       })
       .catch((error) => {
         console.error('Error commenting on post:', error);
+        setSnackbarMessage('Error commenting on post. Please try again.');
+        setSnackbarSeverity('error');
+        setSnackbarOpen(true);
       });
   };
-
+  
+  
   if (loading) return (
     <Box sx={{ width: '100%', mx: 'auto', mt: 4 }}>
       <Skeleton variant="rectangular" width="100%" height={120} sx={{ marginBottom: 2 }} />
