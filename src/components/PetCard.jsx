@@ -100,7 +100,17 @@ export default function PetCard({ pet }) {
         </IconButton>
       </CardActions>
       <CardMedia component="img" image={imageUrl} alt={`Image of ${name}`} sx={{ objectFit: 'cover', width: '100%', height: '100%' }} />
-      <CardContent sx={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 1, background: 'rgba(0, 0, 0, 0.3)', padding: '10px' }}>
+      <CardContent
+          sx={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: 1,
+            background: 'linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0))',
+            padding: '10px',
+          }}
+        >
         <Typography variant="h6" align="center" noWrap sx={{ color: 'white' }}>
           {name}
         </Typography>

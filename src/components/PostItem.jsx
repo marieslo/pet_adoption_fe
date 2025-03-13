@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ThumbUp, Comment, Delete, Edit } from "@mui/icons-material";
-import { Box, Typography, IconButton, Textarea, Button, Avatar } from '@mui/joy';
+import { ThumbUp, Delete, Edit } from "@mui/icons-material";
+import { Box, Typography, IconButton, Avatar, Divider } from '@mui/joy';
 import { useAuth } from "../context/AuthProvider";
 import { Link } from "react-router-dom";  
 import moment from "moment";
-import { v4 as uuidv4 } from 'uuid';
-import CustomButton from './CustomButton';
+import CommentSection from './CommentSection';
 
 const formattedDate = (date) => {
   return moment(date).isValid() ? moment(date).format('DD MMM YYYY, HH:mm') : 'Invalid date';
@@ -16,8 +15,6 @@ export default function PostItem({ post, onDelete, onEdit, onReact, onComment })
   const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(post.content);
-  const [commentContent, setCommentContent] = useState('');
-  const [showCommentInput, setShowCommentInput] = useState(false);
   const [petData, setPetData] = useState(post.pet ? {
     name: post.pet.name,
     picture: post.pet.picture ? post.pet.picture.trim() : '',
@@ -47,14 +44,7 @@ export default function PostItem({ post, onDelete, onEdit, onReact, onComment })
     onReact(post._id, type);
   };
 
-  const handleAddComment = () => {
-    if (commentContent.trim()) {
-      onComment(post._id, commentContent);
-      setCommentContent('');
-      setShowCommentInput(false);
-    }
-  };
-
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -67,24 +57,20 @@ export default function PostItem({ post, onDelete, onEdit, onReact, onComment })
           <Avatar src={post.user.avatar || undefined}>
             {!post.user.avatar && post.user.firstName ? post.user.firstName.slice(0, 2).toUpperCase() : 'Pet Lover'}
           </Avatar>
+          <Box sx={{ display: 'flex', flexDirection: 'column'}}>
           <Typography sx={{ fontWeight: 'bold', fontSize: '0.875rem' }}>
             {post.user.firstName}
           </Typography>
+          <Typography sx={{ color: 'rgb(128, 125, 125)', fontSize: '0.75rem', fontStyle: 'italic' }}>
+            {post.user.shortBio}
+          </Typography>
+          </Box>
         </Box>
         <Typography sx={{ fontSize: '0.8rem', textAlign: 'right' }}>
           {formattedDate(post.createdAt)}
         </Typography>
       </Box>
-      {petData && petData.name && petData.picture && (
-        <Box sx={{ padding: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Avatar src={petData.picture || undefined} sx={{ width: 32, height: 32 }} />
-          <Link to={`/pets/${post.pet._id}`} style={{ textDecoration: 'none' }}>
-            <Typography sx={{ fontSize: '0.875rem', fontWeight: 'bold', color: 'primary.main' }}>
-              {petData.name}
-            </Typography>
-          </Link>
-        </Box>
-      )}
+      <Divider sx={{ borderColor: 'white' }} />
       <Box sx={{ padding: 2 }}>
         {isEditing ? (
           <Textarea
@@ -105,65 +91,42 @@ export default function PostItem({ post, onDelete, onEdit, onReact, onComment })
         ) : (
           <Typography sx={{ fontSize: '1rem', lineHeight: '1.6' }}>{post.content}</Typography>
         )}
-      </Box>
+              {petData && petData.name && petData.picture && (
+        <Link to={`/pets/${post.pet._id}`} style={{ textDecoration: 'none' }}>
+        <Box sx={{ padding: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Avatar src={petData.picture || undefined} sx={{ width: 100, height: 100}} />
 
+            <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'primary.main' }}>
+              {petData.name}
+            </Typography>
+        </Box>
+        </Link>
+      )}
+      </Box>
+      <Divider sx={{ borderColor: 'white' }} />
       <Box sx={{ padding: 1.2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      {isPostOwner && (
+          <Box sx={{ display: 'flex', gap: 1 }}>
+             <IconButton onClick={() => onDelete(post._id)}>
+              <Delete />
+            </IconButton>
+            <IconButton onClick={() => setIsEditing(!isEditing)}>
+              <Edit />
+            </IconButton>
+
+            {isEditing && (
+              <Button onClick={handleSaveEdit} sx={{ fontSize: '0.8rem' }}>Save edited text</Button>
+            )}
+          </Box>
+        )}
         <Box sx={{ display: 'flex', gap: 1 }}>
           <IconButton onClick={() => handleReact(userReaction ? 'dislike' : 'like')}>
             <ThumbUp color={userReaction ? 'primary' : 'action'} />
           </IconButton>
-
           <Typography>{post.reactions.length}</Typography>
-          <IconButton onClick={() => setShowCommentInput(!showCommentInput)}>
-            <Comment color="action" />
-          </IconButton>
-          <Typography>{post.comments.length}</Typography>
-        </Box>
-
-        {isPostOwner && (
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            <IconButton onClick={() => setIsEditing(!isEditing)}>
-              <Edit />
-            </IconButton>
-            <IconButton onClick={() => onDelete(post._id)}>
-              <Delete />
-            </IconButton>
-            {isEditing && (
-              <Button onClick={handleSaveEdit} sx={{ fontSize: '0.8rem' }}>Save Edit</Button>
-            )}
-          </Box>
-        )}
-      </Box>
-      <Box sx={{ padding: 2 }}>
-        {showCommentInput && (
-          <Box>
-            <Textarea
-              value={commentContent}
-              onChange={(e) => setCommentContent(e.target.value)}
-              placeholder="Add a comment..."
-              sx={{ width: '100%', padding: 2, borderRadius: 'var(--border-radius)', border: '1px solid #e1e1e1', fontSize: '0.875rem' }}
-            />
-            <CustomButton
-              text="Post Comment"
-              onClick={handleAddComment}
-              isLoading={false}
-              sx={{ fontSize: '0.8rem', marginTop: 1 }}
-            />
-          </Box>
-        )}
-        <Box sx={{ marginTop: 2 }}>
-          {post.comments.map((comment) => (
-            <Box key={`${comment._id || uuidv4()}-${comment.createdAt}`} sx={{ marginBottom: 1, paddingLeft: comment.parentComment ? 4 : 0, backgroundColor: '#f7f7f7', borderRadius: '8px' }}>
-              <Typography sx={{ fontSize: '0.875rem', fontWeight: 'bold' }}>
-                {comment.user.firstName}: 
-              </Typography>
-              <Typography sx={{ fontSize: '0.875rem' }}>
-                {comment.content}
-              </Typography>
-            </Box>
-          ))}
         </Box>
       </Box>
+      <CommentSection post={post} onComment={onComment} />
     </motion.div>
   );
 }

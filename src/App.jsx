@@ -17,9 +17,12 @@ import FetchPetsProvider from './context/FetchPetsProvider';
 import FavoritePetsProvider from './context/FavoritePetsProvider';
 import { Container, Row, Col } from 'react-bootstrap';
 import ProtectedRoute from './context/ProtectedRoute';
+
 import '../public/styles.css';
 
 export default function App() {
+
+  
   return (
     <div className="App">
       <AuthProvider>
