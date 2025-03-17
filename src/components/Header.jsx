@@ -4,12 +4,10 @@ import { AppBar, Toolbar, Button, IconButton, Box, Drawer, List, Divider, Menu, 
 import { Logout, Menu as MenuIcon, Home as HomeIcon, AccountCircle as AccountCircleIcon, Pageview as PageViewIcon, Favorite as FavoriteIcon, StorageRounded, Pets as PetsIcon, People as PeopleIcon } from '@mui/icons-material';
 import gsap from 'gsap';
 import ModalLoginSignUp from './ModalLoginSignUp';
-import ModalConfirmAction from './ModalConfirmAction';
 import { useAuth } from '../context/AuthProvider';
 import HeaderDrawerListItem from './HeaderDrawerListItem';
 import HeaderNavButton from './HeaderNavButton';
 import { useFavoritePetsContext } from '../context/FavoritePetsProvider';
-import Logo from './Logo';
 
 export default function Header() {
   const navigate = useNavigate();
@@ -19,7 +17,6 @@ export default function Header() {
   const [loading, setLoading] = useState(true);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [openLogoutModal, setOpenLogoutModal] = useState(false);
   const headerRef = useRef(null);
   const { likedPets } = useFavoritePetsContext();
 
@@ -35,15 +32,15 @@ export default function Header() {
     }
   }, []);
 
-  const handleLogout = () => setOpenLogoutModal(true);
-  const handleLogoutConfirm = () => {
+  const handleLogout = () => {
     logout();
     navigate('/');
-    setOpenLogoutModal(false);
   };
-  const handleLogoutCancel = () => setOpenLogoutModal(false);
+  
   const toggleDrawer = () => setDrawerOpen(!drawerOpen);
+
   const handleAdminMenuClick = (event) => setAnchorEl(event.currentTarget);
+
   const handleAdminMenuClose = () => setAnchorEl(null);
 
   return (
@@ -85,12 +82,6 @@ export default function Header() {
                 Back
               </Button>
             )}
-             <HeaderNavButton 
-                  to="/"
-                  label={<Logo />} 
-                  activePath={location.pathname}
-                  sx={{ display: 'inline-block', marginRight: 'auto' }} 
-                />
             {user && !loading && (
               <>
                
@@ -158,7 +149,7 @@ export default function Header() {
                     </>
                   )}
                   <HeaderNavButton to={`/users/profile/${user._id}`} icon={<AccountCircleIcon />} label="Profile Settings" activePath={location.pathname} />
-                  <HeaderNavButton to="#" icon={<Logout />} label="Log Out" activePath={location.pathname} onClick={handleLogout} />
+                  <HeaderNavButton icon={<Logout />} label="Log Out" onClick={handleLogout} />
                 </Box>
               </>
             )}
@@ -190,7 +181,6 @@ export default function Header() {
       <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer}>
         <List sx={{ backgroundColor: 'var(--secondary)', height: '100vh', paddingTop: '16px' }}>
           <Box sx={{ display: 'flex', justifyContent: 'start', marginLeft: '16px', marginBottom: '16px' }}>
-            <Logo />
           </Box>
 
           {user && !loading && (
@@ -241,20 +231,11 @@ export default function Header() {
                   <Divider />
                 </>
               )}
-              <HeaderDrawerListItem to="#" icon={<Logout />} label="Log Out" onClick={handleLogout} />
+             <HeaderDrawerListItem icon={<Logout />} label="Log Out" onClick={handleLogout} />
             </>
           )}
         </List>
       </Drawer>
-      <ModalConfirmAction
-        open={openLogoutModal}
-        onClose={handleLogoutCancel}
-        title="Log Out"
-        onConfirm={handleLogoutConfirm}
-        onCancel={handleLogoutCancel}
-        confirmText="Yes"
-        cancelText="No"
-      />
       <ModalLoginSignUp
         show={modalShow}
         onHide={() => setModalShow(false)}

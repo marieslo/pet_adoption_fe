@@ -18,6 +18,11 @@ export default function SinglePetPage() {
   const [loading, setLoading] = useState(true);
   const [petData, setPetData] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
+  const isOwner = user && petData && (
+    petData.adoptedBy?.some((adopter) => String(adopter) === String(user._id)) ||
+    petData.fosteredBy?.some((foster) => String(foster) === String(user._id))
+  );
+  
 
   useEffect(() => {
     const fetchPetData = async () => {
@@ -34,6 +39,7 @@ export default function SinglePetPage() {
     };
     fetchPetData();
   }, [fetchPetById, id, user?._id]);
+  
 
   const handleLike = async () => {
     if (!user) return setShowAlert(true);
@@ -121,20 +127,21 @@ export default function SinglePetPage() {
                 />
                 
                 <Box sx={{
-                  position: 'absolute',
-                  top: 10,
-                  right: 10,
-                  zIndex: 2,
-                  cursor: 'pointer',
-                }}>
-                  {isLiked ? (
+                position: 'absolute',
+                top: 10,
+                right: 10,
+                zIndex: 2,
+                cursor: 'pointer',
+              }}>
+                {user && (
+                  isLiked ? (
                     <Favorite sx={{ color: 'var(--accent)', fontSize: 60 }} onClick={handleUnlike} />
                   ) : (
                     <FavoriteBorder sx={{ color: 'var(--accent)', fontSize: 60 }} onClick={handleLike} />
-                  )}
-                </Box>
+                  )
+                )}
               </Box>
-
+              </Box>
               <Box sx={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -155,20 +162,20 @@ export default function SinglePetPage() {
                 <Typography><span style={{ fontStyle: 'italic', fontSize: '12px'}}>Breed:</span> {breed}</Typography>
 
                 <Box sx={{
-                  marginTop: 2,
-                  display: 'flex',
-                  justifyContent: 'center',
-                  gap: 2,
-                }}>
-                  {adoptionStatus === 'adoptable' ? (
-                    <>
-                      <CustomButton text="Adopt" onClick={handleAdopt} />
-                      <CustomButton text="Foster" onClick={handleFoster} />
-                    </>
-                  ) : (
-                    <CustomButton text="Return" color="var(--secondary)" onClick={handleReturn} />
-                  )}
-                </Box>
+                marginTop: 2,
+                display: 'flex',
+                justifyContent: 'center',
+                gap: 2,
+              }}>
+                {user && adoptionStatus === 'adoptable' ? (
+                  <>
+                    <CustomButton text="Adopt" onClick={handleAdopt} />
+                    <CustomButton text="Foster" onClick={handleFoster} />
+                  </>
+                ) : isOwner && (
+                  <CustomButton text="Return" color="var(--secondary)" onClick={handleReturn} />
+                )}
+              </Box>
               </Box>
             </Card>
           </Grid>

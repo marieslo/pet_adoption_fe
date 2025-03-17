@@ -89,39 +89,41 @@ export default function PetCard({ pet }) {
 
   return (
     <Card sx={{ width: '200px', height: '300px', border: 1, borderRadius: 6, borderColor: 'white', position: 'relative', overflow: 'hidden' }}>
-      <CardActions sx={{ padding: 0, justifyContent: 'space-between', position: 'absolute', top: 10, left: 10, right: 10, zIndex: 2, cursor: 'pointer' }} >
-        {isLiked ? (
+    <CardActions sx={{ padding: 0, justifyContent: 'space-between', position: 'absolute', top: 10, left: 10, right: 10, zIndex: 2, cursor: 'pointer' }} >
+      {user && (
+        isLiked ? (
           <Favorite sx={{ color: 'var(--accent)', fontSize: 30 }} onClick={handleUnlike} />
         ) : (
           <FavoriteBorder sx={{ color: 'var(--accent)', fontSize: 30 }} onClick={handleLike} />
-        )}
-        <IconButton aria-label="more" onClick={handleMore} sx={{ backgroundColor: 'rgba(255, 255, 255, 0.3)', borderRadius: '50%' }}>
-          <MoreVert />
-        </IconButton>
-      </CardActions>
-      <CardMedia component="img" image={imageUrl} alt={`Image of ${name}`} sx={{ objectFit: 'cover', width: '100%', height: '100%' }} />
-      <CardContent
-          sx={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            zIndex: 1,
-            background: 'linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0))',
-            padding: '10px',
-          }}
-        >
-        <Typography variant="h6" align="center" noWrap sx={{ color: 'white' }}>
-          {name}
-        </Typography>
-        <Typography variant="body2" color="white" noWrap align="center" fontWeight={'bolder'}>
-          {breed}
-        </Typography>
-        <Typography variant="body2" color="white" noWrap align="center" fontStyle={'italic'}>
-          {adoptionStatus}
-        </Typography>
-      </CardContent>
-      {showAlert && <div>Please log in to add pets to favorites</div>}
-    </Card>
+        )
+      )}
+      <IconButton aria-label="more" onClick={handleMore} sx={{ backgroundColor: 'rgba(255, 255, 255, 0.3)', borderRadius: '50%' }}>
+        <MoreVert />
+      </IconButton>
+    </CardActions>
+    <CardMedia component="img" image={imageUrl} alt={`Image of ${name}`} sx={{ objectFit: 'cover', width: '100%', height: '100%' }} />
+    <CardContent
+        sx={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1,
+          background: 'linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0))',
+          padding: '10px',
+        }}
+      >
+      <Typography variant="h6" align="center" noWrap sx={{ color: 'white' }}>
+        {name}
+      </Typography>
+      <Typography variant="body2" color="white" noWrap align="center" fontWeight={'bolder'}>
+        {breed}
+      </Typography>
+      <Typography variant="body2" color="white" noWrap align="center" fontStyle={'italic'}>
+        {adoptionStatus}
+      </Typography>
+    </CardContent>
+    {showAlert && <div>Please log in to add pets to favorites</div>}
+  </Card>  
   );
 }

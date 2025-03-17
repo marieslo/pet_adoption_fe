@@ -29,6 +29,7 @@ export default function PostWriting({ onPostSubmit }) {
 
   const handlePostSubmit = async () => {
     if (!authToken || !content.trim()) return;
+    if (!user) return null;
     setLoading(true);
     try {
       const response = await axios.post(
@@ -47,20 +48,21 @@ export default function PostWriting({ onPostSubmit }) {
   };
 
   return (
-    <Box sx={{ p: 2, backgroundColor: "var(--light)", borderRadius: "var(--border-radius)" }}>
+    <Box sx={{ p: 2, backgroundColor: "var(--light)",  borderRadius: "30px" }}>
       <TextField
-        label={`${user.firstName}, you can ask or share something about a specific pet, clarify breed details, or talk about anything else on your mind`}
+        label={`${user?.firstName || "Hello"}, glad to see you here`}
         value={content}
         onChange={(e) => setContent(e.target.value)}
         multiline
         rows={5}
-        placeholder="Share your thoughts..."
+        placeholder="Ask or share something here"
         sx={{
           mb: 2,
           backgroundColor: "white",
           borderRadius: "30px",
           fontSize: '0.75rem',
           minHeight: '120px',
+          maxWidth: '300px',
          
           '& .MuiOutlinedInput-input': {
             padding: '10px 12px',
@@ -68,12 +70,15 @@ export default function PostWriting({ onPostSubmit }) {
             textAlign: 'left',
             lineHeight: 'normal',
             alignItems: 'center',
+            borderRadius: "30px",
           },
           '& .MuiOutlinedInput-notchedOutline': {
             borderColor: '#a72d66',
+            borderRadius: "30px",
           },
           '&:hover .MuiOutlinedInput-notchedOutline': {
             borderColor: '#a72d66',
+            borderRadius: "30px",
           },
           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
             borderColor: '#a72d66',
