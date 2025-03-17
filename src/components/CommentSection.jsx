@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Comment } from "@mui/icons-material";
+import { Comment, ThumbUp } from "@mui/icons-material";
 import { Box, Typography, IconButton, Textarea, Avatar } from '@mui/joy';
 import { v4 as uuidv4 } from 'uuid';
 import moment from "moment";
@@ -10,12 +10,12 @@ const formattedDate = (date) => {
   return moment(date).isValid() ? moment(date).format('DD MMM YYYY, HH:mm') : 'Invalid date';
 };
 
-export default function CommentSection({ post, onComment }) {
+export default function CommentSection({ post, onComment, onReact }) {
   const { user } = useAuth();
   const [commentContent, setCommentContent] = useState('');
-  const [showCommentInput, setShowCommentInput] = useState(false);
   const [comments, setComments] = useState(post.comments);
   const [showAllComments, setShowAllComments] = useState(false);
+  const [showCommentInput, setShowCommentInput] = useState(false);
 
   const handleAddComment = () => {
     if (commentContent.trim()) {
@@ -43,21 +43,39 @@ export default function CommentSection({ post, onComment }) {
     setShowAllComments((prev) => !prev);
   };
 
-  return (
-    <Box sx={{ padding: 2 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-        <IconButton onClick={() => setShowCommentInput(!showCommentInput)}>
-          <Comment color="action" /> Add a comment
-        </IconButton>
-        <Typography variant="body2">{comments.length} Comments</Typography>
-      </Box>
 
+  const userReaction = post.reactions?.find(
+    (reaction) => reaction.user && reaction.user._id && reaction.user._id.toString() === user?._id
+  );
+
+  const handleReact = (type) => {
+    onReact(post._id, type);
+  };
+
+  return (
+    <Box sx={{ padding: 1 }}>
+      <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'end' }}>
+        <IconButton onClick={() => setShowCommentInput(!showCommentInput)}>
+          <Comment color="action" sx={{ fontSize: 16 }} />
+        </IconButton>
+        <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
+          {comments.length} comment{comments.length !== 1 && 's'}
+        </Typography>
+        <IconButton
+          onClick={() => handleReact(userReaction ? null : "like")}
+        >
+          <ThumbUp sx={{ fontSize: 16, color: userReaction ? "primary.main" : "action.active" }} />
+        </IconButton>
+        <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
+          {post.reactions?.length || 0} reaction{post.reactions?.length !== 1 && 's'}
+        </Typography>
+      </Box>
       {showCommentInput && (
         <Box sx={{ marginTop: 2 }}>
           <Textarea
             value={commentContent}
             onChange={(e) => setCommentContent(e.target.value)}
-            placeholder="Add a comment..."
+            placeholder="Share your thoughts here"
             sx={{
               width: '100%',
               padding: 2,
@@ -67,14 +85,13 @@ export default function CommentSection({ post, onComment }) {
             }}
           />
           <CustomButton
-            text="Post Comment"
+            text="Add comment"
             onClick={handleAddComment}
             isLoading={false}
             sx={{ fontSize: '0.8rem', marginTop: 1 }}
           />
         </Box>
       )}
-
       <Box sx={{ marginTop: 2 }}>
         {commentsToShow.map((comment) => (
           <Box
@@ -88,19 +105,17 @@ export default function CommentSection({ post, onComment }) {
             }}
           >
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Avatar
-                  src={comment.user?.avatar || undefined}
-                  sx={{ fontSize: '0.9rem', bgcolor: '#ccc' }}
-                >
-                  {!comment.user?.avatar && comment.user?.firstName
-                    ? comment.user.firstName.slice(0, 2).toUpperCase()
-                    : 'U'}
-                </Avatar>
-                <Typography sx={{ fontSize: '0.875rem', fontWeight: 'bold' }}>
-                  {comment.user?.firstName || 'Anonymous'}
-                </Typography>
-              </Box>
+              <Avatar
+                src={comment.user?.avatar || undefined}
+                sx={{ fontSize: '0.9rem', bgcolor: '#ccc' }}
+              >
+                {!comment.user?.avatar && comment.user?.firstName
+                  ? comment.user.firstName.slice(0, 2).toUpperCase()
+                  : 'Pet Lover'}
+              </Avatar>
+              <Typography sx={{ fontSize: '0.875rem', fontWeight: 'bold' }}>
+                {comment.user?.firstName || 'Anonymous'}
+              </Typography>
             </Box>
 
             <Box
@@ -146,43 +161,26 @@ export default function CommentSection({ post, onComment }) {
           </Box>
         ))}
       </Box>
-
       {comments.length > 3 && !showAllComments && (
-        <Typography
-          onClick={toggleComments}
-          sx={{
-            marginTop: 2,
-            fontSize: '0.75rem',
-            color: 'var(--accent)',
-            textDecoration: 'none',
-            cursor: 'pointer',
-            textAlign: 'center',
-            '&:hover': {
-              textDecoration: 'underline',
-            },
-          }}
-        >
-          show more comments
-        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <CustomButton
+            text="Show more"
+            onClick={toggleComments}
+            isLoading={false}
+            sx={{ fontSize: '0.8rem', marginTop: 2 }}
+          />
+        </Box>
       )}
 
-      {showAllComments && comments.length > 3 && (
-        <Typography
-          onClick={toggleComments}
-          sx={{
-            marginTop: 2,
-            fontSize: '0.75rem',
-            color: 'var(--accent)',
-            textDecoration: 'none',
-            cursor: 'pointer',
-            textAlign: 'center',
-            '&:hover': {
-              textDecoration: 'underline',
-            },
-          }}
-        >
-          hide comments
-        </Typography>
+      {comments.length > 3 && showAllComments && (
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <CustomButton
+            text="Show less"
+            onClick={toggleComments}
+            isLoading={false}
+            sx={{ fontSize: '0.8rem', marginTop: 2 }}
+          />
+        </Box>
       )}
     </Box>
   );

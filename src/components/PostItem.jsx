@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ThumbUp, Delete, Edit } from "@mui/icons-material";
-import { Box, Typography, IconButton, Avatar, Divider } from '@mui/joy';
+import { Delete, Edit } from "@mui/icons-material";
+import { Box, Typography, Avatar, Divider, Button, IconButton, Textarea } from '@mui/joy';
 import { useAuth } from "../context/AuthProvider";
 import { Link } from "react-router-dom";  
 import moment from "moment";
@@ -19,6 +19,7 @@ export default function PostItem({ post, onDelete, onEdit, onReact, onComment })
     name: post.pet.name,
     picture: post.pet.picture ? post.pet.picture.trim() : '',
   } : null);
+
 
   useEffect(() => {
     if (post.pet && post.pet.name) {
@@ -38,13 +39,10 @@ export default function PostItem({ post, onDelete, onEdit, onReact, onComment })
     setIsEditing(false);
   };
 
-  const userReaction = post.reactions.find(reaction => reaction.user && reaction.user._id && reaction.user._id.toString() === user?._id);
+  const userReaction = post.reactions?.find(
+    (reaction) => reaction.user._id === user?._id
+  );
 
-  const handleReact = (type) => {
-    onReact(post._id, type);
-  };
-
-  
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -58,12 +56,12 @@ export default function PostItem({ post, onDelete, onEdit, onReact, onComment })
             {!post.user.avatar && post.user.firstName ? post.user.firstName.slice(0, 2).toUpperCase() : 'Pet Lover'}
           </Avatar>
           <Box sx={{ display: 'flex', flexDirection: 'column'}}>
-          <Typography sx={{ fontWeight: 'bold', fontSize: '0.875rem' }}>
-            {post.user.firstName}
-          </Typography>
-          <Typography sx={{ color: 'rgb(128, 125, 125)', fontSize: '0.75rem', fontStyle: 'italic' }}>
-            {post.user.shortBio}
-          </Typography>
+            <Typography sx={{ fontWeight: 'bold', fontSize: '0.875rem' }}>
+              {post.user.firstName}
+            </Typography>
+            <Typography sx={{ color: 'rgb(128, 125, 125)', fontSize: '0.75rem', fontStyle: 'italic' }}>
+              {post.user.shortBio}
+            </Typography>
           </Box>
         </Box>
         <Typography sx={{ fontSize: '0.8rem', textAlign: 'right' }}>
@@ -81,7 +79,7 @@ export default function PostItem({ post, onDelete, onEdit, onReact, onComment })
               padding: 2,
               borderRadius: 'var(--border-radius)',
               border: '1px solid #e1e1e1',
-              fontSize: '1rem',
+              fontSize: '0.875rem',
               lineHeight: '1.6',
               fontStyle: 'italic'
             }}
@@ -89,29 +87,29 @@ export default function PostItem({ post, onDelete, onEdit, onReact, onComment })
             autoFocus
           />
         ) : (
-          <Typography sx={{ fontSize: '1rem', lineHeight: '1.6' }}>{post.content}</Typography>
+          <Typography sx={{ fontSize: '0.875rem', lineHeight: '1.6' }}>{post.content}</Typography>
         )}
-              {petData && petData.name && petData.picture && (
-        <Link to={`/pets/${post.pet._id}`} style={{ textDecoration: 'none' }}>
-        <Box sx={{ padding: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Avatar src={petData.picture || undefined} sx={{ width: 100, height: 100}} />
 
-            <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'primary.main' }}>
-              {petData.name}
-            </Typography>
-        </Box>
-        </Link>
-      )}
+        {petData && petData.name && petData.picture && (
+          <Link to={`/pets/${post.pet._id}`} style={{ textDecoration: 'none' }}>
+            <Box sx={{ padding: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+              <Avatar src={petData.picture || undefined} sx={{ width: 100, height: 100, borderRadius: 10 }} />
+              <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'primary.main', textAlign: 'center' }}>
+                {petData.name}
+              </Typography>
+            </Box>
+          </Link>
+        )}
       </Box>
       <Divider sx={{ borderColor: 'white' }} />
-      <Box sx={{ padding: 1.2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-      {isPostOwner && (
+      <Box sx={{ padding: 1.2, display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
+        {isPostOwner && (
           <Box sx={{ display: 'flex', gap: 1 }}>
-             <IconButton onClick={() => onDelete(post._id)}>
-              <Delete />
+            <IconButton onClick={() => onDelete(post._id)}>
+              <Delete sx={{ fontSize: 18 }} />
             </IconButton>
             <IconButton onClick={() => setIsEditing(!isEditing)}>
-              <Edit />
+              <Edit sx={{ fontSize: 18 }} />
             </IconButton>
 
             {isEditing && (
@@ -119,14 +117,13 @@ export default function PostItem({ post, onDelete, onEdit, onReact, onComment })
             )}
           </Box>
         )}
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          <IconButton onClick={() => handleReact(userReaction ? 'dislike' : 'like')}>
-            <ThumbUp color={userReaction ? 'primary' : 'action'} />
-          </IconButton>
-          <Typography>{post.reactions.length}</Typography>
-        </Box>
       </Box>
-      <CommentSection post={post} onComment={onComment} />
+     <CommentSection
+        post={post}
+        onComment={onComment}
+        onReact={onReact}
+        userReaction={userReaction} 
+      />
     </motion.div>
   );
 }
