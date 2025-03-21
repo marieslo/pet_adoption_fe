@@ -94,7 +94,6 @@ export default function PostFeed() {
       setSnackbarOpen(true);
       return;
     }
-  
     const postWithUserInfo = {
       ...newPost,
       user: {
@@ -102,11 +101,9 @@ export default function PostFeed() {
         firstName: user.firstName,
         avatar: user.avatar,
       },
-      pet: {
-        ...newPost.pet,
-      }
+      pet: newPost.pet,
     };
-    setPosts([postWithUserInfo, ...posts]); 
+    setPosts([postWithUserInfo, ...posts]);
     setSnackbarMessage('New post added!');
     setSnackbarSeverity('success');
     setSnackbarOpen(true);
@@ -179,7 +176,20 @@ export default function PostFeed() {
   
 
   return (
-    <Box className="post-feed-wrapper" sx={{ maxWidth: '80vh', mx: 'auto', mt: 2 }}>
+    <Box
+      className="post-feed-wrapper"
+      sx={{
+        width: '100%',
+        height: 'calc(100vh - 100px)',
+        overflowY: 'scroll',
+        marginTop: '80px',
+        marginBottom: '20px',
+        padding: '16px',
+        boxSizing: 'border-box',
+        '&::-webkit-scrollbar': { display: 'none' },
+        scrollbarWidth: 'none',
+      }}
+    >
       <Box sx={{ marginTop: 8, marginBottom: 4, maxWidth: '40vh' }}>
         <PostWriting onPostSubmit={handleNewPost} />
       </Box>
@@ -187,56 +197,24 @@ export default function PostFeed() {
       <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
         <FormControlLabel
           sx={{ fontFamily: 'var(--font-body)', color: 'white' }}
-          control={
-            <Switch
-              checked={showMyPosts}
-              onChange={() => setShowMyPosts(!showMyPosts)}
-              sx={{
-                '& .MuiSwitch-switchBase.Mui-checked': {
-                  color: 'var(--accent)',
-                },
-                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                  backgroundColor: 'var(--accent)',
-                },
-              }}
-            />
-          }
-          label={<Typography sx={{ fontFamily: 'var(--font-body)', color: 'white' }}>
-            {showMyPosts ? "Showing My Posts" : "Showing All Posts"}
-          </Typography>}
+          control={<Switch checked={showMyPosts} onChange={() => setShowMyPosts(!showMyPosts)} sx={{ '& .MuiSwitch-switchBase.Mui-checked': { color: 'var(--accent)' }, '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': { backgroundColor: 'var(--accent)' } }} />}
+          label={<Typography sx={{ fontFamily: 'var(--font-body)', color: 'white' }}>{showMyPosts ? "Showing My Posts" : "Showing All Posts"}</Typography>}
         />
       </Box>
 
-      <Grid container spacing={2} justifyContent="center" sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px' }}>
-        {filteredPosts.length > 0 ? (
-          filteredPosts.map((post, index) => (
-            post && post._id ? ( 
-              <Grid item xs={12} key={post._id} sx={{
-                gridRowEnd: 'span 2',
-                gridColumnEnd: index % 2 === 0 ? 'span 2' : 'span 1',
-              }}>
-                <PostItem
-                  post={post}
-                  onDelete={handleDeletePost}
-                  onEdit={handleEditPost}
-                  onReact={handleReactToPost}
-                  onComment={handleCommentOnPost}
-                />
-              </Grid>
-            ) : null
-          ))
-        ) : (
-          <Typography variant="body1" color="textSecondary" align="center">
-            {showMyPosts ? "You haven't posted anything yet." : "No posts available."}
-          </Typography>
-        )}
+      <Grid container spacing={2} justifyContent="center" sx={{ display: 'grid', gridTemplateColumns: '1fr', gap: '16px' }}>
+        {filteredPosts.map((post, index) => (
+          <Grid item xs={12} key={post._id} sx={{ gridRowEnd: 'span 2', gridColumnEnd: 'span 1' }} >
+            <PostItem post={post} onDelete={handleDeletePost} onEdit={handleEditPost} onReact={handleReactToPost} onComment={handleCommentOnPost} />
+          </Grid>
+        ))}
       </Grid>
-      <Snackbar 
-        open={snackbarOpen} 
-        autoHideDuration={6000} 
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
         onClose={handleSnackbarClose}
       >
-        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity}>
           {snackbarMessage}
         </Alert>
       </Snackbar>

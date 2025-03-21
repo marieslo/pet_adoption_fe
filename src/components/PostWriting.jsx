@@ -48,21 +48,21 @@ export default function PostWriting({ onPostSubmit }) {
   };
 
   return (
-    <Box sx={{ p: 2, backgroundColor: "var(--light)",  borderRadius: "30px" }}>
+    <Box sx={{ p: 2, backgroundColor: "var(--light)",  borderRadius: "30px", width: '300px' }}>
       <TextField
         label={`${user?.firstName || "Hello"}, glad to see you here`}
         value={content}
         onChange={(e) => setContent(e.target.value)}
         multiline
         rows={5}
-        placeholder="Ask or share something here"
+        placeholder="You can ask or share questions about a specific pet, breed, etc."
         sx={{
           mb: 2,
           backgroundColor: "white",
           borderRadius: "30px",
           fontSize: '0.75rem',
           minHeight: '120px',
-          maxWidth: '300px',
+          width: '100%',
          
           '& .MuiOutlinedInput-input': {
             padding: '10px 12px',

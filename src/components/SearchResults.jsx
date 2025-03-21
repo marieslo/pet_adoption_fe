@@ -38,7 +38,16 @@ export default function SearchResults({ petsData, loading, error }) {
           key={index}
           sx={{ display: 'flex', justifyContent: 'center' }}
         >
-          <PetCard pet={pet} />
+          <Box
+            sx={{
+              minWidth: '200px',
+              minHeight: '300px',
+              width: '100%',
+              height: 'auto',
+            }}
+          >
+            <PetCard pet={pet} />
+          </Box>
         </Grid>
       ))}
     </Grid>

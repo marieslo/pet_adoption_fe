@@ -76,9 +76,18 @@ export default function SearchPage() {
   };
 
   return (
-    <Container sx={{ mt: 10, mb: 6, minWidth: '360px', maxWidth: '100%' }}>
-      <Grid container justifyContent="center" spacing={4}>
-        <Grid item xs={12} sm={8} md={5}>
+
+    <Container   
+            sx={{
+            width: '100%',
+            height: '100vh',
+            overflowY: 'scroll',
+            marginTop: '80px',
+            marginBottom: '20px',
+            padding: '16px',
+          }}>
+      <Grid container justifyContent="center" spacing={4} >
+        <Grid item xs={10} sm={6} md={4}>
           <Paper sx={{ padding: 3, backgroundColor: 'var(--light)', borderRadius: 'var(--border-radius)', boxShadow: 3 }}>
             <Box className="search-container" sx={{ width: '100%' }}>
               <SearchInput value={searchTerm} onChange={handleSearch} placeholder="Search by Name or Breed" />
@@ -87,7 +96,7 @@ export default function SearchPage() {
             </Box>
           </Paper>
           <Box sx={{ mt: 3, fontStyle: 'italic', color: '#ffffff' }}>
-            <Typography variant="body2" color="var{--light)">
+            <Typography variant="body2" color="var(--light)">
               <strong>Adoptable Pets:</strong> These pets are available for adoption and are looking for their forever home.
               <br />
               <br />

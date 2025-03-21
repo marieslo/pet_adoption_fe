@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Delete, Edit } from "@mui/icons-material";
-import { Box, Typography, Avatar, Divider, Button, IconButton, Textarea } from '@mui/joy';
+import { Box, Typography, Avatar, Divider, IconButton, Textarea } from '@mui/joy';
 import { useAuth } from "../context/AuthProvider";
 import { Link } from "react-router-dom";  
 import moment from "moment";
 import CommentSection from './CommentSection';
+import CustomButton from './CustomButton';
+
 
 const formattedDate = (date) => {
   return moment(date).isValid() ? moment(date).format('DD MMM YYYY, HH:mm') : 'Invalid date';
@@ -19,7 +21,6 @@ export default function PostItem({ post, onDelete, onEdit, onReact, onComment })
     name: post.pet.name,
     picture: post.pet.picture ? post.pet.picture.trim() : '',
   } : null);
-
 
   useEffect(() => {
     if (post.pet && post.pet.name) {
@@ -69,6 +70,27 @@ export default function PostItem({ post, onDelete, onEdit, onReact, onComment })
         </Typography>
       </Box>
       <Divider sx={{ borderColor: 'white' }} />
+      <Box sx={{ padding: 0.5, display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
+        {isPostOwner && (
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <IconButton onClick={() => onDelete(post._id)}>
+              <Delete sx={{ fontSize: 18 }} />
+            </IconButton>
+            <IconButton onClick={() => setIsEditing(!isEditing)}>
+              <Edit sx={{ fontSize: 18 }} />
+            </IconButton>
+
+            {isEditing && (
+              <CustomButton
+                text="Save edited text"
+                isLoading={false}
+                onClick={handleSaveEdit}
+                sx={{ fontSize: '0.8rem' }}
+              />
+            )}
+          </Box>
+        )}
+      </Box>
       <Box sx={{ padding: 2 }}>
         {isEditing ? (
           <Textarea
@@ -101,23 +123,9 @@ export default function PostItem({ post, onDelete, onEdit, onReact, onComment })
           </Link>
         )}
       </Box>
-      <Divider sx={{ borderColor: 'white' }} />
-      <Box sx={{ padding: 1.2, display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
-        {isPostOwner && (
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            <IconButton onClick={() => onDelete(post._id)}>
-              <Delete sx={{ fontSize: 18 }} />
-            </IconButton>
-            <IconButton onClick={() => setIsEditing(!isEditing)}>
-              <Edit sx={{ fontSize: 18 }} />
-            </IconButton>
 
-            {isEditing && (
-              <Button onClick={handleSaveEdit} sx={{ fontSize: '0.8rem' }}>Save edited text</Button>
-            )}
-          </Box>
-        )}
-      </Box>
+     
+      <Divider sx={{ borderColor: 'white' }} />
      <CommentSection
         post={post}
         onComment={onComment}
