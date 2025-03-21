@@ -1,20 +1,22 @@
 import React from 'react';
-import { Box, Grid } from '@mui/material';
+import { Box } from '@mui/material';
 import PostFeed from '../components/PostFeed';
 
-
 export default function HomePage() {
-
   return (
     <Box
-      className="home-page-container">
-      <Grid container justifyContent="center">
-        <Grid item xs={12} md={6}>
-          <Box sx={{ maxHeight: 'calc(100vh - 100px)', overflowY: 'auto', paddingBottom: '20px' }}>
-            <PostFeed />
-          </Box>
-        </Grid>
-      </Grid>
+      className="home-page-container"
+      sx={{
+        width: '100vw',
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        overflow: 'hidden',
+      }}
+    >
+      <PostFeed />
     </Box>
   );
 }

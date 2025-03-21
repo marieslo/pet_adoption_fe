@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Button, Modal } from 'react-bootstrap';
 import axios from 'axios';
 import { SERVER_URL } from '../api';
 import AdminTable from './AdminTable';
+import { Container, Box } from '@mui/material';
+import CustomButton from '../components/CustomButton';
 
 const itemsPerPage = 4;
 
 export default function PetsDashboard() {
   const [pets, setPets] = useState([]);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedPet, setSelectedPet] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -33,24 +31,13 @@ export default function PetsDashboard() {
 
   const handleEditClick = (id) => navigate(`/pets/addpet/${encodeURIComponent(id)}`);
 
-  const handleDeleteClick = (pet) => {
-    setSelectedPet(pet);
-    setShowDeleteModal(true);
-  };
-
-  const handleDeleteConfirm = async () => {
+  const handleDeleteClick = async (pet) => {
     try {
-      await axios.delete(`${SERVER_URL}/pets/${selectedPet._id}`);
+      await axios.delete(`${SERVER_URL}/pets/${pet._id}`);
       fetchPets();
-      setShowDeleteModal(false);
     } catch (error) {
       console.error('Error deleting pet:', error);
     }
-  };
-
-  const handleDeleteCancel = () => {
-    setSelectedPet(null);
-    setShowDeleteModal(false);
   };
 
   const adoptedCount = pets.filter((pet) => pet.adoptionStatus === 'adopted').length;
@@ -58,18 +45,35 @@ export default function PetsDashboard() {
   const adoptableCount = pets.filter((pet) => pet.adoptionStatus === 'adoptable').length;
 
   return (
-    <div className="admin-dashboard-container">
-      <div className="dashboard-header">
-        <h2 className="admin-dashboard-name">Pets</h2>
-      </div>
-      <div className="status-counts">
-        <span className="dashboard-counter">Adopted: {adoptedCount}</span>
-        <span className="dashboard-counter">Fostered: {fosteredCount}</span>
-        <span className="dashboard-counter">Adoptable: {adoptableCount}</span>
-        <Button onClick={handleAddNewPet} className="add-new-pet-btn" variant="secondary">
-          Add Pet
-        </Button>
-      </div>
+    <Container   
+    sx={{
+    width: '100%',
+    height: '100vh',
+    overflowY: 'scroll',
+    marginTop: '80px',
+    marginBottom: '50px',
+    padding: '16px',
+  }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <CustomButton
+          text="Add Pet"
+          color="var(--accent)"
+          onClick={handleAddNewPet}
+          sx={{ width: '200px' }}
+        />
+      </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '30px',
+            marginBottom: '20px',
+          }}
+        >
+          <span className="dashboard-counter">Adopted: {adoptedCount}</span>
+          <span className="dashboard-counter">Fostered: {fosteredCount}</span>
+          <span className="dashboard-counter">Adoptable: {adoptableCount}</span>
+        </Box>
       <AdminTable 
         data={pets}
         loading={loading}
@@ -92,23 +96,8 @@ export default function PetsDashboard() {
           { label: "Delete", className: "dashboard-icon-delete", onClick: (pet) => handleDeleteClick(pet) }
         ]}
         itemsPerPage={itemsPerPage}
+        onDelete={handleDeleteClick}
       />
-      <Modal show={showDeleteModal} onHide={handleDeleteCancel}>
-        <Modal.Header closeButton>
-          <Modal.Title>Delete Pet</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Are you sure you want to delete {selectedPet && selectedPet.name}?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button className='admin-dashboard-modal-btn' variant="secondary" onClick={handleDeleteCancel}>
-            Cancel
-          </Button>
-          <Button className='admin-dashboard-modal-btn' variant="secondary" onClick={handleDeleteConfirm}>
-            Delete
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </div>
+    </Container>
   );
 }

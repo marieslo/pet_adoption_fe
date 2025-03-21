@@ -91,7 +91,7 @@ export default function EditProfileForm({ onSave, initialData }) {
             borderRadius: 'var(--border-radius)',
             overflow: 'hidden',
             padding: 2,
-            backgroundColor: 'rgba(217, 192, 192, 0.71)', 
+            backgroundColor: 'rgba(195, 168, 152, 0.83)', 
             color: 'var(--accent)',
             display: 'flex',
             flexDirection: 'column',
@@ -205,12 +205,13 @@ export default function EditProfileForm({ onSave, initialData }) {
               style={{ textAlign: 'left' }}
             />
           </Box>
-
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <CustomButton
             text={loading ? 'Saving...' : 'Update'}
             isLoading={loading}
             onClick={handleSave}
           />
+         </Box>
         </Box>
       </Grid>
     </Grid>

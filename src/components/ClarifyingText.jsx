@@ -10,7 +10,8 @@ export default function ClarifyingText({ text }) {
         display: 'inline-block',
         position: 'relative',
         borderRadius: '30px',
-        backgroundColor: 'white',
+        backgroundColor: 'rgb(231, 216, 216)',
+        opacity: 0.5,
         '&::before': {
           content: '""',
           position: 'absolute',

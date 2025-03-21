@@ -43,7 +43,7 @@ const theme = createTheme({
             borderColor: getCssVariable('--accent') || getCssVariable('--primary') || '#a72d66',
           },
           '& label.Mui-focused': {
-            color: getCssVariable('--accent') || getCssVariable('--primary') || '#a72d66',
+            color: getCssVariable('--accent') || getCssVariable('--dark') || '#a72d66',
           },
           '& label': {
             fontSize: '14px',
