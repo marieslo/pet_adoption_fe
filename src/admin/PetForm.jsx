@@ -5,6 +5,9 @@ import { motion } from 'framer-motion';
 import CustomButton from '../components/CustomButton';
 import CustomInput from '../components/CustomInput';
 import { SERVER_URL } from '../api';
+import config from '../../config.json';
+
+const cloudinaryUploadUrl = config.cloudinaryUploadUrl;
 
 export default function PetForm({ petId, isEdit, onSuccess }) {
   const initialState = {
@@ -73,25 +76,24 @@ export default function PetForm({ petId, isEdit, onSuccess }) {
     }
   };
 
-  const uploadImage = (files) => {
-    const file = files[0];
+
+  const uploadImage = async (file) => {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('upload_preset', 'pet-adoption');
-    const uploadUrl = process.env.CLOUDINARY_UPLOAD_URL;
-
-    axios.post(uploadUrl, formData)
-      .then(response => {
-        setPetDetails(prevDetails => ({
-          ...prevDetails,
-          picture: response.data.url,
-        }));
-      })
-      .catch(error => {
-        console.error('Error uploading image:', error);
+  
+    try {
+      const response = await axios.post(cloudinaryUploadUrl, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
+      console.log('Image uploaded successfully:', response.data);
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }
   };
-
+  
   const previewFile = (file) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);

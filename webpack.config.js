@@ -48,6 +48,9 @@ export default {
     alias: {
       '@': path.resolve(__dirname, 'src'),
     },
+    fallback: {
+      process: require.resolve('process/browser'),
+    },
   },
   output: {
     filename: 'main.js',

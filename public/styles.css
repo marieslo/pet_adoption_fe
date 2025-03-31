@@ -20,7 +20,8 @@ body {
 
 .welcome-page-container, 
 .fav-pets-page-container, 
-.profile-page-container {
+.profile-page-container,
+.home-page-container {
   background-size: cover;
   background-repeat: no-repeat;
   width: 100%;
@@ -34,6 +35,10 @@ body {
 
 .welcome-page-container {
   background-image: url('https://res.cloudinary.com/nkwjho4xf/image/upload/v1741190671/pet-adoption/welcome-page-background_jirxwu.jpg');
+}
+
+.home-page-container {
+  background-image: url('https://res.cloudinary.com/nkwjho4xf/image/upload/v1743450799/pet-adoption/medium-shot-woman-holding-meerkat_1_nbc3fk.jpg');
 }
 
 .fav-pets-page-container {
@@ -55,4 +60,40 @@ body {
   .profile-page-container {
     background-image: none; 
   }
+}
+
+.table-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.custom-modal .modal-content {
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.custom-modal .modal-header {
+  border-bottom: none;
+  font-size: 18px;
+}
+
+.custom-modal .modal-footer {
+  border-top: none;
+  display: flex;
+  justify-content: space-between;
+}
+
+.custom-modal .btn-secondary {
+  background-color: #6c757d;
+  border-radius: 8px;
+  padding: 10px 20px;
+}
+
+.custom-modal .btn-danger {
+  background-color: #dc3545;
+  border-radius: 8px;
+  padding: 10px 20px;
 }

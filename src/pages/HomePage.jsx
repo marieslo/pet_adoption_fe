@@ -7,13 +7,13 @@ export default function HomePage() {
     <Box
       className="home-page-container"
       sx={{
-        width: '100vw',
-        height: '100vh',
         display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        overflow: 'hidden',
+        flexDirection: { xs: 'column', md: 'row' },
+        justifyContent: 'center',
+        alignItems: 'start',
+        gap: 2,
+        width: '100%', 
+        height: '100%',
       }}
     >
       <PostFeed />

@@ -14,6 +14,8 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { Delete, Edit } from "@mui/icons-material";
+import PetsIcon from '@mui/icons-material/Pets';
+import RoleEditIcon from '@mui/icons-material/Settings'; 
 
 
 export default function AdminTable({
@@ -173,28 +175,25 @@ export default function AdminTable({
                           {col.render ? col.render(item[col.key], item) : item[col.key]}
                         </TableCell>
                       ))}
-                      {actions.length > 0 && (
-                          <TableCell>
-                          {actions.map((action, index) => (
-                            (action.label === "Edit" || action.label === "Delete") && (
-                              <IconButton
-                                key={index}
-                                onClick={() => {
-                                  if (action.label === "Delete") {
-                                    onDelete(item);
-                                  } else {
-                                    action.onClick(item);
-                                  }
-                                }}
-                                color="#a25579"
-                                size="small"
-                              >
-                                {action.label === "Edit" ? <Edit fontSize="inherit" /> : <Delete fontSize="inherit" />}
-                              </IconButton>
-                            )
-                          ))}
-                        </TableCell>
-                      )}
+                    {actions.length > 0 && (
+                <TableCell>
+                  {actions.map((action, index) => (
+                    <IconButton
+                      key={index}
+                      onClick={() => {
+                        action.onClick(item);
+                      }}
+                      color="#a25579"
+                      size="small"
+                    >
+                      {action.label === 'Edit' && <Edit fontSize="inherit" />}
+                      {action.label === 'Delete' && <Delete fontSize="inherit" />}
+                      {action.label === 'View Pets' && <PetsIcon fontSize="inherit" />}
+                      {action.label === 'Edit Role' && <RoleEditIcon fontSize="inherit" />}
+                    </IconButton>
+                  ))}
+                  </TableCell>
+                )}
                     </motion.tr>
                   ))
               )}

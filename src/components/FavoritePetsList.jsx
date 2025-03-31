@@ -1,20 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PetCard from './PetCard';
-import { Box, IconButton } from '@mui/joy';
-import { ArrowForward, ArrowBack } from '@mui/icons-material';
+import { Box, } from '@mui/joy';
 
-export default function FavoritePetsList({ title, cssClass, pets, onLike, onUnlike, likedPets }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
+export default function FavoritePetsList({cssClass, pets, onLike, onUnlike, likedPets }) {
+
   const hasPets = pets.length > 0;
-
-
-  const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % pets.length);
-  };
-
-  const handlePrev = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + pets.length) % pets.length);
-  };
 
   const renderPets = () => {
     if (likedPets.length === 0) {
@@ -35,62 +25,33 @@ export default function FavoritePetsList({ title, cssClass, pets, onLike, onUnli
 
   return (
     <div className={`pets-section ${cssClass}`}>
-      {hasPets && <h2 className={`my-pets-${cssClass}`}>{title}:</h2>}
-      <Box sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'relative',
-        width: '100%',
-        minWidth: '450px',
-        overflow: 'hidden',
-        gap: 2,
-      }}>
-        <IconButton 
-          onClick={handlePrev} 
-          variant="soft" 
-          color="neutral" 
-          sx={{
-            position: 'absolute',
-            left: 0,
-            borderRadius: '50%',
-            opacity: 0.7,
-            '&:hover': { opacity: 1 },
-            width: 40,
-            height: 40,
-            zIndex: 20, 
-          }}
-        >
-          <ArrowBack />
-        </IconButton>
+     <Box sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          position: 'relative',
+          width: '100%',
+          minWidth: '450px',
+          overflow: 'hidden',
+          gap: 2,
+          flexDirection: { xs: 'column', md: 'row' }, 
+          top: '80px',
+        }}>
 
         <Box sx={{
           display: 'flex',
           justifyContent: 'center',
-          alignItems: 'center',
+          alignItems: 'start',
           transition: 'transform 0.3s ease',
           width: '100%',
+          flexDirection: { xs: 'column', md: 'row' },
+          gap: 2,
+          padding: { xs: 2, sm: 0 },
+          height: '80vh',
+          overflowY: 'auto', 
         }}>
           {hasPets ? renderPets() : <p className="no-pets">No pets available</p>}
         </Box>
-
-        <IconButton 
-          onClick={handleNext} 
-          variant="soft" 
-          color="neutral" 
-          sx={{
-            position: 'absolute',
-            right: 0,
-            borderRadius: '50%', 
-            opacity: 0.7,
-            '&:hover': { opacity: 1 },
-            width: 40,
-            height: 40,
-            zIndex: 20,
-          }}
-        >
-          <ArrowForward />
-        </IconButton>
       </Box>
     </div>
   );

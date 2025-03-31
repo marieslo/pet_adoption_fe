@@ -48,7 +48,7 @@ export default function PostWriting({ onPostSubmit }) {
   };
 
   return (
-    <Box sx={{ p: 2, backgroundColor: "var(--light)",  borderRadius: "30px", width: '300px' }}>
+    <Box sx={{ p: 2, backgroundColor: "rgba(217, 200, 187, 0.94)",  borderRadius: "30px", width: '100%', maxWidth: '500px',margin: '0 auto', justifyContent: 'center', alignItems: 'center',}}>
       <TextField
         label={`${user?.firstName || "Hello"}, glad to see you here`}
         value={content}
