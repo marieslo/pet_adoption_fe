@@ -14,7 +14,7 @@ export default function AddPetForm() {
   };
 
   return (
-    <div>
+    <div style={{ marginTop: '100px', padding: '30px' }}>
       <PetForm isEdit={false} onSuccess={handleSuccess} />
       <Snackbar
         open={showSuccessMessage}

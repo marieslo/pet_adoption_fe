@@ -188,9 +188,10 @@ export default function PostFeed() {
         boxSizing: 'border-box',
         '&::-webkit-scrollbar': { display: 'none' },
         scrollbarWidth: 'none',
+        marginRight: { xs: 0, md: '300px' },
       }}
     >
-      <Box sx={{ marginTop: 8, marginBottom: 4, maxWidth: '40vh' }}>
+      <Box sx={{ marginTop: 8, marginBottom: 2}}>
         <PostWriting onPostSubmit={handleNewPost} />
       </Box>
 

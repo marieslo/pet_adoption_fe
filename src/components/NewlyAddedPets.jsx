@@ -32,6 +32,7 @@ export default function NewlyAddedPets() {
   const visiblePets = [
     newlyAddedPets[(currentIndex) % newlyAddedPets.length],
     newlyAddedPets[(currentIndex + 1) % newlyAddedPets.length],
+    newlyAddedPets[(currentIndex + 2) % newlyAddedPets.length],
   ];
 
   return (
@@ -43,6 +44,7 @@ export default function NewlyAddedPets() {
       gap: 2,
       zIndex: 10,
       width: '100%',
+      marginTop: '80px'
     }}>
       {loading ? (
         <div>Loading...</div>

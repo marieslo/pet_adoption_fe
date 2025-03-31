@@ -39,6 +39,7 @@ export default function AdoptablePetsFeed() {
   const visiblePets = [
     adoptablePets[(currentIndex) % adoptablePets.length],
     adoptablePets[(currentIndex + 1) % adoptablePets.length],
+    adoptablePets[(currentIndex + 2) % adoptablePets.length],
   ];
 
   const handleNext = () => {
@@ -73,7 +74,7 @@ export default function AdoptablePetsFeed() {
             justifyContent: 'center',
             alignItems: 'center',
             position: 'relative',
-            width: '60%',
+            width: '100%',
             minWidth: '450px',
             overflow: 'hidden',
             gap: 2,
