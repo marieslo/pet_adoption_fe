@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "type": "module",
   "scripts": {
-    "build": "webpack --config webpack.config.js --mode production",
+    "build": "webpack --config webpack.config.mjs --mode production",
     "dev": "webpack serve --mode development --open",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
