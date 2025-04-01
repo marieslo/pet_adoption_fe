@@ -38,7 +38,7 @@ _This is a MERN full-stack project.\
 5. Favorite Pets\
 <img width="600" alt="Screenshot 2025-04-01 at 00 07 29" src="https://github.com/user-attachments/assets/af8fc0fc-378e-48fc-96c1-8c0121259c51" />\
 6. Pet's Page\
-
+<img width="600" alt="Screenshot 2025-04-01 at 12 45 22" src="https://github.com/user-attachments/assets/4be3c897-121a-456d-bf3b-06c5590951f5" />\
 7. User's Profile Page\
 <img width="600" alt="Screenshot 2025-04-01 at 00 12 22" src="https://github.com/user-attachments/assets/71cf3ba9-768a-4170-a1d2-4f7a12e8db47" />\
 8.Admin dashboards\
