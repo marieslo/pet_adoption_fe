@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { fileURLToPath } = require('url');
 const { dirname } = require('path');
 
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -40,15 +41,12 @@ module.exports = {
       directory: path.join(__dirname, 'dist'),
     },
     open: true,
-    hot: true,
+    hot: true, 
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'], 
     alias: {
       '@': path.resolve(__dirname, 'src'),
-    },
-    fallback: {
-      process: require.resolve('process/browser'),
     },
   },
   output: {
