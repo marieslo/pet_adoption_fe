@@ -1,5 +1,2 @@
 node_modules/
-api.js
 .DS_Store
-.env
-config.json
