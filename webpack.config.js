@@ -1,13 +1,11 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { fileURLToPath } = require('url');
-const { dirname } = require('path');
-
+import path from 'path';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = path.dirname(__filename);
 
-module.exports = {
+export default {
   entry: './src/main.jsx',
   module: {
     rules: [
