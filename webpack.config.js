@@ -32,6 +32,7 @@ export default {
   plugins: [
     new HtmlWebpackPlugin({
       template: './public/index.html',
+      inject: 'body',
     }),
   ],
   devServer: {
@@ -51,4 +52,5 @@ export default {
     filename: 'main.js',
     path: path.resolve(__dirname, 'dist'),
   },
+
 };
